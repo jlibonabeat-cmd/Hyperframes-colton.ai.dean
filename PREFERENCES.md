@@ -20,7 +20,7 @@ _(colors, typography, density, placement — populated by /feedback over time)_
 
 _(scene length, cuts vs. transitions, breathing room — populated by /feedback over time)_
 
-- _no rules captured yet_
+- Edits should "jump": crisp, fast cuts on the beat, aiming for about one visual event per second with short bursts on drops, like @jsewellbeats. Avoid holding one view longer than ~3 s unless it is the talking-head moment. (2026-10-19)
 
 ## Captions
 
@@ -32,13 +32,14 @@ _(style, color, sync tightness, word-by-word vs. phrase chunks — populated by 
 
 _(preferred / avoid — populated by /feedback over time)_
 
-- _no rules captured yet_
+- Effects should be syncopated with my beats (on kicks, snares and off-beat hats), similar to @jsewellbeats. (2026-10-19)
+- Keep the glitch / fisheye / shatter finales and 1-frame flash inserts from my own edits (Glide, Don't Tell Em). (2026-10-19, inferred from the edits the user called their style)
 
 ## Audio
 
 _(music vibe, voiceover style, SFX, mix — populated by /feedback over time)_
 
-- _no rules captured yet_
+- Visuals are driven by my own beat: derive onset times and BPM from the actual track and place hits on them. Never sync to a fixed clock. (2026-10-19)
 
 ## Brand
 

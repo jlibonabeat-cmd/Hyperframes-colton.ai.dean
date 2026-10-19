@@ -45,7 +45,10 @@ _(Colors, fonts, logo. Often a blank slate at the start — `assets/brand-tokens
 
 ## Inspiration creators
 
-_(Studied creators live in [`_reference/creator-library/`](_reference/creator-library/). Paste a TikTok / Instagram Reel / YouTube Short URL and run `/study-creator <url>` to add one. At build time, name a creator — "build this like @handle" — to apply their style fingerprint to the visual layer. /setup seeds your first few here.)_
+- **@jsewellbeats** — primary editing reference: crisp, fast, beat-locked face-cam + DAW edits. Fingerprint: [`_reference/creator-library/jsewellbeats/style-distilled.md`](_reference/creator-library/jsewellbeats/style-distilled.md) (medium-low confidence; built from screen recordings).
+- Own edits used as the style baseline: GLIDE BEAT EDIT and Don't Tell Em (both 9:16, face-cam over FL Studio).
+
+Studied creators live in [`_reference/creator-library/`](_reference/creator-library/). Paste a TikTok / Instagram Reel / YouTube Short URL and run `/study-creator <url>` to add one. At build time, name a creator — "build this like @handle" — to apply their style fingerprint to the visual layer.
 
 ## Posting cadence & length defaults
 
