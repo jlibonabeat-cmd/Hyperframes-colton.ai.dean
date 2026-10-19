@@ -1,16 +1,18 @@
 :root {
-  /* TODO: fill in your brand colors */
-  --brand-bg: ;
-  --brand-surface: ;
-  --brand-surface-2: ;
-  --brand-border: ;
-  --brand-accent: ;
-  --brand-accent-glow: ;
-  --brand-warn: ;
-  --brand-text: ;
-  --brand-text-dim: ;
+  /* DEFAULT dark palette (set during /setup, 2026-10-19). Accent matches the FL Studio
+     mint-green notes/playhead in the @prodbyjlib edits; warn matches the warm lamp light.
+     Change any value here and every project that copies this file picks it up. */
+  --brand-bg: #0a0a0f;
+  --brand-surface: #14141c;
+  --brand-surface-2: #1c1c27;
+  --brand-border: #2a2a38;
+  --brand-accent: #2ee6a0;
+  --brand-accent-glow: rgba(46, 230, 160, 0.45);
+  --brand-warn: #ff7a2f;
+  --brand-text: #ffffff;
+  --brand-text-dim: #9a9aae;
 
-  /* TODO: pick your typography */
+  /* Typography: system default until a brand font is chosen */
   --font-mono: ui-monospace, Menlo, monospace;
   --font-display: system-ui, sans-serif;
 }

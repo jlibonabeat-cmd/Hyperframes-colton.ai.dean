@@ -1,20 +1,16 @@
-<!-- HYPERFRAMES_SETUP_INCOMPLETE -->
-<!-- ^ Leave this marker until /setup is complete. It tells Claude to greet a new user
-     and run onboarding before any video work. The setup skill removes it when finished. -->
-
 # Creator Profile — prodbyjlib (Jack Jones)
 
 Your identity, positioning, and workflow for video work in this workspace. **Read this before every video task** (alongside `PREFERENCES.md`). Use it for on-screen text, niche framing, and workflow assumptions.
 
-> 🚧 **This file is a blank template.** Run `/setup` (or just tell Claude "help me get set up") and it will fill these sections in from a short interview. You can also edit it by hand any time.
+> Set up on 2026-10-19 via `/setup`. Re-run `/setup` or edit this file by hand any time.
 
 ## Identity
 
 - **Name on-screen**: prodbyjlib (producer alias; real name Jack Jones)
 - **Instagram**: @prodbyjlib
-- **TikTok**: _(handle or "—")_
-- **YouTube**: _(handle or "—")_
-- **X / other**: _(handle or "—")_
+- **TikTok**: — (not provided yet; ask before putting any TikTok handle on screen)
+- **YouTube**: — (not provided yet)
+- **X / other**: — (not provided yet)
 
 When putting handles on-screen (lower-thirds, outros, end-cards), use the platform-appropriate handle.
 
@@ -41,7 +37,7 @@ When putting handles on-screen (lower-thirds, outros, end-cards), use the platfo
 
 ## Brand identity
 
-_(Colors, fonts, logo. Often a blank slate at the start — `assets/brand-tokens.css` fills in over time. Set initial values during /setup.)_
+Default dark palette with a mint-green accent (matches the FL Studio notes and playhead in your edits) and system fonts, set during /setup on 2026-10-19. Values live in `assets/brand-tokens.css`; change them any time. No logo yet.
 
 ## Inspiration creators
 
