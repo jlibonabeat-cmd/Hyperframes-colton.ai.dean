@@ -2,7 +2,7 @@
 <!-- ^ Leave this marker until /setup is complete. It tells Claude to greet a new user
      and run onboarding before any video work. The setup skill removes it when finished. -->
 
-# Creator Profile — _(your name)_
+# Creator Profile — prodbyjlib (Jack Jones)
 
 Your identity, positioning, and workflow for video work in this workspace. **Read this before every video task** (alongside `PREFERENCES.md`). Use it for on-screen text, niche framing, and workflow assumptions.
 
@@ -10,8 +10,8 @@ Your identity, positioning, and workflow for video work in this workspace. **Rea
 
 ## Identity
 
-- **Name on-screen**: _(your display name)_
-- **Instagram**: _(@handle or "—")_
+- **Name on-screen**: prodbyjlib (producer alias; real name Jack Jones)
+- **Instagram**: @prodbyjlib
 - **TikTok**: _(handle or "—")_
 - **YouTube**: _(handle or "—")_
 - **X / other**: _(handle or "—")_
@@ -24,7 +24,7 @@ When putting handles on-screen (lower-thirds, outros, end-cards), use the platfo
 
 ## Content niche
 
-_(What you make videos about — e.g. AI tools, fitness, cooking, finance, comedy. Set during /setup. When planning a new video, the assistant assumes this niche unless told otherwise.)_
+**Music production** — music producer posting as @prodbyjlib. When planning a new video, assume this niche unless told otherwise.
 
 ## On-camera mix
 
