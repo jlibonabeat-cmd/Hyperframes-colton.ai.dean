@@ -40,15 +40,17 @@ _(preferred / avoid — populated by /feedback over time)_
 _(music vibe, voiceover style, SFX, mix — populated by /feedback over time)_
 
 - Visuals are driven by my own beat: derive onset times and BPM from the actual track and place hits on them. Never sync to a fixed clock. (2026-10-19)
+- Screen-recording footage must be genuinely time-synced to what is playing: the 808s, snares and hi-hats on screen land exactly when heard (like my Glide and Don't Tell Em edits). Use the DAW's own transport clock in the recording to align, never random cuts. (2026-10-19)
 
 ## Brand
 
 _(logo treatment, hashtags, handles, brand-tokens overrides — populated by /feedback over time)_
 
-- _no rules captured yet_
+- No on-screen text on beat edits: no @handle, no title card, no sample/instrument labels (KICK, SNARE...). My Glide / Don't Tell Em edits have none. (2026-10-19)
 
 ## Avoid
 
 _(anti-patterns to never repeat — populated by /feedback over time)_
 
-- _no rules captured yet_
+- Never build a beat edit without me (face-cam) in it. (2026-10-19)
+- Never cut screen recordings together randomly or label them with text. (2026-10-19)
