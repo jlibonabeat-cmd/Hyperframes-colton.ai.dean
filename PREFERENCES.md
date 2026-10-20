@@ -33,6 +33,7 @@ _(style, color, sync tightness, word-by-word vs. phrase chunks — populated by 
 _(preferred / avoid — populated by /feedback over time)_
 
 - Effects should be syncopated with my beats (on kicks, snares and off-beat hats), similar to @jsewellbeats. (2026-10-19)
+- Calm it down: no pulse zooms, no drifting/unnatural zooms, no camera shake, no whip blur on cuts. Hold a steady crop per shot. Cuts about once per bar in drops (~1.3s), every 2 bars in breakdowns; fast flicking (~0.6s shots) felt jarring and disengaging. (2026-10-20, Fast Lane v3 feedback, worst around 0:11-0:18)
 - Keep the glitch / fisheye / shatter finales and 1-frame flash inserts from my own edits (Glide, Don't Tell Em). (2026-10-19, inferred from the edits the user called their style)
 
 ## Audio
