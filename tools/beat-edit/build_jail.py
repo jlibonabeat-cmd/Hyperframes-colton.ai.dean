@@ -31,7 +31,7 @@ DIV = 3                              # half-height of the mint divider
 MINT = (160, 230, 46)                # BGR
 SRC_W, SRC_H = 1920, 1080
 FACE_W, FACE_H = 1080, 1920
-FACE_T0 = 1.0                        # face_proxy time at video t=0 (proxy starts 12 s into the phone clip)
+FACE_SEGS = [(3.6, 9.0), (24.8, 30.4), (15.8, 19.2), (1.4, 3.0), (39.8, 42.3)]   # face_full.mp4 seconds, looking at the screen
 FACE_Y0 = 520                        # top of the 800-px face crop in the 1080x1920 proxy
 
 out_path = sys.argv[1]
@@ -54,15 +54,18 @@ V = {
     "SNARE_A": dict(clip="snare_a.mp4", inst="SNARE", kind="roll", split_only=True, segs=[(1.1, 7.9, 20.854)], cy=560, h=600),
     "SNARE_M": dict(clip="snare_main.mp4", inst="SNARE", kind="roll", segs=[(9.5, 19.3, 12.350)], cy=560, h=600),
     "808A": dict(clip="s808.mp4", inst="808", kind="roll", split_only=True, segs=[(4.9, 14.5, 28.930)], cy=545, h=600),
-    "808B": dict(clip="s808b.mp4", inst="808", kind="roll", split_only=True, fit=(490, 380, 1405, 560), segs=[(3.1, 8.5, 35.234)], cy=560, h=600),
+    "808B": dict(clip="s808b.mp4", inst="808", kind="roll", split_only=True, hs=700, segs=[(3.1, 8.5, 35.234)], cy=560, h=600),
     "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(7.6, 18.5, 25.400)], cy=570, h=880, fx=1010),
 }
 
 
+PIC_LEAD = 0.02                      # OBS picture runs ~20 ms ahead of its own audio (measured on snare_main)
+
+
 def coverage(view, s0, s1):
     for (a, b, D) in V[view]["segs"]:
-        if s0 - D >= a and s1 - D <= b:
-            return s0 - D
+        if s0 - D - PIC_LEAD >= a and s1 - D - PIC_LEAD <= b:
+            return s0 - D - PIC_LEAD
     return None
 
 
@@ -85,9 +88,17 @@ def act(inst, t0, t1):
 
 # ----------------------------------------------------------------------------- shot plan
 # cut points in bars relative to the start; 2-bar holds at the top, mid-drop and late drop
-CUT_BARS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20]
-FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_M"), 2: ("full", "HAT"), 3: ("full", "OPENHAT"),
-         4: ("face", "SNARE_M"), 5: ("full", "MACRO"), 6: ("full", "SNARE_M")}   # retention: 3 changes in the first 4 s
+CUT_BARS = [0, 1, 1.75, 3, 3.75, 5, 5.75, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20]
+# audited frame-by-frame at every heard hit:
+#  SNARE_M shows only the main backbeat -> each snare shot ends on beat 4 (".75"), before the other snare/clap layers;
+#    bar 23 excluded (backbeat note moved in the recording)
+#  HAT roll matches heard hats; OPENHAT / SNARE_A have heard hits with no note on screen -> not used
+#  808A matches (bars 26 + 28 have moving notes; later bars are one held note); 808B ("adding 808s part 2") matches within
+#    ~2 frames in bars 30 + 32 only (bars 29 + 31 have a heard 808 with no note) ; MACRO / MIXER = whole song, always in sync
+FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_M"), 1.75: ("full", "HAT"), 3: ("face", "SNARE_M"),
+         3.75: ("full", "MACRO"), 5: ("full", "SNARE_M"), 5.75: ("full", "MACRO"), 7: ("face", "MACRO"),
+         8: ("full", "MACRO"), 9: ("face", "808A"), 10: ("full", "MIXER"), 11: ("face", "808A"), 12: ("full", "MACRO"),
+         13: ("face", "808B"), 14: ("full", "MIXER"), 15: ("face", "808B"), 16: ("full", "MACRO_W"), 18: ("face", "MACRO")}
 DROP_J = 8                                   # bar 25 = the drop (bar 24 is the silent bar)
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -133,6 +144,16 @@ for i in range(len(CUT_BARS) - 1):
     used[V[vn]["clip"]] = used.get(V[vn]["clip"], 0) + 1
     since_face = 0 if lay == "face" else since_face + 1
 shots[-1]["n1"] = NF
+fq = [list(x) for x in FACE_SEGS]
+for s_ in sorted([x for x in shots if x["layout"] == "face"], key=lambda x: -(x["n1"] - x["n0"])):
+    need = (s_["n1"] - s_["n0"]) / FPS + 0.1
+    fits = [seg for seg in fq if seg[1] - seg[0] >= need]
+    if fits:
+        seg = min(fits, key=lambda g: (g[1] - g[0]) - need)       # best fit
+        s_["face_t"] = seg[0]
+        seg[0] += need
+    else:
+        raise SystemExit(f"not enough clean face footage for shot at {s_['t0']:.2f}")
 
 # zoom moves (never below 1.0 so the crop never runs out of picture):
 #   impact  : opens zoomed in and snaps out (1.25 -> 1.0 in ~10 frames, zoom-blurred), then a slow push
@@ -291,7 +312,7 @@ def warp(src, rect, size):
 
 
 def view_rect(v, x, aspect, lead=0.3):
-    ch = 900 if aspect < 0.7 else (v["h"] if v["kind"] == "fixed" and "fx" in v else 780)
+    ch = 900 if aspect < 0.7 else (v["h"] if v["kind"] == "fixed" and "fx" in v else v.get("hs", 780))
     cw = ch * aspect
     xmin = 500 if v["kind"] == "roll" else 745
     if v["kind"] == "fixed":
@@ -368,7 +389,7 @@ for s in shots:
     k = f1 - f0
     v = V[s["view"]]
     rd = reader(f"{HERE}/{v['clip']}", s["tau"] + off, k, SRC_W, SRC_H)
-    frd = reader(f"{HERE}/face_proxy.mp4", FACE_T0 + f0 / FPS, k, FACE_W, FACE_H) if s["layout"] == "face" else None
+    frd = reader(f"{HERE}/face_full.mp4", s["face_t"] + off, k, FACE_W, FACE_H) if s["layout"] == "face" else None
     st = {}
     lastx = [None]
     for n in range(f0, f1):
@@ -421,9 +442,9 @@ for s in shots:
 enc.stdin.close()
 enc.wait()
 json.dump({"start": START, "dur": DUR, "jolts": jolts, "whips": sorted(whip_in),
-           "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "cands")} for s in shots]},
+           "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "face_t")} for s in shots]},
           open(out_path.rsplit(".", 1)[0] + "_events.json", "w"), indent=1)
 print("frames", frames_done, "shots", len(shots))
 for s in shots:
-    print(f"{s['t0']:6.2f} bar{START_BAR + s['j0']:3d} {s['layout']:5s} {s['view']:8s} zoom={s.get('zm')} cands={s['cands']}")
+    print(f"{s['t0']:6.2f} bar{START_BAR + s['j0']:5.2f} {s['layout']:5s} {s['view']:8s} zoom={s.get('zm')} cands={s['cands']}")
 print("jolts", [(round(t, 2), a) for t, a in jolts], "whips", sorted(whip_in))

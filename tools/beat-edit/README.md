@@ -50,3 +50,10 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 - **Use the audio cross-correlation offset, not the clock OCR.** OCR reads about 40 ms late (display latency), and the audio offset keeps OBS's own picture/sound relationship. Check it with `verify2.py`: playhead vs note at each master onset should be within about 1 frame.
 - **Skip clips where you re-draw one note over and over.** They never read as in time.
 - **"Putting in" clips need the whole pattern in frame** (`fit` mode: pattern area scaled to the panel width on a blurred fill), otherwise the notes being placed fall outside the crop.
+
+### JAIL v4 QA routine (do this before sending anything)
+
+1. **Face-cam:** label the whole phone clip at 2–4 fps and keep only stretches where Jack looks at the screen. No eye contact with the lens and no reaching for the phone (`FACE_SEGS`).
+2. **Sync per shot:** for every piano-roll shot, render the exact output frames at each heard hit (from `hits.json`) and check that a note sits on the playhead in each one. A recording can be in sync but not show the part you hear: the main-snare roll only has the backbeat, so cut away before the other snare layers come in.
+3. **Crops:** never letterbox or fit-to-width. Every view fills its panel.
+4. **Every frame:** tile all frames (15x5 per sheet) and look at all of them before sending.
