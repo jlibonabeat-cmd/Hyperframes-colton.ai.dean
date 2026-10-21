@@ -85,7 +85,8 @@ def act(inst, t0, t1):
 
 # ----------------------------------------------------------------------------- shot plan
 # cut points in bars relative to the start; 2-bar holds at the top, mid-drop and late drop
-CUT_BARS = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 20]
+CUT_BARS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 20]
+FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_A"), 2: ("full", "HAT")}   # retention: 3 changes in the first 4 s
 DROP_J = 8                                   # bar 25 = the drop (bar 24 is the silent bar)
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -95,9 +96,11 @@ for i in range(len(CUT_BARS) - 1):
     t0, t1 = j0 * BAR, j1 * BAR
     s0, s1 = START + t0, START + t1
     # layout: face every <=3 shots, never twice in a row; silent bar + last shot = face; drop downbeat = full DAW
-    if j0 == 7 or j1 == NBARS:
+    if j0 in FORCE:
+        lay = FORCE[j0][0]
+    elif j0 == 7 or j1 == NBARS:
         lay = "face"
-    elif j0 == DROP_J or j0 == 16:
+    elif j0 == DROP_J or j0 == 16 or j1 == 7:
         lay = "full"
     elif last_layout == "face":
         lay = "full"
@@ -124,13 +127,84 @@ for i in range(len(CUT_BARS) - 1):
             sc -= 0.3
         cands.append((sc, vn))
     cands.sort(reverse=True)
-    vn = cands[0][1]
+    vn = FORCE[j0][1] if j0 in FORCE else cands[0][1]
     shots.append(dict(idx=i, j0=j0, j1=j1, t0=t0, t1=t1, n0=fr(t0), n1=fr(t1), layout=lay, view=vn,
                       tau=coverage(vn, s0, s1 + 0.05), cands=[c[1] for c in cands]))
     last_view, last_layout = vn, lay
     used[V[vn]["clip"]] = used.get(V[vn]["clip"], 0) + 1
     since_face = 0 if lay == "face" else since_face + 1
 shots[-1]["n1"] = NF
+
+# zoom moves (never below 1.0 so the crop never runs out of picture):
+#   impact  : opens zoomed in and snaps out (1.25 -> 1.0 in ~10 frames, zoom-blurred), then a slow push
+#   mixer   : slow push in + a punch on every bar downbeat (the meters alone are dull)
+#   push/pull: slow 7% zoom in or out across the shot (occasional, on DAW-only shots)
+pp = 0
+for s in shots:
+    v = V[s["view"]]
+    if s["idx"] == 0:
+        s["zm"] = "impact"
+    elif s["view"] == "MIXER":
+        s["zm"] = "mixer"
+    elif s["layout"] == "full" and (s["j1"] - s["j0"] >= 2 or s["idx"] % 2 == 0) and s["j0"] != DROP_J:
+        s["zm"] = "push" if pp % 2 == 0 else "pull"
+        pp += 1
+    else:
+        s["zm"] = None
+
+
+def smooth(u):
+    u = min(max(u, 0.0), 1.0)
+    return u * u * (3 - 2 * u)
+
+
+def zoom_at(s, n):
+    u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
+    k = n - s["n0"]
+    zm = s.get("zm")
+    if zm == "impact":
+        return 1.0 + 0.25 * (1 - smooth(k / 10.0)) ** 2 + 0.06 * smooth(u)
+    if zm == "mixer":
+        z = 1.0 + 0.14 * smooth(u)
+        for j in range(s["j0"], s["j1"]):
+            d = n - fr(j * BAR)
+            if 0 <= d < 12:
+                z += 0.07 * math.exp(-d / 3.5)
+        return z
+    if zm == "push":
+        return 1.0 + 0.07 * smooth(u)
+    if zm == "pull":
+        return 1.07 - 0.07 * smooth(u)
+    return 1.0
+
+
+def zoomed(r, z, v, x):
+    x0, y0, cw, ch = r
+    if z <= 1.0005:
+        return r
+    if "ph" in v:
+        fx = v["ph"]
+    elif "fxl" in v:
+        fx = x0 + 0.08 * cw
+    elif x is not None and x0 <= x <= x0 + cw:
+        fx = x
+    else:
+        fx = x0 + cw / 2
+    fy = y0 + ch / 2
+    return (fx - (fx - x0) / z, fy - (fy - y0) / z, cw / z, ch / z)
+
+
+def panel(src, r, size, v, x, z, zprev):
+    """warp the DAW crop at zoom z; if the zoom jumped this frame, average several zoom steps (zoom blur)."""
+    if abs(z - zprev) < 0.012:
+        return warp(src, zoomed(r, z, v, x), size)
+    acc = np.zeros((size[1], size[0], 3), np.float32)
+    steps = 7
+    for i in range(steps):
+        zi = zprev + (z - zprev) * i / (steps - 1)
+        acc += warp(src, zoomed(r, zi, v, x), size)
+    return (acc / steps).astype(np.uint8)
+
 
 # ----------------------------------------------------------------------------- motion events
 # whips: drop + every third cut (not into the silent bar, not into the last shot)
@@ -278,15 +352,17 @@ for s in shots:
             lastx[0] = x
         else:
             x = lastx[0]
+        z = zoom_at(s, n)
+        zp = zoom_at(s, n - 1) if n > s["n0"] else (1.45 if s.get("zm") == "impact" else z)
         if s["layout"] == "full":
-            img = warp(src, held(st, v, x, W / H), (W, H))
+            img = panel(src, held(st, v, x, W / H), (W, H), v, x, z, zp)
             dy0, dy1 = 0, H
         else:
             img = np.empty((H, W, 3), np.uint8)
             fsrc = next(frd)
             img[:FH] = fsrc[FACE_Y0:FACE_Y0 + FH]
             bh = H - FH
-            img[FH:] = warp(src, held(st, v, x, W / bh), (W, bh))
+            img[FH:] = panel(src, held(st, v, x, W / bh), (W, bh), v, x, z, zp)
             dy0, dy1 = FH + DIV, H
         # jolt: DAW panel only, blurred along the movement of this frame
         if abs(jx[n]) + abs(jy[n]) > 0.5 or (n > 0 and abs(jx[n - 1]) + abs(jy[n - 1]) > 0.5):
@@ -311,9 +387,9 @@ for s in shots:
 enc.stdin.close()
 enc.wait()
 json.dump({"start": START, "dur": DUR, "jolts": jolts, "whips": sorted(whip_in),
-           "shots": [{k_: s[k_] for k_ in ("t0", "t1", "layout", "view", "tau", "cands")} for s in shots]},
+           "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "cands")} for s in shots]},
           open(out_path.rsplit(".", 1)[0] + "_events.json", "w"), indent=1)
 print("frames", frames_done, "shots", len(shots))
 for s in shots:
-    print(f"{s['t0']:6.2f} bar{START_BAR + s['j0']:3d} {s['layout']:5s} {s['view']:8s} cands={s['cands']}")
+    print(f"{s['t0']:6.2f} bar{START_BAR + s['j0']:3d} {s['layout']:5s} {s['view']:8s} zoom={s.get('zm')} cands={s['cands']}")
 print("jolts", [(round(t, 2), a) for t, a in jolts], "whips", sorted(whip_in))

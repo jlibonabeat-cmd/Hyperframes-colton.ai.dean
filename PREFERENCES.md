@@ -22,6 +22,12 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 
 - Edits should "jump": crisp, fast cuts on the beat, aiming for about one visual event per second with short bursts on drops, like @jsewellbeats. Avoid holding one view longer than ~3 s unless it is the talking-head moment. (2026-10-19)
 
+## Pacing & retention (from JAIL feedback, 2026-10-21)
+
+- Retention matters most at the start: 3 changes in the first ~4 s. Example order: macro/arrangement shot → me + a "putting something in" recording → the first element (e.g. hats).
+- Mixer shots are boring on their own: give them a zoom punch on bar downbeats (with zoom blur) plus a slow push.
+- Occasional slow zoom in/out (~7%) on screen recordings and macro shots is good. Occasional, not every shot, and never the old constant pulse/drift.
+
 ## Captions
 
 _(style, color, sync tightness, word-by-word vs. phrase chunks — populated by /feedback over time)_
