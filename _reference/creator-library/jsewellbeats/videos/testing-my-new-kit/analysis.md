@@ -13,3 +13,11 @@ Source: OBS screen recording of the reel in Instagram web (reel window x 400–8
 - **Whip transitions on some cuts:** 1–2 frames (at 30 fps) of strong horizontal motion blur, with the outgoing frame smearing out and the incoming one smearing in from the side. There's a bright streak at the edge and no zoom.
 - **Jolts on hits:** inside a shot the DAW panel snaps a short distance sideways or vertically with motion blur on a kick or 808 hit, then settles within a few frames. The face panel stays still.
 - No pulse zooms, no constant shake.
+
+## More reels studied 2026-10-21 (two OBS recordings from Jack, frame by frame at 6 fps)
+
+- **Camera rides the playhead:** tight macro on 1–2 notes with a thin cyan playhead. The view pans or tracks with it, so each note hit lands centre frame.
+- **Tilted views:** the playlist, waveforms and plugin windows are rotated about 5–10° and slowly rotate and push. It reads like a handheld camera.
+- **Transition variety:** horizontal motion-blur whips, vertical streak whips, zoom-blur punches (scale in with radial blur, then settle) and hard cuts. Never the same twice in a row.
+- **Plugin cutaways:** about 1 s each on Ozone (EQ and dynamics meters), OTT and Fruity Soft Clipper (meters moving), usually with a zoom or whip in.
+- **Face:** wide shot on top, about 30–40% of the frame, looking at the screen. He appears every 2–4 shots.

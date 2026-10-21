@@ -57,3 +57,9 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 2. **Sync per shot:** for every piano-roll shot, render the exact output frames at each heard hit (from `hits.json`) and check that a note sits on the playhead in each one. A recording can be in sync but not show the part you hear: the main-snare roll only has the backbeat, so cut away before the other snare layers come in.
 3. **Crops:** never letterbox or fit-to-width. Every view fills its panel.
 4. **Every frame:** tile all frames (15x5 per sheet) and look at all of them before sending.
+
+### JAIL v5
+
+- Hat recording check: compare the recording's own hat rolls (shifted by D) with the master's rolls. The hat clip has a roll at song 25.31 that the master doesn't have (it was edited later), so the hat shot is limited to 24.21–25.23, where every heard hat has its note on screen.
+- Camera moves: `track` (1.55× macro riding the playhead), `tilt` (playlist rotated ±7°→±3° with a slow push, clamped inside the crop), `push`/`pull` on split shots, `mixer` punches, and `impact` on the opener.
+- Transitions cycle whipH / zoom / hard / whipV (motion-blurred). The drop is a zoom punch with a soft flash, and the cut into the silent bar is hard.

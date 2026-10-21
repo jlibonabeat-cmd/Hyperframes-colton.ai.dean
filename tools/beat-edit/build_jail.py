@@ -88,17 +88,17 @@ def act(inst, t0, t1):
 
 # ----------------------------------------------------------------------------- shot plan
 # cut points in bars relative to the start; 2-bar holds at the top, mid-drop and late drop
-CUT_BARS = [0, 1, 1.75, 3, 3.75, 5, 5.75, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20]
+CUT_BARS = [0, 1, 1.75, 2.5, 3, 3.75, 5, 5.75, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20]
 # audited frame-by-frame at every heard hit:
-#  SNARE_M shows only the main backbeat -> each snare shot ends on beat 4 (".75"), before the other snare/clap layers;
-#    bar 23 excluded (backbeat note moved in the recording)
-#  HAT roll matches heard hats; OPENHAT / SNARE_A have heard hits with no note on screen -> not used
-#  808A matches (bars 26 + 28 have moving notes; later bars are one held note); 808B ("adding 808s part 2") matches within
-#    ~2 frames in bars 30 + 32 only (bars 29 + 31 have a heard 808 with no note) ; MACRO / MIXER = whole song, always in sync
-FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_M"), 1.75: ("full", "HAT"), 3: ("face", "SNARE_M"),
-         3.75: ("full", "MACRO"), 5: ("full", "SNARE_M"), 5.75: ("full", "MACRO"), 7: ("face", "MACRO"),
-         8: ("full", "MACRO"), 9: ("face", "808A"), 10: ("full", "MIXER"), 11: ("face", "808A"), 12: ("full", "MACRO"),
-         13: ("face", "808B"), 14: ("full", "MIXER"), 15: ("face", "808B"), 16: ("full", "MACRO_W"), 18: ("face", "MACRO")}
+#  SNARE_M shows only the main backbeat -> each snare shot ends on beat 4 (".75"); bar 23 excluded
+#  HAT recording has a roll at song 25.31 that is NOT in the master (master roll is at 26.98) -> hat shot only
+#    bar 18 beat 3 -> bar 19 beat 2 (song 24.21-25.23), where every heard hat/roll has its note on screen
+#  808A: bars 26 + 28; 808B: bars 30 + 32; MACRO / MIXER = whole song, always in sync
+FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_M"), 1.75: ("full", "HAT"), 2.5: ("full", "MACRO"),
+         3: ("face", "SNARE_M"), 3.75: ("full", "MACRO"), 5: ("full", "SNARE_M"), 5.75: ("full", "MACRO"),
+         7: ("face", "MACRO"), 8: ("full", "MACRO"), 9: ("face", "808A"), 10: ("full", "MIXER"), 11: ("face", "808A"),
+         12: ("full", "MACRO"), 13: ("face", "808B"), 14: ("full", "MIXER"), 15: ("face", "808B"), 16: ("full", "MACRO_W"),
+         18: ("face", "MACRO")}
 DROP_J = 8                                   # bar 25 = the drop (bar 24 is the silent bar)
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -159,14 +159,23 @@ for s_ in sorted([x for x in shots if x["layout"] == "face"], key=lambda x: -(x[
 #   impact  : opens zoomed in and snaps out (1.25 -> 1.0 in ~10 frames, zoom-blurred), then a slow push
 #   mixer   : slow push in + a punch on every bar downbeat (the meters alone are dull)
 #   push/pull: slow 7% zoom in or out across the shot (occasional, on DAW-only shots)
+TILT_SIGN = [1, -1]
+nt = 0
 pp = 0
 for s in shots:
     v = V[s["view"]]
+    s["theta"] = 0.0
     if s["idx"] == 0:
         s["zm"] = "impact"
     elif s["view"] == "MIXER":
         s["zm"] = "mixer"
-    elif s["layout"] == "full" and (s["j1"] - s["j0"] >= 2 or s["idx"] % 2 == 0) and s["j0"] != DROP_J:
+    elif s["layout"] == "full" and v["kind"] == "roll" or s["view"] == "HAT" and s["layout"] == "full":
+        s["zm"] = "track"                       # tight macro, camera follows the playhead
+    elif s["layout"] == "full" and s["view"] in ("MACRO", "MACRO_W") and s["j0"] not in (DROP_J,):
+        s["zm"] = "tilt"                        # tilted playlist, slow rotate + push (J Sewell)
+        s["theta"] = TILT_SIGN[nt % 2]
+        nt += 1
+    elif s["layout"] == "face":
         s["zm"] = "push" if pp % 2 == 0 else "pull"
         pp += 1
     else:
@@ -191,11 +200,22 @@ def zoom_at(s, n):
             if 0 <= d < 12:
                 z += 0.07 * math.exp(-d / 3.5)
         return z
+    if zm == "track":
+        return 1.55 + 0.08 * smooth(u)
+    if zm == "tilt":
+        return 1.26 + 0.10 * smooth(u)
     if zm == "push":
         return 1.0 + 0.07 * smooth(u)
     if zm == "pull":
         return 1.07 - 0.07 * smooth(u)
     return 1.0
+
+
+def theta_at(s, n):
+    if s.get("zm") != "tilt":
+        return 0.0
+    u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
+    return s["theta"] * (7.0 - 4.0 * smooth(u))
 
 
 def zoomed(r, z, v, x):
@@ -228,28 +248,61 @@ def fit_panel(src, v, size):
     return bg
 
 
-def panel(src, r, size, v, x, z, zprev):
-    if v.get("fit"):
-        return fit_panel(src, v, size)
-    """warp the DAW crop at zoom z; if the zoom jumped this frame, average several zoom steps (zoom blur)."""
-    if abs(z - zprev) < 0.012:
-        return warp(src, zoomed(r, z, v, x), size)
+def cam(src, r, z, th, v, x, size):
+    """crop rect r zoomed by z (about the play position) and rotated by th degrees, kept inside r."""
+    zx0, zy0, zw, zh = zoomed(r, z, v, x)
+    cx, cy = zx0 + zw / 2, zy0 + zh / 2
+    if abs(th) > 0.01:
+        c, sn = math.cos(math.radians(th)), abs(math.sin(math.radians(th)))
+        bw, bh = zw * c + zh * sn, zw * sn + zh * c
+        x0, y0, cw, ch = r
+        cx = min(max(cx, x0 + bw / 2), x0 + cw - bw / 2)
+        cy = min(max(cy, y0 + bh / 2), y0 + ch - bh / 2)
+    sc = size[0] / zw
+    a = math.radians(th)
+    R = np.array([[math.cos(a), -math.sin(a)], [math.sin(a), math.cos(a)]]) * sc
+    t = np.array([size[0] / 2, size[1] / 2]) - R @ np.array([cx, cy])
+    M = np.float32(np.hstack([R, t[:, None]]))
+    return cv2.warpAffine(src, M, size, flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+
+
+def panel(src, r, size, v, x, z, zprev, th=0.0, thprev=0.0):
+    """DAW panel; if the camera jumped this frame (zoom/rotation), average the in-between positions (motion blur)."""
+    if abs(z - zprev) < 0.012 and abs(th - thprev) < 0.4:
+        return cam(src, r, z, th, v, x, size)
     acc = np.zeros((size[1], size[0], 3), np.float32)
     steps = 7
     for i in range(steps):
-        zi = zprev + (z - zprev) * i / (steps - 1)
-        acc += warp(src, zoomed(r, zi, v, x), size)
+        u = i / (steps - 1)
+        acc += cam(src, r, zprev + (z - zprev) * u, thprev + (th - thprev) * u, v, x, size)
     return (acc / steps).astype(np.uint8)
+
+
+def zoom_blur(img, z0, z1, samples=8):
+    """radial zoom blur of the whole frame: average of scalings about the centre from z0 to z1."""
+    h_, w_ = img.shape[:2]
+    acc = np.zeros(img.shape, np.float32)
+    for i in range(samples):
+        zz = z0 + (z1 - z0) * i / (samples - 1)
+        M = np.float32([[zz, 0, (1 - zz) * w_ / 2], [0, zz, (1 - zz) * h_ / 2]])
+        acc += cv2.warpAffine(img, M, (w_, h_), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    return (acc / samples).astype(np.uint8)
 
 
 # ----------------------------------------------------------------------------- motion events
 # whips: drop + every third cut (not into the silent bar, not into the last shot)
-whip_in = set()
+TRANS_CYCLE = ["whipH", "zoom", "hard", "whipV", "whipH", "hard", "zoom", "whipV"]
+trans = {}
+k_ = 0
 for s in shots:
     if s["idx"] == 0 or s["j0"] == 7:
+        continue                                   # into the silent bar: hard cut on the drop-out
+    if s["j0"] == DROP_J:
+        trans[s["n0"]] = "zoom"
         continue
-    if s["j0"] == DROP_J or s["idx"] % 3 == 1:
-        whip_in.add(s["n0"])
+    trans[s["n0"]] = TRANS_CYCLE[k_ % len(TRANS_CYCLE)]
+    k_ += 1
+whip_in = {n for n, t in trans.items() if t != "hard"}
 # jolts: rare — the drop downbeat and the 3 strongest 808 hits in the drop that are not on a cut
 drop_t = DROP_J * BAR
 cand = [(s, t) for t, s in zip(kt, ks) if t > drop_t + 0.5 and t < DUR - 2 * BAR]
@@ -403,9 +456,19 @@ for s in shots:
             x = lastx[0]
         z = zoom_at(s, n)
         zp = zoom_at(s, n - 1) if n > s["n0"] else (1.45 if s.get("zm") == "impact" else z)
+        th = theta_at(s, n)
+        thp = theta_at(s, n - 1) if n > s["n0"] else th
+        if s.get("zm") == "track" and x is not None:
+            xs_ = st.get("xs")
+            xs_ = x if xs_ is None else 0.7 * xs_ + 0.3 * x
+            st["xs"] = xs_
+            st["r"] = None
         if s["layout"] == "full":
-            r = held(st, v, x, W / H)
-            img = panel(src, r, (W, H), v, x, z, zp)
+            if s.get("zm") == "track" and v["kind"] == "roll" and x is not None:
+                r = view_rect(v, st["xs"], W / H, lead=0.42)     # camera rides the playhead
+            else:
+                r = held(st, v, x, W / H)
+            img = panel(src, r, (W, H), v, x, z, zp, th, thp)
             if v.get("draw_ph"):
                 draw_playhead(img, 0, H, zoomed(r, z, v, x), v, (W, H))
             dy0, dy1 = 0, H
@@ -429,19 +492,34 @@ for s in shots:
         if s["layout"] == "face":
             img[FH - DIV:FH + DIV] = MINT
         # whips: outgoing frame streaks left, incoming frames streak in from the right
-        if n in whip_out:
-            img = motion_blur_path(img, 0, 0, -140, 0, 14)
-        elif n in whip_in:
-            img = motion_blur_path(img, 200, 0, 70, 0, 14)
-        elif n - 1 in whip_in:
-            img = motion_blur_path(img, 70, 0, 0, 0, 10)
+        tn = trans.get(n + 1)
+        ti = trans.get(n)
+        tp = trans.get(n - 1)
+        if tn == "whipH":
+            img = motion_blur_path(img, 0, 0, -160, 0, 14)
+        elif tn == "whipV":
+            img = motion_blur_path(img, 0, 0, 0, -220, 14)
+        elif tn == "zoom":
+            img = zoom_blur(img, 1.0, 1.35)
+        if ti == "whipH":
+            img = motion_blur_path(img, 220, 0, 80, 0, 14)
+        elif ti == "whipV":
+            img = motion_blur_path(img, 0, 300, 0, 100, 14)
+        elif ti == "zoom":
+            img = zoom_blur(img, 1.35, 1.12)
+        if tp == "whipH":
+            img = motion_blur_path(img, 80, 0, 0, 0, 10)
+        elif tp == "whipV":
+            img = motion_blur_path(img, 0, 100, 0, 0, 10)
+        elif tp == "zoom":
+            img = zoom_blur(img, 1.12, 1.0)
         if flash[n] > 0:
             img = cv2.addWeighted(img, 1 - flash[n], np.full_like(img, 255), flash[n], 0)
         enc.stdin.write(np.ascontiguousarray(img).tobytes())
         frames_done += 1
 enc.stdin.close()
 enc.wait()
-json.dump({"start": START, "dur": DUR, "jolts": jolts, "whips": sorted(whip_in),
+json.dump({"start": START, "dur": DUR, "jolts": jolts, "whips": sorted(whip_in), "trans": {str(k): t for k, t in sorted(trans.items())},
            "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "face_t")} for s in shots]},
           open(out_path.rsplit(".", 1)[0] + "_events.json", "w"), indent=1)
 print("frames", frames_done, "shots", len(shots))

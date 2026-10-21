@@ -28,6 +28,8 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 - Every DAW shot must visibly play in time: notes hit the playhead exactly when heard. When I'm placing notes, the whole pattern must be in frame so you see each note land. (2026-10-21)
 - Never use face-cam moments where I look into the lens or break the 4th wall. Only use moments where I'm working on the screen. (2026-10-21)
 - Never letterbox a screen recording (no black bars). It must fill its panel. (2026-10-21)
+- More dynamic movement like @jsewellbeats: camera tracking the playhead on tight piano-roll shots, tilted (5–10°) slowly rotating playlist shots, and a mix of horizontal whips, vertical whips, zoom-blur punches and hard cuts. All moves must carry motion blur. (2026-10-21)
+- Plugin cutaways (Ozone, OTT, Soft Clipper) are welcome, but only from real screen recordings of me using them. (2026-10-21)
 - Mixer shots are boring on their own: give them a zoom punch on bar downbeats (with zoom blur) plus a slow push.
 - Occasional slow zoom in/out (~7%) on screen recordings and macro shots is good. Occasional, not every shot, and never the old constant pulse/drift.
 
