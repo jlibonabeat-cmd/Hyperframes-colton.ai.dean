@@ -32,3 +32,14 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 - Ending: clean cut on the bar line (0.12 s audio fade) so the reel loops into the opening drop. No fisheye or glitch outro on a dead frame.
 
 `example-fast-lane/` holds the Fast Lane data (`segs2.json`, `hits.json`, face `info.json`, final shot list) as a worked example.
+
+## JAIL (Oct 2026): the newer, cleaner pipeline. Start here next time
+
+`build_jail.py` is a from-scratch renderer in the @pandoraxx918 / @jsewellbeats style, and the better template. Steps:
+
+1. `jail_clock.py <clips...>`: OCR FL's clock (crop `150:48:904:6` for this OBS layout) and group the readings into playback runs (song = clip + D). OCR misreads 7→1 sometimes, which splits runs. Merge runs with the same D.
+2. `jail_xcorr.py <clips...>`: refine each run's D by cross-correlating the recording's own audio with the master (correlation 0.9–0.99). Use D = mean(clock, audio). The recordings' audio is only for syncing; the master mp3 is the output audio.
+3. `jail_playhead.py`: map where each piano roll actually shows a playhead. A pattern's playhead only appears while that pattern is playing in the song; outside that, the notes sit still and the shot looks dead. Trim segments to those ranges.
+4. Note the view types: `roll` (playhead moves across the piano roll, the crop follows it), `fixed` + `ph` (playlist in follow mode: the playhead is parked at x≈994 and the song scrolls under it), `fixed` + `fxl` (piano roll in smooth-follow: notes stream left and play at the keyboard edge), `fixed` + `fx` (mixer).
+5. The vertical phone face-cam (4K, rotated) is proxied to 1080x1920 and an 800-px band is cropped (FACE_Y0) for the top panel. It plays continuously across shots like a real camera.
+6. The shot plan is explicit cut bars (`CUT_BARS`). Face every ≤3 shots, never twice in a row, on the silent bar and on the last shot. Whips (multi-sample motion blur) on the drop and ~every third cut, plus a soft flash on the drop. 3 jolts max, motion-blurred along their path, on strong 808 hits away from cuts and outside the last 2 bars.
