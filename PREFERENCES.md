@@ -37,7 +37,9 @@ _(preferred / avoid — populated by /feedback over time)_
 - Wants the v4 calm format plus a little dynamism: occasional shakes and velocity shifts (quick push-in punch with eased release) on strong kick / bass hits only, used sparingly "here and there" like @jsewellbeats, not on every hit. (2026-10-20, Fast Lane v4 feedback: "closest one so far")
 - Face-cam must be zoomed out: face panel on top at ~40% of frame height, wide framing showing the room (like my Glide / Don't Tell Em edits and @jsewellbeats). Never full-frame face close-ups. When face + DAW share the frame, the DAW is the priority but I'm the brand. (2026-10-20)
 - Motion like @jsewellbeats: hard cuts most of the time, a short sideways motion-blur whip (1 frame out, 2 frames in) on some cuts, and small sideways/vertical jolts with motion blur on strong kick/808 hits — not zoom punches. (2026-10-20, studied from his "Testing my new kit" reel)
-- Keep the glitch / fisheye / shatter finales and 1-frame flash inserts from my own edits (Glide, Don't Tell Em). (2026-10-19, inferred from the edits the user called their style)
+- Kick/808 jolts must be clearly visible, not subtle (24–46 px was too little; 60–110 px works), roughly once a second in drops. (2026-10-21)
+- Outro: no fisheye/glitch finale on a frozen or face-only shot (Fast Lane v6 outro rejected). End clean on the bar line on a face + DAW shot so the reel loops. (2026-10-21, replaces the earlier "keep glitch finales" guess)
+- Hook idea from @pandoraxx918: real social-proof notifications (big producers following / liking) stacked in the first second, repeated at the end to loop. Only ever real notifications. (2026-10-21)
 
 ## Audio
 
