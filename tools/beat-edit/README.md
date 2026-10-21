@@ -1,0 +1,34 @@
+# Beat-edit pipeline (FL Studio screen recordings → 9:16 beat-synced reel)
+
+Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rendered frame by frame, not Hyperframes HTML. The skill `beat-sync-edit` describes when and how to run it. This file covers the mechanics.
+
+## Inputs (one working folder, set `BEAT_EDIT_DIR` or run from inside it)
+
+| File | What |
+|---|---|
+| `beat.mp3` | the beat (full track) |
+| `<name>.mp4` | silent OBS screen recordings of FL Studio, 1920x1080. The FL transport clock (B:S:T) must be visible top-centre |
+| `face/<name>.mp4` + `face/info.json` | face-cam clips. Raw face-cam is best; in Fast Lane they were cropped from the user's Glide / Don't Tell Em edits (1620x930) |
+| `segs2.json` | per clip: `[clip_a, clip_b, D, spread]` playback segments, where song_time = clip_time + D |
+| `hits.json` | kick / snare / hat onsets + strengths for the chosen window (`hits.py`) |
+
+## Steps
+
+1. **Clock OCR → song time.** `clockmap.py` OCRs FL's B:S:T clock every 0.4 s (`crop=138:52:893:2` for a 1920x1080 OBS capture; adjust if the layout differs). Seconds = ((B-1) + ((S-1) + T/24)/16) × 4 × 60/BPM. Steps are 1–16, ticks 0–23.
+2. **Segments.** Group consecutive readings where clip_time − song_time is constant: each run is a playback segment with offset D (use the median; drop OCR misreads). Re-check D with exact `ffmpeg -ss` reads (the `fps=` filter is off by ~0.17 s). Trim 0.1 s margins and cut segments around OBS windows, dialogs and view changes (look at the frames!). Write `segs2.json`.
+3. **Onsets.** `python3 -I hits.py <START> <DUR>` → `hits.json` (kick 35–130 Hz, snare 1.5–5 kHz, hat 7–16 kHz).
+4. **Configure `build_beat_edit.py`:** `START` / `DUR` (bar-aligned, where the recordings cover the song), the `V` views dict (clip, instrument, `roll` or `play`, segments, crop centre y and height), `PLAYHEAD_FALLBACK`, `FACE_CX` / `FACE_ORDER` / `FACE_START`.
+5. **Render:** `python3 -I build_beat_edit.py out/name.mp4 [t_from t_to]`. It writes `out/name_events.json` (shot list).
+6. **Review** frames (contact sheets plus frame-exact checks around jolts, whips and the ending) before showing anyone.
+
+## What the renderer does (v7 rules, from the user's feedback)
+
+- Every shot reads its recording at `clip_time = song_time − D`, so notes cross the playhead when heard. If no recording covers a stretch, it holds the nearest frame under the face (never a full-frame face).
+- Cuts: every bar in drops, every 2 bars in breakdowns, snapped to kick/snare onsets. Extra cuts at coverage edges. Same view twice in a row is merged into one shot.
+- Layouts: `full` (DAW), `face` (face panel 800 px of 1920, wide framing, DAW below), `dual` (two DAW views). Face appears at least every third shot, never twice in a row, and on the last shot.
+- Crops are held still per shot and only re-centre when the playhead reaches the edge. Zoom is fixed, with no drift.
+- Motion (@jsewellbeats style): hard cuts, a sideways motion-blur whip on about every third cut and on section changes, and jolts (60–110 px sideways or vertical snap with motion blur, settling over 5 frames) on strong kick/808 hits about once a second in drops and less in the breakdown. Only the DAW panel moves, not the face. Small 2–3% scale bump with each jolt.
+- No text, no labels, no handle. No shake on snares, no pulse zoom, no chroma flicker.
+- Ending: clean cut on the bar line (0.12 s audio fade) so the reel loops into the opening drop. No fisheye or glitch outro on a dead frame.
+
+`example-fast-lane/` holds the Fast Lane data (`segs2.json`, `hits.json`, face `info.json`, final shot list) as a worked example.

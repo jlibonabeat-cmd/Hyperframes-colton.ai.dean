@@ -28,23 +28,15 @@ The user already shares the layout language: split face-cam over FL Studio, full
 
 Takeaway: keep the user's finale effects (they are a strength), and add the density: tighten holds, add 1-2 mid-video bursts, and put smear transitions on the layout changes.
 
-## Rules for applying this to @prodbyjlib beats
+## Rules for applying this to @prodbyjlib beats (corrected after Fast Lane v1–v7 feedback, Oct 2026)
 
-These are the build-time rules; they override defaults but sit below `PREFERENCES.md`.
+These are the build-time rules. They override defaults but sit below `PREFERENCES.md`. The earlier draft (fast ~0.7 s cuts, 4–6% punch pulses on every kick, big glitch outro) was tested and **rejected** by the user as jarring, so don't bring it back.
 
-- **Measure the beat from the actual audio first.** Extract kick / snare / hat onset times and the BPM from the track, and place cuts and hits on those times (within about one frame), instead of on a fixed grid. Known tempos from the FL projects: Glide 140 BPM, Fast Lane 180 BPM F minor.
-- **Syncopate:** land hard layout cuts on kicks/snares, and put the small accents (a zoom nudge, a flash frame, a note highlight) on off-beat hats and ghost notes so the picture bounces against the rhythm rather than just following the downbeat.
-- **Punch pulses:** a 4-6% scale pop on each kick that settles in about 120-150 ms with an ease-out; keep it on the DAW/face layers, not on captions.
-- **Section changes get an effect, not a plain cut:** smear whip, light-leak or white flash for 1-2 frames, matching the user's existing flashes.
-- **Burst on drops:** 5-8 hits across a half bar; then breathe for a bar.
-- **Ends big:** distort / glitch / shatter in the last 1-2 s, as in the user's own edits.
-- **Face-cam optional per video** (user mixes face and faceless). Faceless versions use the DAW layouts only, with macro note shots doing the work of the face-cam cutaways.
-- **Never** hold a single layout for more than ~3 s unless it is the talking-head moment.
+- **Footage locked to the song:** read each FL recording at the song time it is showing (FL clock OCR), so notes cross the playhead when heard. Never cut screen recordings together randomly.
+- **Pacing:** about one cut per bar in drops (~1.3 s at 180 BPM) and every 2 bars in breakdowns. Cuts land on kick/snare onsets.
+- **Face:** split layout, face panel on top at ~40% with wide framing. Never full-frame face close-ups. Face appears regularly (at least every third shot) and ends the video.
+- **Motion:** hard cuts, plus a 1-frame-out / 2-frames-in horizontal motion-blur whip on about every third cut and on section changes. **Jolts** on strong kick/808 hits (60–110 px snap with motion blur, settling over ~5 frames, DAW panel only) about once a second in drops. These have to be clearly visible: 24–46 px was too subtle.
+- **No** pulse zooms, slow zoom drift, snare shake, chroma flicker or on-screen text.
+- **Ending:** a clean cut on the bar line so the reel loops (see @pandoraxx918). No fisheye or glitch outro on a frozen or dead frame.
 
-## Hyperframes mapping
-
-- Whip / smear: `whip-pan`, `transitions-blur`, `transitions-push`
-- Flash frames: `flash-through-white`, `light-leak`
-- Glitch / finale: `glitch`, `chromatic-radial-split`, `thermal-distortion`, `gravitational-lens` (fisheye feel), `transitions-destruction` (shatter)
-- Pixelate: component `grid-pixelate-wipe`
-- Grain over everything: component `grain-overlay`
+Frame-level study of his transitions: `videos/testing-my-new-kit/analysis.md`. Pipeline: `tools/beat-edit/`.
