@@ -25,6 +25,7 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 ## Pacing & retention (from JAIL feedback, 2026-10-21)
 
 - Retention matters most at the start: 3 changes in the first ~4 s. Example order: macro/arrangement shot → me + a "putting something in" recording → the first element (e.g. hats).
+- Every DAW shot must visibly play in time: notes hit the playhead exactly when heard. When I'm placing notes, the whole pattern must be in frame so you see each note land. (2026-10-21)
 - Mixer shots are boring on their own: give them a zoom punch on bar downbeats (with zoom blur) plus a slow push.
 - Occasional slow zoom in/out (~7%) on screen recordings and macro shots is good. Occasional, not every shot, and never the old constant pulse/drift.
 

@@ -43,3 +43,10 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 4. Note the view types: `roll` (playhead moves across the piano roll, the crop follows it), `fixed` + `ph` (playlist in follow mode: the playhead is parked at x≈994 and the song scrolls under it), `fixed` + `fxl` (piano roll in smooth-follow: notes stream left and play at the keyboard edge), `fixed` + `fx` (mixer).
 5. The vertical phone face-cam (4K, rotated) is proxied to 1080x1920 and an 800-px band is cropped (FACE_Y0) for the top panel. It plays continuously across shots like a real camera.
 6. The shot plan is explicit cut bars (`CUT_BARS`). Face every ≤3 shots, never twice in a row, on the silent bar and on the last shot. Whips (multi-sample motion blur) on the drop and ~every third cut, plus a soft flash on the drop. 3 jolts max, motion-blurred along their path, on strong 808 hits away from cuts and outside the last 2 bars.
+
+### JAIL v3 lessons (sync bugs Jack caught)
+
+- **Smooth-follow piano rolls hide the playhead.** The notes play at a fixed x somewhere mid-screen, not at the keyboard edge. Find it from the ruler bar labels at known song times (x_p = label_x + bar_fraction × px_per_bar, mod px_per_bar), then draw FL's playhead there (`draw_ph`). Cropping at the keyboard edge put the hats about 1.4 s out.
+- **Use the audio cross-correlation offset, not the clock OCR.** OCR reads about 40 ms late (display latency), and the audio offset keeps OBS's own picture/sound relationship. Check it with `verify2.py`: playhead vs note at each master onset should be within about 1 frame.
+- **Skip clips where you re-draw one note over and over.** They never read as in time.
+- **"Putting in" clips need the whole pattern in frame** (`fit` mode: pattern area scaled to the panel width on a blurred fill), otherwise the notes being placed fall outside the crop.

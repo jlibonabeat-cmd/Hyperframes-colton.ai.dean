@@ -45,17 +45,17 @@ def fr(t):
 
 
 # ----------------------------------------------------------------------------- views (clip, instrument, kind, playback segments)
-# segments: (clip_a, clip_b, D) — D = mean(clock OCR offset, audio x-corr offset); 0.1 s margins
+# segments: (clip_a, clip_b, D) — D from audio x-corr (keeps OBS's own picture/sound relationship); clock OCR agrees within ~40 ms
 V = {
-    "MACRO": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=994, segs=[(0.9, 47.3, 19.570)], cy=530, h=760),
-    "MACRO_W": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=994, segs=[(0.9, 47.3, 19.570)], cy=560, h=880, only=True),
-    "HAT": dict(clip="hat.mp4", inst="HAT", kind="fixed", fxl=505, segs=[(5.2, 16.7, 16.586)], cy=590, h=640),
-    "OPENHAT": dict(clip="openhat.mp4", inst="HAT", kind="roll", segs=[(5.9, 11.5, 16.074)], cy=560, h=600),
-    "SNARE_A": dict(clip="snare_a.mp4", inst="SNARE", kind="roll", segs=[(1.1, 7.9, 20.879)], cy=560, h=600),
-    "SNARE_M": dict(clip="snare_main.mp4", inst="SNARE", kind="roll", segs=[(9.5, 19.3, 12.390)], cy=560, h=600),
-    "808A": dict(clip="s808.mp4", inst="808", kind="roll", segs=[(4.9, 14.5, 28.940)], cy=545, h=600),
-    "808B": dict(clip="s808b.mp4", inst="808", kind="roll", segs=[(3.1, 8.4, 35.244)], cy=560, h=600),
-    "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(7.6, 18.5, 25.420)], cy=570, h=880, fx=1010),
+    "MACRO": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=994, segs=[(0.9, 47.3, 19.556)], cy=530, h=760),
+    "MACRO_W": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=994, segs=[(0.9, 47.3, 19.556)], cy=560, h=880, only=True),
+    "HAT": dict(clip="hat.mp4", inst="HAT", kind="fixed", ph=909, draw_ph=True, segs=[(5.2, 11.5, 16.561)], cy=590, h=640),
+    "OPENHAT": dict(clip="openhat.mp4", inst="HAT", kind="roll", segs=[(5.9, 11.5, 16.039)], cy=560, h=600),
+    "SNARE_A": dict(clip="snare_a.mp4", inst="SNARE", kind="roll", split_only=True, segs=[(1.1, 7.9, 20.854)], cy=560, h=600),
+    "SNARE_M": dict(clip="snare_main.mp4", inst="SNARE", kind="roll", segs=[(9.5, 19.3, 12.350)], cy=560, h=600),
+    "808A": dict(clip="s808.mp4", inst="808", kind="roll", split_only=True, segs=[(4.9, 14.5, 28.930)], cy=545, h=600),
+    "808B": dict(clip="s808b.mp4", inst="808", kind="roll", split_only=True, fit=(490, 380, 1405, 560), segs=[(3.1, 8.5, 35.234)], cy=560, h=600),
+    "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(7.6, 18.5, 25.400)], cy=570, h=880, fx=1010),
 }
 
 
@@ -85,8 +85,9 @@ def act(inst, t0, t1):
 
 # ----------------------------------------------------------------------------- shot plan
 # cut points in bars relative to the start; 2-bar holds at the top, mid-drop and late drop
-CUT_BARS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 20]
-FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_A"), 2: ("full", "HAT")}   # retention: 3 changes in the first 4 s
+CUT_BARS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20]
+FORCE = {0: ("full", "MACRO"), 1: ("face", "SNARE_M"), 2: ("full", "HAT"), 3: ("full", "OPENHAT"),
+         4: ("face", "SNARE_M"), 5: ("full", "MACRO"), 6: ("full", "SNARE_M")}   # retention: 3 changes in the first 4 s
 DROP_J = 8                                   # bar 25 = the drop (bar 24 is the silent bar)
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -95,10 +96,28 @@ for i in range(len(CUT_BARS) - 1):
     j0, j1 = CUT_BARS[i], CUT_BARS[i + 1]
     t0, t1 = j0 * BAR, j1 * BAR
     s0, s1 = START + t0, START + t1
-    # layout: face every <=3 shots, never twice in a row; silent bar + last shot = face; drop downbeat = full DAW
+    cands = []
+    for vn, v in V.items():
+        if coverage(vn, s0, s1 + 0.05) is None:
+            continue
+        if v.get("only") and j0 != 16:
+            continue
+        if vn == "SNARE_A":
+            continue                             # mostly one note being re-drawn: never reads as in time
+        sc = act(v["inst"], t0, t1) - 0.5 * used.get(v["clip"], 0)
+        if v.get("only"):
+            sc += 5.0                            # bars 33-34: wide arrangement shot, the breather before the outro
+        if vn == last_view:
+            sc -= 2.0
+        if j0 in (7, DROP_J) and vn == "MACRO":
+            sc += 3.0                            # silent bar / drop downbeat: the whole arrangement stops / lights up
+        cands.append((sc, vn))
+    cands.sort(reverse=True)
+    vn = FORCE[j0][1] if j0 in FORCE else cands[0][1]
+    # layout: content first (808 / putting-in views need the wide split), then rhythm of face vs full
     if j0 in FORCE:
         lay = FORCE[j0][0]
-    elif j0 == 7 or j1 == NBARS:
+    elif V[vn].get("split_only") or j0 == 7 or j1 == NBARS:
         lay = "face"
     elif j0 == DROP_J or j0 == 16 or j1 == 7:
         lay = "full"
@@ -107,27 +126,7 @@ for i in range(len(CUT_BARS) - 1):
     elif since_face >= 2:
         lay = "face"
     else:
-        lay = "full" if (i % 3) else "face"
-    cands = []
-    for vn, v in V.items():
-        if coverage(vn, s0, s1 + 0.05) is None:
-            continue
-        if v.get("only") and j0 != 16:
-            continue
-        sc = act(v["inst"], t0, t1) - 0.3 * used.get(v["clip"], 0)
-        if v.get("only"):
-            sc += 5.0                            # bars 33-34: wide arrangement shot, the breather before the outro
-        if vn == last_view:
-            sc -= 2.0
-        if j0 == 7 and vn == "MACRO":
-            sc += 2.0                            # silent bar: the whole arrangement stops
-        if j0 == DROP_J and vn == "MACRO":
-            sc += 2.0                            # drop downbeat: every new track lights up in the playlist
-        if lay == "face" and v["kind"] == "fixed":
-            sc -= 0.3
-        cands.append((sc, vn))
-    cands.sort(reverse=True)
-    vn = FORCE[j0][1] if j0 in FORCE else cands[0][1]
+        lay = "full"
     shots.append(dict(idx=i, j0=j0, j1=j1, t0=t0, t1=t1, n0=fr(t0), n1=fr(t1), layout=lay, view=vn,
                       tau=coverage(vn, s0, s1 + 0.05), cands=[c[1] for c in cands]))
     last_view, last_layout = vn, lay
@@ -194,7 +193,23 @@ def zoomed(r, z, v, x):
     return (fx - (fx - x0) / z, fy - (fy - y0) / z, cw / z, ch / z)
 
 
+def fit_panel(src, v, size):
+    """whole pattern visible (you can see every note being placed): scale the pattern area to the panel width,
+    fill the rest with a blurred, darkened copy."""
+    x0, y0, cw, ch = v["fit"]
+    w = size[0]
+    h = int(round(ch * w / cw))
+    fg = cv2.resize(src[y0:y0 + ch, x0:x0 + cw], (w, h), interpolation=cv2.INTER_AREA)
+    bg = cv2.resize(src[100:1040, x0:x0 + cw], (w, size[1]), interpolation=cv2.INTER_LINEAR)
+    bg = (cv2.GaussianBlur(bg, (0, 0), 25) * 0.45).astype(np.uint8)
+    top = (size[1] - h) // 2
+    bg[top:top + h] = fg
+    return bg
+
+
 def panel(src, r, size, v, x, z, zprev):
+    if v.get("fit"):
+        return fit_panel(src, v, size)
     """warp the DAW crop at zoom z; if the zoom jumped this frame, average several zoom steps (zoom blur)."""
     if abs(z - zprev) < 0.012:
         return warp(src, zoomed(r, z, v, x), size)
@@ -276,7 +291,7 @@ def warp(src, rect, size):
 
 
 def view_rect(v, x, aspect, lead=0.3):
-    ch = v["h"]
+    ch = 900 if aspect < 0.7 else (v["h"] if v["kind"] == "fixed" and "fx" in v else 780)
     cw = ch * aspect
     xmin = 500 if v["kind"] == "roll" else 745
     if v["kind"] == "fixed":
@@ -289,7 +304,7 @@ def view_rect(v, x, aspect, lead=0.3):
     else:
         x0 = x - lead * cw
     x0 = min(max(x0, xmin), 1888 - cw)
-    y0 = min(max(v["cy"] - ch / 2, 100), 1040 - ch)
+    y0 = min(max(v["cy"] - ch / 2, 100), 1040 - ch) if ch < 940 else 100
     return x0, y0, cw, ch
 
 
@@ -305,6 +320,19 @@ def held(state, v, x, aspect):
     r = view_rect(v, x, aspect)
     state["r"] = r
     return r
+
+
+def draw_playhead(img, y0, y1, r, v, size):
+    """FL-style playhead (dark-green glow + bright 1px core) at the view's real play position."""
+    x0, _, cw, _ = r
+    sx = size[0] / cw
+    X = int(round((v["ph"] - x0) * sx))
+    g = max(3, int(round(4 * sx)))
+    if 0 <= X < size[0]:
+        a = max(0, X - g)
+        reg = img[y0:y1, a:X].astype(np.float32)
+        img[y0:y1, a:X] = (reg * 0.35 + np.array((34, 89, 0), np.float32) * 0.65).astype(np.uint8)
+        img[y0:y1, X:min(size[0], X + max(2, int(sx)))] = (133, 189, 80)
 
 
 def shift_img(img, dx, dy):
@@ -355,14 +383,20 @@ for s in shots:
         z = zoom_at(s, n)
         zp = zoom_at(s, n - 1) if n > s["n0"] else (1.45 if s.get("zm") == "impact" else z)
         if s["layout"] == "full":
-            img = panel(src, held(st, v, x, W / H), (W, H), v, x, z, zp)
+            r = held(st, v, x, W / H)
+            img = panel(src, r, (W, H), v, x, z, zp)
+            if v.get("draw_ph"):
+                draw_playhead(img, 0, H, zoomed(r, z, v, x), v, (W, H))
             dy0, dy1 = 0, H
         else:
             img = np.empty((H, W, 3), np.uint8)
             fsrc = next(frd)
             img[:FH] = fsrc[FACE_Y0:FACE_Y0 + FH]
             bh = H - FH
-            img[FH:] = panel(src, held(st, v, x, W / bh), (W, bh), v, x, z, zp)
+            r = held(st, v, x, W / bh)
+            img[FH:] = panel(src, r, (W, bh), v, x, z, zp)
+            if v.get("draw_ph"):
+                draw_playhead(img, FH, H, zoomed(r, z, v, x), v, (W, bh))
             dy0, dy1 = FH + DIV, H
         # jolt: DAW panel only, blurred along the movement of this frame
         if abs(jx[n]) + abs(jy[n]) > 0.5 or (n > 0 and abs(jx[n - 1]) + abs(jy[n - 1]) > 0.5):
