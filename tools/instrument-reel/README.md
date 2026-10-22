@@ -8,3 +8,9 @@ Built on "Catch Me" (90 BPM, Oct 2026). The only output audio is the master mp3.
 4. Re-measure each shot's residual lag (clip audio vs master) and shift `c0` by it. Every shot ended within ±2 ms.
 5. `cm_render.py`: exact frame counts per shot, hard cuts, master audio with a tiny fade at the end. No zooms, whips or effects.
 6. QA: tile every frame. No talking, no lens looks, no camera handling.
+
+## Versions + zoom (v2–v5)
+
+`cm_make.py [name ...]` builds named versions (cut points in half bars + angle order) in one go. Rules:
+- Subtle eased zoom (8% in or out, alternating) only on far-away angles (wide room, front) and only on shots ≥ 2 s. Close-ups and short shots stay static.
+- Every shot's take is re-checked against the master. If its residual is > 100 ms, that take is rejected and the next best one (or the next angle) is used. All versions end within ±2 ms.

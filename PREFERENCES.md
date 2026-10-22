@@ -39,6 +39,7 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 - Different style from the DAW (J Sewell) edits: just me playing guitar/synth from several phone angles (wide room, hands close-up, side fretboard, front).
 - The master track is the only audio. Each clip is synced to it using the clip's own audio, so it looks like I'm playing the track.
 - Simple hard cuts on chord changes / phrase starts, no zooms, whips or motion effects, not choppy.
+- Long far-away shots (wide room / front, ≥2 s) get a subtle slow zoom in or out (~8%). Close-ups stay static. (2026-10-22)
 
 ## Captions
 
