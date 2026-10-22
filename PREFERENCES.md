@@ -34,6 +34,12 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 - Mixer shots are boring on their own: give them a zoom punch on bar downbeats (with zoom blur) plus a slow push.
 - Occasional slow zoom in/out (~7%) on screen recordings and macro shots is good. Occasional, not every shot, and never the old constant pulse/drift.
 
+## Instrument reels (2026-10-22)
+
+- Different style from the DAW (J Sewell) edits: just me playing guitar/synth from several phone angles (wide room, hands close-up, side fretboard, front).
+- The master track is the only audio. Each clip is synced to it using the clip's own audio, so it looks like I'm playing the track.
+- Simple hard cuts on chord changes / phrase starts, no zooms, whips or motion effects, not choppy.
+
 ## Captions
 
 _(style, color, sync tightness, word-by-word vs. phrase chunks — populated by /feedback over time)_
