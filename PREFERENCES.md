@@ -26,6 +26,7 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 
 - Retention matters most at the start: 3 changes in the first ~4 s. Example order: macro/arrangement shot → me + a "putting something in" recording → the first element (e.g. hats).
 - Every DAW shot must visibly play in time: notes hit the playhead exactly when heard. When I'm placing notes, the whole pattern must be in frame so you see each note land. (2026-10-21)
+- Avoid face-cam moments where I'm talking (mouth moving / speaking to someone). The track plays over the footage, so talking looks out of place. Prefer moments where I'm quietly working or nodding to the beat. (2026-10-22)
 - Never use face-cam moments where I look into the lens or break the 4th wall. Only use moments where I'm working on the screen. (2026-10-21)
 - Never letterbox a screen recording (no black bars). It must fill its panel. (2026-10-21)
 - More dynamic movement like @jsewellbeats: camera tracking the playhead on tight piano-roll shots, tilted (5–10°) slowly rotating playlist shots, and a mix of horizontal whips, vertical whips, zoom-blur punches and hard cuts. All moves must carry motion blur. (2026-10-21)

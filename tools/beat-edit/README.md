@@ -53,7 +53,7 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 
 ### JAIL v4 QA routine (do this before sending anything)
 
-1. **Face-cam:** label the whole phone clip at 2–4 fps and keep only stretches where Jack looks at the screen. No eye contact with the lens and no reaching for the phone (`FACE_SEGS`).
+1. **Face-cam:** label the whole phone clip at 2–4 fps and keep only stretches where Jack looks at the screen. No eye contact with the lens, no talking (mouth moving) and no reaching for the phone (`FACE_SEGS`).
 2. **Sync per shot:** for every piano-roll shot, render the exact output frames at each heard hit (from `hits.json`) and check that a note sits on the playhead in each one. A recording can be in sync but not show the part you hear: the main-snare roll only has the backbeat, so cut away before the other snare layers come in.
 3. **Crops:** never letterbox or fit-to-width. Every view fills its panel.
 4. **Every frame:** tile all frames (15x5 per sheet) and look at all of them before sending.
