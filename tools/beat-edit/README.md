@@ -63,3 +63,10 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 - Hat recording check: compare the recording's own hat rolls (shifted by D) with the master's rolls. The hat clip has a roll at song 25.31 that the master doesn't have (it was edited later), so the hat shot is limited to 24.21–25.23, where every heard hat has its note on screen.
 - Camera moves: `track` (1.55× macro riding the playhead), `tilt` (playlist rotated ±7°→±3° with a slow push, clamped inside the crop), `push`/`pull` on split shots, `mixer` punches, and `impact` on the opener.
 - Transitions cycle whipH / zoom / hard / whipV (motion-blurred). The drop is a zoom punch with a soft flash, and the cut into the silent bar is hard.
+
+### JAIL with new face footage (IMG_9481, Oct 23), `build_jail2.py`, `VARIANT=A|B`
+
+- New phone face-cam: front-camera clips are mirrored (the cap text reads backwards), so `hflip` them. Crop band FACE_Y0=460.
+- `REACT_T`: a "stank face" moment pinned to the shot where the 808 comes in.
+- 808 focus: the 808 enters at bar 26 (j=9), one bar after the drop. Variant A puts the 808 full-screen there. Variant B has him reacting on top with the 808 below, then full-screen 808. Full-screen 808 shots use a wider track zoom (1.12→1.22) so the whole 808 phrase reads.
+- `TRANS_FORCE` sets the transition into the drop and into the 808 shot.
