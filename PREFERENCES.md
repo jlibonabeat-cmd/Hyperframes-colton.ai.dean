@@ -31,6 +31,7 @@ _(scene length, cuts vs. transitions, breathing room — populated by /feedback 
 - Never letterbox a screen recording (no black bars). It must fill its panel. (2026-10-21)
 - More dynamic movement like @jsewellbeats: camera tracking the playhead on tight piano-roll shots, tilted (5–10°) slowly rotating playlist shots, and a mix of horizontal whips, vertical whips, zoom-blur punches and hard cuts. All moves must carry motion blur. (2026-10-21)
 - Plugin cutaways (Ozone, OTT, Soft Clipper) are welcome, but only from real screen recordings of me using them. (2026-10-21)
+- When I send a colour-graded clip, the edit must look like my grade on my phone (watch for HDR/HLG iPhone files; tone-map, don't decode as SDR). (2026-10-23)
 - Mixer shots are boring on their own: give them a zoom punch on bar downbeats (with zoom blur) plus a slow push.
 - Occasional slow zoom in/out (~7%) on screen recordings and macro shots is good. Occasional, not every shot, and never the old constant pulse/drift.
 

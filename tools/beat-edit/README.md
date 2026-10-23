@@ -70,3 +70,11 @@ Built on the Fast Lane edit (v1–v7, Oct 2026). Python + ffmpeg + OpenCV, rende
 - `REACT_T`: a "stank face" moment pinned to the shot where the 808 comes in.
 - 808 focus: the 808 enters at bar 26 (j=9), one bar after the drop. Variant A puts the 808 full-screen there. Variant B has him reacting on top with the 808 below, then full-screen 808. Full-screen 808 shots use a wider track zoom (1.12→1.22) so the whole 808 phrase reads.
 - `TRANS_FORCE` sets the transition into the drop and into the 808 shot.
+
+### Colour-graded phone clips are HDR (HLG). Convert them properly
+
+iPhone exports can be HEVC 10-bit BT.2020 HLG (`color_transfer=arib-std-b67`). Decoding them straight to 8-bit treats them as SDR: the grade washes out to pale and flat, and Jack's grade disappears. Always check `ffprobe ... color_transfer` and tone-map:
+
+`zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=gbrp`
+
+Then, if needed, match it to how it looks on his phone. Fit a per-channel curve against a screenshot he sends of the same frame and apply it as a `.cube` (`lut3d`). Compare a before/after frame before sending.
