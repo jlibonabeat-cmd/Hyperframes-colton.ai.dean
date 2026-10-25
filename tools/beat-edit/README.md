@@ -86,3 +86,11 @@ Then, if needed, match it to how it looks on his phone. Fit a per-channel curve 
 - `playhead.lo` / `xmin` per view: these piano rolls start at x≈100 and the arrangement playhead sits at x=493 (follow mode). The default crop clamp (745) cut the arrangement playhead out, so arrangement views need `xmin=330`.
 - "808 pattern 2" never shows a playhead (the pattern isn't playing in that recording), so it isn't used. The "putting 808 in" recording is only valid from bar 11, after the notes are placed.
 - Soft Clipper gets the mixer punch-zoom treatment.
+
+### GLOCK B → B2: what was wrong and the fix (Jack caught it)
+
+- **Notes outside the crop:** the sample-chops notes sit at the bottom of the roll (y≈750–890) but the crop was centred on y=650 and zoomed in, so the shot showed an empty grid. Roll shots now take their vertical centre from the notes the playhead actually hits in that shot (`validate.json` → `cy`).
+- **Playhead crossing empty space:** these rolls are sparse (snare ≈1.5 notes per bar, kick ≈1 per bar, scratch 0–1, 808 part 1 1). A 1.6 s shot of a sparse roll while the drums bang reads as "out of time". Fix: `glock_validate.py` lists every moment the playhead hits a visible note (in song time). Roll shots are now 2–4 beats long and placed around those hits, with the arrangement, Soft Clipper and face covering the rest.
+- **"Putting in" recordings:** notes are added during the recording, so some heard hits have no note yet. `glock_validate.py` also flags crossings of final-pattern notes that aren't drawn yet ("missing"). The plan avoids those moments.
+- Don't judge sync with band-pass "snare/kick" onsets from the full mix: the sample and 808 pollute those bands. Judge it from the playhead/note crossings plus the per-bar match between the recording's own audio and the master (`glock_barmatch.py`). Then render the output frames at every crossing (±1 frame) and look at them.
+- Jolts are never placed within 0.25 s of a note hit.

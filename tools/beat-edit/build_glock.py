@@ -106,7 +106,7 @@ if VARIANT == "A":
              16: ("face", "MACRO"), 17: ("full", "CLIPPER"), 18: ("full", "MACRO_W"), 19: ("face", "MACRO")}
     REACT_J = 7
     TRANS_FORCE = {4: "zoom", 12: "zoom"}
-else:                   # B: more of you in the drop, 808/kick full-screen
+elif VARIANT == "B":
     CUT_BARS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20]
     FORCE = {0: ("full", "MACRO"), 1: ("face", "MACRO_T"), 2: ("full", "MACRO"), 3: ("face", "MACRO"),
              4: ("full", "KICK"), 5: ("face", "SNARE"), 6: ("full", "SCRATCH"), 7: ("full", "808A"),
@@ -114,6 +114,18 @@ else:                   # B: more of you in the drop, 808/kick full-screen
              12: ("full", "SNARE"), 13: ("face", "MACRO"), 14: ("full", "SNARE"), 15: ("face", "CLIPPER"),
              16: ("full", "MACRO_T"), 17: ("full", "CLIPPER"), 18: ("face", "MACRO")}
     REACT_J = 8
+    TRANS_FORCE = {4: "zoom", 12: "zoom"}
+else:                   # B2: every piano-roll shot is built around notes the playhead actually hits (validate.json)
+    # beats -> bars (/4). Visual crossings (video s): KICK 7.03 8.43 12.63 12.83 13.49 14.89 15.49 | SNARE 7.64 8.44 9.67
+    # 11.47 12.47 12.87, +8 bars 20.52 21.32 22.56 24.36 25.36 25.76 | 808A 11.26. Avoided (note not drawn yet when
+    # heard): SNARE 10.84 12.97 23.72 25.86, 808A 12.46, SCRATCH 9.22. CHOPS/SCRATCH barely hit anything -> not used.
+    B_ = [0, 4, 8, 12, 16, 18, 20, 23, 25, 27, 29, 32, 36, 39, 42, 44, 48, 52, 55, 57, 60, 64, 68, 72, 80]
+    CUT_BARS = [b / 4 for b in B_]
+    L_ = ["full:MACRO", "face:MACRO_T", "full:MACRO", "face:MACRO", "full:KICK", "full:SNARE", "face:KICK", "full:SNARE",
+          "full:CLIPPER", "full:808A", "face:KICK", "full:MACRO", "face:KICK", "full:CLIPPER", "face:MACRO_T", "full:MACRO_W",
+          "full:SNARE", "face:MACRO", "full:SNARE", "full:CLIPPER", "face:SNARE", "full:MACRO_T", "full:CLIPPER", "face:MACRO"]
+    FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
+    REACT_J = 29 / 4
     TRANS_FORCE = {4: "zoom", 12: "zoom"}
 DROP_J = 4                                   # 0:12.92 = the drop
 SILENT_J = -1
@@ -161,6 +173,16 @@ for i in range(len(CUT_BARS) - 1):
     used[V[vn]["clip"]] = used.get(V[vn]["clip"], 0) + 1
     since_face = 0 if lay == "face" else since_face + 1
 shots[-1]["n1"] = NF
+VAL = json.load(open(f"{HERE}/validate.json")) if os.path.exists(f"{HERE}/validate.json") else {}
+for x in shots:
+    vv = VAL.get(x["view"])
+    if not vv:
+        continue
+    s0_, s1_ = START + x["t0"], START + x["t1"]
+    ys = [y for t, y, e in vv["cross"] for sh in (0, P8) if s0_ <= t + sh < s1_]
+    x["n_cross"] = len(ys)
+    if ys:
+        x["cy"] = 0.5 * (min(ys) + max(ys))
 bad = [(round(x["t0"], 2), x["view"]) for x in shots if x["tau"] is None]
 if bad:
     raise SystemExit(f"no footage coverage for {bad}")
@@ -221,7 +243,7 @@ def zoom_at(s, n):
         return 1.0 + 0.25 * (1 - smooth(k / 10.0)) ** 2 + 0.06 * smooth(u)
     if zm == "mixer":
         z = 1.0 + 0.14 * smooth(u)
-        for j in range(s["j0"], s["j1"]):
+        for j in range(int(math.ceil(s["j0"] - 1e-6)), int(math.ceil(s["j1"] - 1e-6))):
             d = n - fr(j * BAR)
             if 0 <= d < 12:
                 z += 0.07 * math.exp(-d / 3.5)
@@ -337,7 +359,8 @@ cand = [(s, t) for t, s in zip(kt, ks) if t > drop_t + 0.5 and t < DUR - 2 * BAR
 cand.sort(reverse=True)
 jolts = []   # the drop itself gets a whip + soft flash, not a jolt
 for s, t in cand:
-    if all(abs(t - u) > 2.0 for u, _ in jolts) and all(abs(fr(t) - w) > 6 for w in whip_in) and len(jolts) < 3:
+    near_hit = any(abs(START + t - (c + sh)) < 0.25 for vv in VAL.values() for c, _, _ in vv["cross"] for sh in (0, P8))
+    if not near_hit and all(abs(t - u) > 2.0 for u, _ in jolts) and all(abs(fr(t) - w) > 6 for w in whip_in) and len(jolts) < 3:
         jolts.append((float(t), 0.8))
 jolts.sort()
 DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
@@ -468,7 +491,7 @@ for s in shots:
         continue
     off = (f0 - s["n0"]) / FPS
     k = f1 - f0
-    v = V[s["view"]]
+    v = dict(V[s["view"]], **({"cy": s["cy"]} if "cy" in s else {}))
     rd = reader(f"{HERE}/{v['clip']}", s["tau"] + off, k, SRC_W, SRC_H)
     frd = reader(f"{HERE}/face2_flip.mp4", s["face_t"] + off, k, FACE_W, FACE_H) if s["layout"] == "face" else None
     st = {}
@@ -548,7 +571,7 @@ for s in shots:
 enc.stdin.close()
 enc.wait()
 json.dump({"start": START, "dur": DUR, "jolts": jolts, "whips": sorted(whip_in), "trans": {str(k): t for k, t in sorted(trans.items())},
-           "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "face_t")} for s in shots]},
+           "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "face_t", "cy", "n_cross")} for s in shots]},
           open(out_path.rsplit(".", 1)[0] + "_events.json", "w"), indent=1)
 print("frames", frames_done, "shots", len(shots))
 for s in shots:
