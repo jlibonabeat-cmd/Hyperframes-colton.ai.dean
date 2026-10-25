@@ -14,3 +14,9 @@ Built on "Catch Me" (90 BPM, Oct 2026). The only output audio is the master mp3.
 `cm_make.py [name ...]` builds named versions (cut points in half bars + angle order) in one go. Rules:
 - Subtle eased zoom (8% in or out, alternating) only on far-away angles (wide room, front) and only on shots ≥ 2 s. Close-ups and short shots stay static.
 - Every shot's take is re-checked against the master. If its residual is > 100 ms, that take is rejected and the next best one (or the next angle) is used. All versions end within ±2 ms.
+
+## Think I May Be Falling (Oct 25): `ir_make.py`, the cleaner template
+
+- Phone clips can be HDR (HLG), but **Jack doesn't want any colour processing on instrument footage**: just scale to 1080x1920.
+- Takes are single continuous playthroughs of a riff in time with the track, so place every shot **exactly on the take's grid** (`song = clip + take_D (mod riff)`) plus a per-take fine offset (median lag over half-bar windows, here −6 / −8 / −18 ms). Per-shot residual searches are unreliable when the vocal dominates the master or the riff repeats every 8th note (they lock onto ±268 ms), so keep the fine search to ±0.1 s and only use it per take.
+- Never reuse identical footage of the same take. Stop before a take's end if he stops playing (`MAXC`).
