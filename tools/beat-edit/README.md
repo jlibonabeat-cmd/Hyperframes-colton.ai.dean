@@ -78,3 +78,11 @@ iPhone exports can be HEVC 10-bit BT.2020 HLG (`color_transfer=arib-std-b67`). D
 `zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=gbrp`
 
 Then, if needed, match it to how it looks on his phone. Fit a per-channel curve against a screenshot he sends of the same frame and apply it as a `.cube` (`lut3d`). Compare a before/after frame before sending.
+
+### GLOCK ON MY HIP (149 BPM, Oct 25): `build_glock.py`, `VARIANT=A|B`
+
+- Window: song bars 4–23 (0:06.48–0:38.69). The intro (bars 4–7) only has the arrangement view, the drop is at 0:12.92 and phrase B at 0:25.80.
+- **Reusing a recording 8 bars later:** snare and hat patterns repeat exactly in phrase B (band correlation 0.97–1.00), so those views get a second segment at D + 8 bars. The 808/kick and melody change in phrase B, so they are not reused.
+- `playhead.lo` / `xmin` per view: these piano rolls start at x≈100 and the arrangement playhead sits at x=493 (follow mode). The default crop clamp (745) cut the arrangement playhead out, so arrangement views need `xmin=330`.
+- "808 pattern 2" never shows a playhead (the pattern isn't playing in that recording), so it isn't used. The "putting 808 in" recording is only valid from bar 11, after the notes are placed.
+- Soft Clipper gets the mixer punch-zoom treatment.
