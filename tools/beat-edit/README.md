@@ -94,3 +94,12 @@ Then, if needed, match it to how it looks on his phone. Fit a per-channel curve 
 - **"Putting in" recordings:** notes are added during the recording, so some heard hits have no note yet. `glock_validate.py` also flags crossings of final-pattern notes that aren't drawn yet ("missing"). The plan avoids those moments.
 - Don't judge sync with band-pass "snare/kick" onsets from the full mix: the sample and 808 pollute those bands. Judge it from the playhead/note crossings plus the per-bar match between the recording's own audio and the master (`glock_barmatch.py`). Then render the output frames at every crossing (±1 frame) and look at them.
 - Jolts are never placed within 0.25 s of a note hit.
+
+### GLOCK C / D variants (Oct 25): `VARIANT=C|D`, `SHAKE=1`
+
+Jack approved B2 and asked for more variants: same footage, different parts at different times, even more on time, J Sewell transitions with a bit of shake.
+
+- **Transition shake** (`SHAKE=1`, default on): after every whip / zoom transition, a damped 7-frame shake (18 px for whips, 26 px for zooms, decaying, seeded RNG 149), each frame motion-blurred along its path. Hard cuts get none.
+- **Hard cut on hits:** any cut within 3.5 frames of a validated note crossing becomes a hard cut, otherwise the hit lands on a whip-smeared frame.
+- **HAT coverage limit:** hat notes only exist up to clip 2.95 s; after that the roll is an empty grid. HAT segments end there.
+- Variant C leads with hats and snares; variant D is kick/808-led with more face shots. `glock_hitsheet.py <variant>` renders the output frame at every crossing for checking.

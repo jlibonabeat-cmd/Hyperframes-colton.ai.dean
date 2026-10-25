@@ -54,7 +54,7 @@ V = {
     "MACRO": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=493, xmin=330, segs=[(1.7, 47.3, 4.690)], cy=520, h=760),
     "MACRO_T": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=493, xmin=330, segs=[(1.7, 47.3, 4.690)], cy=330, h=520),
     "MACRO_W": dict(clip="macro.mp4", inst="ARR", kind="fixed", ph=493, xmin=330, segs=[(1.7, 47.3, 4.690)], cy=560, h=880),
-    "HAT": dict(clip="hat.mp4", inst="HAT", kind="roll", lo=100, xmin=100, segs=[(1.0, 4.2, 11.719), (1.0, 4.2, 11.719 + P8)], cy=549, h=520),
+    "HAT": dict(clip="hat.mp4", inst="HAT", kind="roll", lo=100, xmin=100, segs=[(1.0, 2.95, 11.719), (1.0, 2.95, 11.719 + P8)], cy=549, h=520),
     "SNARE": dict(clip="snare.mp4", inst="SNARE", kind="roll", lo=100, xmin=100, segs=[(1.4, 8.6, 11.376), (1.4, 8.6, 11.376 + P8)], cy=549, h=560),
     "KICK": dict(clip="kick.mp4", inst="808", kind="roll", lo=100, xmin=100, segs=[(1.0, 13.8, 11.830)], cy=600, h=640),
     "808A": dict(clip="s808a.mp4", inst="808", kind="roll", lo=100, xmin=100, segs=[(5.6, 10.6, 10.131)], cy=550, h=600),
@@ -115,7 +115,7 @@ elif VARIANT == "B":
              16: ("full", "MACRO_T"), 17: ("full", "CLIPPER"), 18: ("face", "MACRO")}
     REACT_J = 8
     TRANS_FORCE = {4: "zoom", 12: "zoom"}
-else:                   # B2: every piano-roll shot is built around notes the playhead actually hits (validate.json)
+elif VARIANT == "B2":  # B2: every piano-roll shot is built around notes the playhead actually hits (validate.json)
     # beats -> bars (/4). Visual crossings (video s): KICK 7.03 8.43 12.63 12.83 13.49 14.89 15.49 | SNARE 7.64 8.44 9.67
     # 11.47 12.47 12.87, +8 bars 20.52 21.32 22.56 24.36 25.36 25.76 | 808A 11.26. Avoided (note not drawn yet when
     # heard): SNARE 10.84 12.97 23.72 25.86, 808A 12.46, SCRATCH 9.22. CHOPS/SCRATCH barely hit anything -> not used.
@@ -126,6 +126,26 @@ else:                   # B2: every piano-roll shot is built around notes the pl
           "full:SNARE", "face:MACRO", "full:SNARE", "full:CLIPPER", "face:SNARE", "full:MACRO_T", "full:CLIPPER", "face:MACRO"]
     FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
     REACT_J = 29 / 4
+    TRANS_FORCE = {4: "zoom", 12: "zoom"}
+if VARIANT in ("C", "D"):
+    # Same rule as B2: roll shots only around hits the playhead really makes (validate.json), never across a
+    # not-yet-drawn note. HAT = continuous hat notes + roll at beat 21.7 (and 53.7 in phrase B).
+    if VARIANT == "C":   # hats & snares lead, kick/808 in the middle
+        B_ = [0, 4, 8, 12, 16, 18, 20, 22, 25, 27, 29, 32, 36, 39, 42, 44, 48, 50, 52, 55, 57, 60, 64, 68, 72, 80]
+        L_ = ["full:MACRO", "face:MACRO", "full:MACRO_T", "face:MACRO", "full:HAT", "full:SNARE", "full:KICK", "face:SNARE",
+              "full:CLIPPER", "full:808A", "face:KICK", "full:MACRO_T", "full:KICK", "face:CLIPPER", "full:MACRO", "face:MACRO_W",
+              "full:HAT", "full:SNARE", "face:MACRO_T", "full:SNARE", "full:CLIPPER", "face:SNARE", "full:MACRO_T", "full:CLIPPER",
+              "face:MACRO"]
+        REACT_J = 29 / 4
+    else:                # D: kick/808 led, more of you
+        B_ = [0, 4, 8, 12, 16, 18, 20, 22, 25, 27, 29, 32, 36, 39, 42, 44, 48, 50, 52, 55, 57, 60, 62, 64, 68, 72, 80]
+        L_ = ["full:MACRO", "face:MACRO_T", "full:MACRO", "face:MACRO", "full:KICK", "face:SNARE", "full:KICK", "full:SNARE",
+              "face:CLIPPER", "full:808A", "full:SNARE", "face:MACRO_T", "full:KICK", "face:CLIPPER", "full:MACRO_T", "face:MACRO",
+              "full:HAT", "face:SNARE", "full:CLIPPER", "face:SNARE", "full:MACRO_T", "full:SNARE", "face:SNARE", "full:MACRO_W",
+              "full:CLIPPER", "face:MACRO"]
+        REACT_J = 25 / 4
+    CUT_BARS = [b / 4 for b in B_]
+    FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
     TRANS_FORCE = {4: "zoom", 12: "zoom"}
 DROP_J = 4                                   # 0:12.92 = the drop
 SILENT_J = -1
@@ -352,6 +372,12 @@ for s in shots:
         continue
     trans[s["n0"]] = TRANS_CYCLE[k_ % len(TRANS_CYCLE)]
     k_ += 1
+# never smear a note hit: a cut within 3 frames of a crossing becomes a hard cut
+_VAL = json.load(open(f"{HERE}/validate.json")) if os.path.exists(f"{HERE}/validate.json") else {}
+_hits = [c + sh - START for vv in _VAL.values() for c, _, _ in vv["cross"] for sh in (0, 8 * BAR)]
+for n_ in list(trans):
+    if any(abs(n_ / FPS - h) < 3.5 / FPS for h in _hits):
+        trans[n_] = "hard"
 whip_in = {n for n, t in trans.items() if t != "hard"}
 # jolts: rare — the drop downbeat and the 3 strongest 808 hits in the drop that are not on a cut
 drop_t = DROP_J * BAR
@@ -375,6 +401,20 @@ for k, (t, a) in enumerate(jolts):
         if n + q < len(jx):
             jx[n + q] = dx * amp * p
             jy[n + q] = dy * amp * p
+SHAKE = os.environ.get("SHAKE", "1") == "1"
+shx = np.zeros(NF + 12); shy = np.zeros(NF + 12)
+if SHAKE:
+    rs = np.random.default_rng(149)
+    for n0_, kind_ in trans.items():
+        if kind_ == "hard":
+            continue
+        amp = 26.0 if kind_ == "zoom" else 18.0
+        ang = rs.uniform(0, 2 * np.pi)
+        for k in range(1, 8):                     # starts right after the transition lands
+            a_ = amp * math.exp(-(k - 1) / 1.8) * (1 if k % 2 else -1)
+            ang += rs.uniform(-0.9, 0.9)
+            if n0_ + k < len(shx):
+                shx[n0_ + k] = a_ * math.cos(ang); shy[n0_ + k] = a_ * math.sin(ang) * 0.8
 flash = np.zeros(NF + 10)
 for k, a in enumerate([0.35, 0.18, 0.07]):
     flash[fr(drop_t) + k] = a
@@ -564,6 +604,8 @@ for s in shots:
             img = motion_blur_path(img, 0, 100, 0, 0, 10)
         elif tp == "zoom":
             img = zoom_blur(img, 1.12, 1.0)
+        if SHAKE and (abs(shx[n]) + abs(shy[n]) > 0.5):
+            img = motion_blur_path(img, shx[n - 1] if n > 0 else 0.0, shy[n - 1] if n > 0 else 0.0, shx[n], shy[n], 10)
         if flash[n] > 0:
             img = cv2.addWeighted(img, 1 - flash[n], np.full_like(img, 255), flash[n], 0)
         enc.stdin.write(np.ascontiguousarray(img).tobytes())
