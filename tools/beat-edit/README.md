@@ -103,3 +103,11 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **Hard cut on hits:** any cut within 3.5 frames of a validated note crossing becomes a hard cut, otherwise the hit lands on a whip-smeared frame.
 - **HAT coverage limit:** hat notes only exist up to clip 2.95 s; after that the roll is an empty grid. HAT segments end there.
 - Variant C leads with hats and snares; variant D is kick/808-led with more face shots. `glock_hitsheet.py <variant>` renders the output frame at every crossing for checking.
+
+### CALI MAN (190 BPM, Oct 26): `build_cali.py`, `VARIANT=A|B`
+
+- Window: song bars 31–44 (0:37.91–0:55.59). Bar 32 is silent, the drop is bar 33 (0:40.45), and the breakdown at bar 41 is melody + perc loop only, so it uses arrangement crops (`MACRO_T` melody rows, `MACRO_P` perc-loop rows, `MACRO_W`).
+- **Pattern-mode recordings** (808 first/second 4 bars, clap, hats): FL loops the pattern from 1:01, so song = clip + Dp + B0 + 32 bars (the pattern plays from song bar 33). Each recording's own audio matched the master bar by bar (corr 0.8–0.93) before use.
+- **Frame-exact clock OCR** (`cali_clock2.py`, every 3rd native 60 fps frame) beats the 0.2 s OCR + `fps=` filter. OCR misreads "4:xx" as "40x", which looks like gaps; merge those runs.
+- **Follow-mode piano rolls** (hats, kick): the playhead is parked at x≈864 and the notes scroll left, and FL only redraws every 2–3 OBS frames. `cali_validate2.py` detects note starts arriving at the parked playhead. The kick roll is two long sub notes, so its hits are entered by hand.
+- The hard-cut-on-hit rule only counts hits visible in the shots either side of the cut, and the forced drop zoom punch is kept.
