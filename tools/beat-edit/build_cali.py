@@ -104,6 +104,12 @@ if VARIANT == "A":       # 808-led: drop on the 808 roll, the 808 B run with you
     L_ = ["full:MACRO", "face:MACRO", "full:808A", "full:HAT", "face:808A", "full:CLAP", "full:CLIPPER", "face:808B",
           "full:CLAP", "full:808A", "face:HAT", "full:MACRO", "face:MACRO_P", "full:MACRO_T", "full:MACRO_W", "face:MACRO"]
     REACT_J = 24 / 4
+elif VARIANT == "C":     # drums focus: 808 / clap / hats / kick rolls; arrangement only where no roll recording covers
+    # (bar 31 + silent bar 32 before the pattern recordings start, drums ending bar 40, breakdown 41-44); no mixer shots
+    B_ = [0, 4, 8, 11, 14, 16, 18.5, 21, 23.5, 25.5, 28, 30, 32, 35, 37.25, 40, 48, 56]
+    L_ = ["full:MACRO", "face:MACRO", "full:808A", "full:CLAP", "face:HAT", "full:808A", "full:CLAP", "face:808A",
+          "full:KICK", "full:808B", "face:CLAP", "full:808B", "full:808A", "full:HAT", "face:MACRO_T", "full:MACRO_P", "face:MACRO"]
+    REACT_J = 28 / 4
 else:                    # B, drums-led: drop on the kick, claps / hats / mastering, 808 runs in between
     B_ = [0, 4, 8, 11, 14, 17, 19.5, 22.25, 24, 27.5, 30, 32, 35, 37.5, 40, 44, 48, 52, 56]
     L_ = ["full:MACRO_T", "face:MACRO_W", "full:KICK", "full:CLAP", "face:HAT", "full:MASTER", "full:808A", "face:CLIPPER",
