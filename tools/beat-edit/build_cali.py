@@ -110,6 +110,11 @@ elif VARIANT == "C":     # drums focus: 808 / clap / hats / kick rolls; arrangem
     L_ = ["full:MACRO", "face:MACRO", "full:808A", "full:CLAP", "face:HAT", "full:808A", "full:CLAP", "face:808A",
           "full:KICK", "full:808B", "face:CLAP", "full:808B", "full:808A", "full:HAT", "face:MACRO_T", "full:MACRO_P", "face:MACRO"]
     REACT_J = 28 / 4
+elif VARIANT == "D":     # drums focus like C, different order: drop on the kick, hats lead, 808s answer
+    B_ = [0, 4, 8, 10.5, 13, 15.5, 18.5, 21, 23.5, 25.5, 27.5, 29.5, 32, 35, 37.25, 40, 48, 56]
+    L_ = ["full:MACRO_W", "face:MACRO", "full:KICK", "full:CLAP", "full:HAT", "face:808A", "full:HAT", "full:808A",
+          "face:KICK", "full:CLAP", "full:808B", "face:HAT", "full:808A", "full:HAT", "face:MACRO_T", "full:MACRO_T", "face:MACRO_P"]
+    REACT_J = 23.5 / 4
 else:                    # B, drums-led: drop on the kick, claps / hats / mastering, 808 runs in between
     B_ = [0, 4, 8, 11, 14, 17, 19.5, 22.25, 24, 27.5, 30, 32, 35, 37.5, 40, 44, 48, 52, 56]
     L_ = ["full:MACRO_T", "face:MACRO_W", "full:KICK", "full:CLAP", "face:HAT", "full:MASTER", "full:808A", "face:CLIPPER",
