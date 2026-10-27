@@ -63,8 +63,11 @@ V = {
     "808_8": dict(S8, segs=[(0.95, 11.1, 9.140 + P8)]),
     "CLAP": dict(clip="clap.mp4", inst="CLAP", kind="roll", light=True, lo=358, xmin=262, segs=[(3.9, 11.05, 6.213)], cy=544, h=420, hs=260, tz=2.0),
     "VOX": dict(clip="vocal.mp4", inst="ARR", kind="roll", light=True, lo=358, xmin=262, segs=[(7.85, 16.65, 12.397)], cy=622, h=420, hs=280, tz=1.8),
-    "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(0.95, 6.2, 19.347), (7.9, 9.75, 19.346)], cy=430, h=660, fx=660),
-    "PLUGIN": dict(clip="plugin.mp4", inst="ARR", kind="fixed", segs=[(0.85, 6.15, 19.377)], cy=460, h=620, fx=790),
+    # mixer: only the channels whose meters move (master 352, ch1 428, 808 Monarch 540, kick 652, snare 708, clap 764)
+    "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(0.95, 6.2, 19.347), (7.9, 9.75, 19.346)], cy=540, h=820, fx=560, xmin=0),
+    "MIXER_T": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(0.95, 6.2, 19.347), (7.9, 9.75, 19.346)], cy=370, h=540, fx=652, xmin=0),
+    # Smooth Operator window x 400-1185, y 200-700: shown whole in the split panel (1080x1120)
+    "PLUGIN": dict(clip="plugin.mp4", inst="ARR", kind="fixed", segs=[(0.85, 6.15, 19.377)], cy=450, h=820, fx=792, xmin=0),
 }
 
 
@@ -114,8 +117,8 @@ else:                    # B: the variation with the mixer + mixing-plugin cutaw
     B_ = [0, 4, 8, 11, 13.5, 16, 18.5, 21, 23, 25, 28, 30.25, 33, 35.5, 40, 42.5, 45, 48, 50.5, 53, 55.5, 58.5, 61, 63.5, 66, 68, 72]
     L_ = ["full:MACRO_W", "face:MACRO", "full:SNARE", "full:808", "face:SNARE", "full:808", "full:SNARE_W", "face:CLAP",
           "full:808", "full:SNARE", "full:CLAP", "full:SNARE", "face:808", "full:MACRO_T",
-          "full:MIXER", "face:808_8", "full:SNARE8", "full:PLUGIN", "face:VOX", "full:808_8", "full:SNARE8", "face:808_8",
-          "full:SNARE8_W", "full:MIXER", "full:SNARE8", "face:MACRO_W"]
+          "full:MIXER", "face:808_8", "full:SNARE8", "face:PLUGIN", "full:VOX", "full:808_8", "full:SNARE8", "face:808_8",
+          "full:SNARE8_W", "full:MIXER_T", "full:SNARE8", "face:MACRO_W"]
     REACT_J = 13.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
@@ -213,7 +216,7 @@ for s in shots:
     s["theta"] = 0.0
     if s["idx"] == 0:
         s["zm"] = "impact"
-    elif s["view"] in ("MIXER", "PLUGIN"):
+    elif s["view"] in ("MIXER", "MIXER_T", "PLUGIN"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and (v["kind"] == "roll" or v.get("follow")):
         s["zm"] = "track"                       # tight macro, camera follows the playhead

@@ -138,7 +138,7 @@
    "view": "CLAP",
    "tau": 8.054526315789474,
    "zm": "push",
-   "face_t": 31.433333333333334,
+   "face_t": 31.400000000000002,
    "cy": 544.0,
    "n_cross": 1
   },
@@ -193,7 +193,7 @@
    "view": "808",
    "tau": 8.936999999999998,
    "zm": "pull",
-   "face_t": 29.7,
+   "face_t": 28.8,
    "cy": null,
    "n_cross": 0
   },
@@ -226,7 +226,7 @@
    "view": "808_8",
    "tau": 1.8317368421052613,
    "zm": "push",
-   "face_t": 30.566666666666666,
+   "face_t": 29.666666666666668,
    "cy": null,
    "n_cross": 0
   },
@@ -244,22 +244,22 @@
   {
    "t0": 15.157894736842104,
    "t1": 15.94736842105263,
-   "layout": "full",
+   "layout": "face",
    "view": "PLUGIN",
    "tau": 3.416842105263157,
    "zm": "mixer",
-   "face_t": null,
+   "face_t": 30.533333333333335,
    "cy": null,
    "n_cross": null
   },
   {
    "t0": 15.94736842105263,
    "t1": 16.736842105263158,
-   "layout": "face",
+   "layout": "full",
    "view": "VOX",
    "tau": 11.186315789473683,
-   "zm": "pull",
-   "face_t": 40.03333333333333,
+   "zm": "track",
+   "face_t": null,
    "cy": 622.0,
    "n_cross": 1
   },
@@ -291,8 +291,8 @@
    "layout": "face",
    "view": "808_8",
    "tau": 6.884368421052631,
-   "zm": "push",
-   "face_t": 28.8,
+   "zm": "pull",
+   "face_t": 40.03333333333333,
    "cy": null,
    "n_cross": 0
   },
@@ -311,7 +311,7 @@
    "t0": 20.052631578947366,
    "t1": 20.842105263157894,
    "layout": "full",
-   "view": "MIXER",
+   "view": "MIXER_T",
    "tau": 8.34257894736842,
    "zm": "mixer",
    "face_t": null,
@@ -335,7 +335,7 @@
    "layout": "face",
    "view": "MACRO_W",
    "tau": 22.78763157894737,
-   "zm": "pull",
+   "zm": "push",
    "face_t": 38.666666666666664,
    "cy": null,
    "n_cross": null
