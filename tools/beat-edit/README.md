@@ -112,3 +112,11 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **Follow-mode piano rolls** (hats, kick): the playhead is parked at x≈864 and the notes scroll left, and FL only redraws every 2–3 OBS frames. `cali_validate2.py` detects note starts arriving at the parked playhead. The kick roll is two long sub notes, so its hits are entered by hand.
 - The hard-cut-on-hit rule only counts hits visible in the shots either side of the cut, and the forced drop zoom punch is kept.
 - `VARIANT=C` (drums focus, Jack's request): 808 / clap / hat / kick rolls back to back; arrangement only where no roll recording covers the music (bar 31, the silent bar, the drum-out at bar 40 and the breakdown); no mixer shots. A hat roll whose notes have run out reads as an empty grid, so place hat shots right before a run of hat notes.
+
+### DOPE BOY (190 BPM, Oct 27): `build_dope.py`, `VARIANT=A|B`
+
+- Window bars 7–24 (0:07.66–0:30.39), drop at bar 9 (0:10.18). Face: MVI_5558 (Canon, landscape 1920x1080), cropped 1458x1080 → 1080x800 proxy (`face_dope.mp4`). Same outfit for the whole edit, so only use one face clip per edit.
+- **Light FL theme**: clock OCR needs a non-inverted threshold (`dope_clock.py`); notes are orange (R>200, B<115), the playhead core is BGR≈(92,148,191) (`dope_scan.py`).
+- **Smooth-follow piano rolls** (snare, 808): notes scroll left at px_per_bar/BAR and play at the keyboard edge (x≈355), where FL draws the playhead. Hit times = per-note predictions clustered (`dope_validate.py`); median error vs master snare onsets ≈ −10 ms. These views get `pic=0` (no OBS picture lead) because the hit position was measured from the picture directly.
+- Snare + 808 repeat exactly 8 bars later (band/pitch correlation ≈1.0), so `SNARE8` / `808_8` reuse them in phrase 2.
+- "Putting in clap" only has the 4 claps that were already drawn; it's used as one tight (2×) shot around a clap hit. The clap offset needed −50 ms vs the clock-derived D (checked on the output frames).
