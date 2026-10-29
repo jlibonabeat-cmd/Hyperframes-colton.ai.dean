@@ -19,7 +19,7 @@ def tile(f, lab, face):
 T, X = [], []
 for s in d["shots"]:
     vv = v.get(s["view"]); face = s["layout"] == "face"
-    if s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "COMP", "LAZER", "SCRATCH"):
+    if s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "COMP", "LAZER", "SCRATCH", "RESO"):
         for u in (0.1, 0.5, 0.9):
             n = int((s["t0"] + (s["t1"] - s["t0"]) * u) * 30); X.append(tile(F[n], f"{s['view']} n{n}", False))
     if not vv: continue

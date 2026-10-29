@@ -130,3 +130,8 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - Clap / 808 / open hat / rim are "putting in" clips: `arr_validate.py` lists the notes not drawn yet (`miss`), and the plan avoids them.
 - **Mixer rule in practice:** a mixer shot during the intro or the break shows flat meters. Only place mixer shots where the drums framed in them are playing. Smooth Operator was reused from the Dope Boy session as a non-synced cutaway (it's a spectrum, so there's no visible timing to break).
 - Intro with only the melody: open on the wide arrangement, not a tight crop of empty tracks.
+- **Arrested fixes (Jack's feedback):**
+  - Show the MIDI rather than an arrangement clip sitting at the bottom of the frame. The "Reso Baseline" recording *is* the PayPal [Bass] pattern (same notes, pattern mode). It sits at song bars 5–8 (found by matching its note hits to master onsets), so it covers the 0:05–0:19 bass.
+  - The scratch fill is an arrangement page view whose playhead is hidden behind the waveform, so the old shot never moved. Detect the playhead in an empty track below (`ph_rows`), ride it (`roll` + track zoom), and only use the stretch where it's on screen.
+  - The lazer channel-rack shot is framed tight on the Zap 3 [Perc] row where he puts it in (clip ~5.3–6.0 s), with a gentle push and no punch zooms.
+  - Check every roll shot starts near a real note. A 2-beat lead-in of empty grid before the first rim read as dead, so the previous shot was lengthened.

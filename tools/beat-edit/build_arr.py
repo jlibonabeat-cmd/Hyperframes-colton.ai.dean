@@ -67,8 +67,13 @@ V = {
     "OH1_R": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(2.5, 6.15, 16.757 + R6)], cy=560, h=520, hs=420, tz=1.4),
     "OH2": dict(ROLL, clip="oh2.mp4", inst="HAT", segs=[(2.55, 11.95, 16.719)], cy=560, h=520, hs=420, tz=1.4),
     "RIM": dict(ROLL, clip="rim.mp4", inst="SNARE", segs=[(2.3, 11.7, 26.551)], cy=560, h=520, hs=420, tz=1.4),
-    "SCRATCH": dict(clip="scratch.mp4", inst="ARR", kind="roll", lo=600, xmin=560, segs=[(0.8, 3.65, 16.02)], cy=640, h=560, hs=480),
-    "LAZER": dict(clip="lazer.mp4", inst="ARR", kind="fixed", segs=[(4.25, 9.2, 24.613)], cy=470, h=700, fx=1100, xmin=0),
+    # scratch fill: arrangement page view, playhead only on screen clip 1.9-3.2 (song 17.9-19.2); detect it in the empty
+    # track below the waveform (the waveform hides it) and ride it
+    "SCRATCH": dict(clip="scratch.mp4", inst="ARR", kind="roll", lo=700, xmin=600, ph_rows=(760, 990), pht=0.6, segs=[(1.85, 3.4, 16.02)], cy=610, h=700, hs=560, tz=1.15),
+    # Reso bass = the PayPal [Bass] pattern (same notes), pattern mode; the pattern sits at song bars 5-8 -> D = Dp + B0 + 4 bars
+    "RESO": dict(ROLL, clip="reso.mp4", inst="808", segs=[(4.65, 11.9, -4.7125 + 0.082 + 9.6)], cy=555, h=560, hs=440, tz=1.25),
+    # channel rack: tight on the Zap 3 [Perc] (lazer) row + names, where he selects / puts the zap in (clip 5.3-6.0)
+    "LAZER": dict(clip="lazer.mp4", inst="ARR", kind="fixed", segs=[(4.25, 8.25, 24.613)], cy=511, h=470, fx=895, xmin=0),
     "COMP": dict(clip="comp.mp4", inst="ARR", kind="fixed", segs=[(1.2, 6.05, 18.07)], cy=400, h=770, fx=768, xmin=0),
     # mixer: drum channels with moving meters (claps 2-3, open hats 4-5, rim/zap 6-7, HH 8, 808 9) / tight on HH + 808
     "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(1.15, 29.65, 8.569)], cy=560, h=810, fx=772, xmin=0),
@@ -114,17 +119,17 @@ VARIANT = os.environ.get("VARIANT", "A")
 # CLAP 11.02 13.05 15.05 17.04 19.03 21.05 (not drawn yet: 15.31 19.16 19.25) | HAT 16th notes 16.0-18.7 + 19.7-23.9 |
 # 808 24.74 25.51 26.48 27.25 27.99 28.76 29.5 31.27 32.02 32.76 33.53 34.53 35.24 (not drawn yet: 26.85 29.05) |
 # HATPAT 16ths 24.3-36 | OH1 27.47 | OH2 37.03 | RIM 45.74 46.23 53.76 54.24 | repeats +24 beats.
-if VARIANT == "A":       # drum focus (CALI D style), Smooth Operator in the break
-    B_ = [0, 4, 8, 11, 14, 16, 18.5, 20, 22, 24, 26.7, 28.5, 30.5, 33, 35, 36.5, 38, 40, 42, 45, 47, 48, 50.7, 52.5, 54.6, 56]
-    L_ = ["full:MACRO_W", "face:MACRO_T", "full:MACRO_D", "full:CLAP", "face:MACRO_W", "full:HAT", "face:MACRO_D",
-          "full:HAT", "face:SCRATCH", "full:808", "full:OH1", "face:HATPAT", "full:808", "full:HATPAT", "face:808",
-          "full:OH2", "full:MIXER_T", "full:MACRO_P", "face:PLUGIN", "full:RIM", "full:MACRO_D", "full:808_R",
+if VARIANT == "A":       # drum focus (CALI D style), Smooth Operator + lazer zap in the break
+    B_ = [0, 4, 8, 11, 13.5, 16, 19.5, 21.75, 24, 26.7, 28.5, 30.5, 33, 35, 36.5, 38, 40, 44.5, 46.5, 48, 50.7, 52.5, 54.6, 56]
+    L_ = ["full:MACRO_W", "face:MACRO_T", "full:RESO", "full:CLAP", "face:RESO", "full:HAT", "face:MACRO_W",
+          "full:SCRATCH", "full:808", "full:OH1", "face:HATPAT", "full:808", "full:HATPAT", "face:808",
+          "full:OH2", "full:MIXER_T", "face:LAZER", "full:RIM", "face:PLUGIN", "full:808_R",
           "face:OH1_R", "full:RIM", "face:MACRO_W"]
     REACT_J = 28.5 / 4
-else:                    # B: variation with the mixer, the compressor on the melody and the lazer perc channel rack
-    B_ = [0, 4, 8, 10.5, 13, 16, 18.5, 20, 22, 24, 26.7, 29.3, 31.5, 33.5, 35.5, 37.5, 40, 42.5, 45, 46.6, 48, 50.7, 52.5, 54.6, 56]
-    L_ = ["full:MACRO_W", "face:MACRO", "full:MACRO_D", "face:CLAP", "full:MACRO_D", "full:HAT", "face:MACRO_T",
-          "full:HAT", "full:SCRATCH", "full:HATPAT", "face:COMP", "full:808", "full:HATPAT", "face:808", "full:OH2",
+else:                    # B: variation with the mixer, the compressor on the melody and the lazer zap channel rack
+    B_ = [0, 4, 8, 10.5, 13, 16, 18.5, 21.75, 24, 26.7, 29.3, 31.5, 33.5, 35.5, 37.5, 40, 42.5, 45, 46.6, 48, 50.7, 52.5, 54.6, 56]
+    L_ = ["full:MACRO_W", "face:MACRO", "full:RESO", "face:CLAP", "full:RESO", "full:HAT", "face:MACRO_T",
+          "full:SCRATCH", "full:HATPAT", "face:COMP", "full:808", "full:HATPAT", "face:808", "full:OH2",
           "full:MIXER_T", "face:LAZER", "full:MACRO_P", "full:RIM", "face:PLUGIN", "full:808_R", "face:OH1_R",
           "full:RIM", "face:MACRO"]
     REACT_J = 33.5 / 4
@@ -222,7 +227,7 @@ for s in shots:
     s["theta"] = 0.0
     if s["idx"] == 0:
         s["zm"] = "impact"
-    elif s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "COMP", "LAZER"):
+    elif s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "COMP"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and (v["kind"] == "roll" or v.get("follow")):
         s["zm"] = "track"                       # tight macro, camera follows the playhead
@@ -431,9 +436,14 @@ def reader(path, ss, nframes, w, h_):
     p.wait()
 
 
-def find_playhead(frm, kind, lo=None, light=False):
+def find_playhead(frm, kind, lo=None, light=False, rows=None, pht=0.75):
     if kind == "fixed":
         return None
+    if rows:                                 # playhead hidden behind a waveform: look in an empty track instead
+        reg = frm[rows[0]:rows[1]:3].astype(np.int16)
+        g = (reg[..., 1] > 70) & (reg[..., 1] - reg[..., 2] > 35) & (reg[..., 1] - reg[..., 0] > 25)
+        c = np.where(g.mean(axis=0)[lo:1890] > pht)[0]
+        return int(c[0]) + lo if len(c) else None
     if light:                                # FL light theme: brown-orange 1-px playhead core
         reg = frm[210:870:5].astype(np.int16)
         g = (np.abs(reg[..., 0] - 91) < 22) & (np.abs(reg[..., 1] - 140) < 30) & (np.abs(reg[..., 2] - 185) < 28)
@@ -541,7 +551,7 @@ for s in shots:
     lastx = [None]
     for n in range(f0, f1):
         src = next(rd)
-        x = find_playhead(src, v["kind"], v.get("lo"), v.get("light", False))
+        x = find_playhead(src, v["kind"], v.get("lo"), v.get("light", False), v.get("ph_rows"), v.get("pht", 0.75))
         if x is not None and lastx[0] is not None and abs(x - lastx[0]) < 150:
             x = 0.5 * x + 0.5 * lastx[0]
         if x is not None:
