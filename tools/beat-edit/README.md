@@ -121,3 +121,12 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - Snare + 808 repeat exactly 8 bars later (band/pitch correlation ≈1.0), so `SNARE8` / `808_8` reuse them in phrase 2.
 - "Putting in clap" only has the 4 claps that were already drawn; it's used as one tight (2×) shot around a clap hit. The clap offset needed −50 ms vs the clock-derived D (checked on the output frames).
 - **Mixer / plugin shots (Jack's feedback on Dope B):** frame the mixer on the channels whose meters actually move (measure orange meter pixels over the shot; here master, 808, kick, snare, clap), never a generic strip. Show a plugin window (Smooth Operator) whole, in the split panel (1080x1120 fits a wide window), not cropped into a 9:16 sliver. Fixed views need `xmin=0`: the default `xmin` (745) silently pushes the crop to the right.
+
+### ARRESTED (100 BPM, Oct 29): `build_arr.py`, `VARIANT=A|B`
+
+- Window bars 3–16 (0:04.88–0:38.48), drop at bar 9 (0:19.28); bars 15–16 repeat bars 9–10, so 808 / hat pattern / open hat views are reused 6 bars later (`*_R`).
+- `arr_locate.py` finds where each recording's own audio sits in the master (all 0.95–0.99 except the Reso bass line, which isn't in this beat's arrangement, so it isn't used).
+- **Follow-mode hats:** FL redraws every ~3 OBS frames and the 16th notes are ~70 px apart, so frame-to-frame shift tracking aliases. Take the scroll speed from the grid (px per beat ÷ beat length) instead. Every hit then lands on the 16th grid.
+- Clap / 808 / open hat / rim are "putting in" clips: `arr_validate.py` lists the notes not drawn yet (`miss`), and the plan avoids them.
+- **Mixer rule in practice:** a mixer shot during the intro or the break shows flat meters. Only place mixer shots where the drums framed in them are playing. Smooth Operator was reused from the Dope Boy session as a non-synced cutaway (it's a spectrum, so there's no visible timing to break).
+- Intro with only the melody: open on the wide arrangement, not a tight crop of empty tracks.
