@@ -135,3 +135,14 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - The scratch fill is an arrangement page view whose playhead is hidden behind the waveform, so the old shot never moved. Detect the playhead in an empty track below (`ph_rows`), ride it (`roll` + track zoom), and only use the stretch where it's on screen.
   - The lazer channel-rack shot is framed tight on the Zap 3 [Perc] row where he puts it in (clip ~5.3–6.0 s), with a gentle push and no punch zooms.
   - Check every roll shot starts near a real note. A 2-beat lead-in of empty grid before the first rim read as dead, so the previous shot was lengthened.
+
+### RACK ON TOP (144 BPM, Oct 31): `build_rack.py`, `VARIANT=A|B|C`
+
+- Window bars 7–40 (0:10.02–1:06.69), 56.7 s. Each variant uses a different single face clip (A MVI_5561 yellow tee, B MVI_5558 navy, C the GLOCK cap clip), so there's never an outfit change mid-edit. `FACE_SEGS` were hand-labelled for MVI_5561. If a long edit needs more clean face than one clip has, clean stretches get reused (second pass, offset).
+- Clock OCR: the small "B:S:T" label sits inside the wider clock crop, so mask it. OCR misreads split runs (e.g. 37.83 vs 27.83 = a "3" read as "2"), so merge runs with the same offset by hand.
+- One picture offset for every view (song = clip + Dp + 0.02), fitted from note crossings vs master onsets. Every view lands within ~25 ms.
+- The 808 phrase at bar 37 repeats bar 29 (pitch correlation 1.0), so it's reused there (`*_R`).
+- Mixer: meters measured per strip. Only master, hats, samples and 808 move, so both mixer framings centre on those.
+- Hi-hat roll: don't centre on the crossed row alone. The F#4 rolls sit below the C5 eighths, so keep both rows in frame.
+- Before the drums enter, arrangement crops on the drum rows show empty tracks, so use sample/bongo rows there.
+- Crop `xmin=462` keeps the piano keyboard strip out of tight roll shots.
