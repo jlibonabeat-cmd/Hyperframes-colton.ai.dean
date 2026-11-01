@@ -155,3 +155,7 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **Smooth-scroll rolls** (hi-hats, 808 pattern 3, bell full) play at the keyboard edge (x≈450). Take px/bar from two ruler numbers on screen, then fit only the play x. Phase-correlating the ruler strip locks onto the static toolbar, so don't use it. Wide 808 notes have no visible edge at that zoom, so their hits come from master sub onsets inside the covered stretch.
 - Pattern 1 (bars 33-40) has no roll recording and doesn't reuse the pattern 4 hats (57% match), so it uses the arrangement view, the face shots and Smooth Operator.
 - Face: the new copy_99ED92DA_1.MOV is a CapCut export of the same take as GLOCK (mirrored, with a CapCut end card after 29.2 s). hflip it and trim before 29.2 s.
+- **Packman revision (Jack's feedback):** "a lot of macro shots towards the end", and 0:18-0:20 "not focused on anything" (a lazer roll cut in before its first note, so it was an empty grid). Fixes:
+  - Every roll shot must open within ~1 beat of a visible hit.
+  - When a section has no recording, test every recorded view shifted by whole phrases against the master (per-hit, <30 ms) and reuse the ones that repeat: pattern-4 snare +24 bars (6/6), lazer +8 (4/4), pattern-2 snare +8 (only between its undrawn notes), pattern-4 open hats +24 (windowed).
+  - Arrangement shots are now only the wide entry/exit of a section.

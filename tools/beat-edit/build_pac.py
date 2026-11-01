@@ -72,7 +72,13 @@ V = {
     "SNARE": dict(ROLL, clip="snare.mp4", inst="SNARE", segs=[(11.5, 14.75, 20.897 + OF), (9.0, 10.45, 20.897 + OF)], cy=520, h=480, hs=380, tz=1.4),
     "STICK": dict(ROLL, clip="stick.mp4", inst="SNARE", segs=[(5.0, 11.15, 27.35 + OF)], cy=540, h=480, hs=380, tz=1.4),
     "LAZER": dict(FOL, clip="lazer.mp4", inst="ARR", segs=[(2.1, 11.3, -2.155 + P2)], cy=493, h=480, hs=380, tz=1.3),
-    "808F2": dict(FOL, clip="s808_2full.mp4", inst="808", segs=[(1.05, 9.2, -0.889 + P2)], cy=456, h=560, hs=440, tz=1.05),
+    "808F2": dict(FOL, clip="s808_2full.mp4", inst="808", segs=[(0.9, 9.2, -0.889 + P2)], cy=456, h=560, hs=440, tz=1.05),
+    # pattern 1 (bars 33-40) re-uses: pattern-4 snare (+24 bars, 6/6 hits), pattern-4 open hats (+24, used 103-107.5 only),
+    # lazer (+8, 4/4) and pattern-2 snare (+8, only 112-114.1 where nothing heard is undrawn)
+    "SNARE4_R": dict(ROLL, clip="snare4.mp4", inst="SNARE", segs=[(4.45, 12.55, 5.456 + OF + 24 * BAR)], cy=519, h=480, hs=380, tz=1.4),
+    "OH4_R": dict(ROLL, clip="oh4.mp4", inst="HAT", segs=[(5.6, 10.45, 4.0 + OF + 24 * BAR)], cy=540, h=480, hs=380, tz=1.4),
+    "LAZER_R": dict(FOL, clip="lazer.mp4", inst="ARR", segs=[(2.1, 11.6, -2.155 + P2 + 8 * BAR)], cy=493, h=480, hs=380, tz=1.3),
+    "SNARE_R": dict(ROLL, clip="snare.mp4", inst="SNARE", segs=[(11.5, 14.75, 20.897 + OF + 8 * BAR), (9.0, 10.45, 20.897 + OF + 8 * BAR)], cy=520, h=480, hs=380, tz=1.4),
     # mixer (pattern 2, pattern mode): split = master..ch12 with the Soft Clipper window; full = Soft Clipper + 808 strip
     "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(0.85, 7.75, 1.523 + P2), (8.1, 17.4, -8.077 + P2)], cy=560, h=850, fx=772, xmin=0),
     "MIXER_T": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(0.85, 7.75, 1.523 + P2), (8.1, 17.4, -8.077 + P2)], cy=480, h=700, fx=805, xmin=0),
@@ -127,27 +133,30 @@ def act(inst, t0, t1):
 # 0.8-27.5 | BELL 32.4-53.2 (not drawn 43.6, 51.7-52.7) | 808F3 / 8083 32-64 | 808P3 hits only after 38 (not drawn 33.5 37.0)
 # 808F2 64.6-91.1 | HAT2 68-72, 76-96 | BELLF 68-94 | LAZER 78.7 94.2 | SNARE 69.9 79.0 79.5 81.9 84.4 85.9 (not drawn 70.5
 # 77.9 82.3 86.1) | STICK 78.5 94.4 (not drawn 78.7-79.1, 94.8-95.8) | mixer 64-95 | pattern 1: arrangement only.
+TAIL = [96, 99.5, 103, 107.5, 110.3, 112, 114.1, 116.5, 119.5, 123.5, 126.3, 128]
 if VARIANT == "A":       # drum focus (Rack C style)
     B_ = [0, 3, 5.5, 8, 10.5, 13, 16, 19, 21.5, 24, 26.5, 28, 32, 35, 38, 41, 44, 47, 50, 53.5, 56, 59, 61.5,
-          64, 66.5, 69, 71.5, 75, 78, 80, 82.25, 85, 88, 91, 93.5, 96, 100, 104, 108, 112, 116, 120, 124, 128]
+          64, 69, 71.5, 75, 78, 80, 82.25, 85, 88, 91, 93.5] + TAIL
     L_ = ["full:HAT4", "face:OH4", "full:SNARE4", "full:OH4", "face:HAT4", "full:SNARE4", "full:HAT4", "face:SNARE4",
           "full:HAT4", "full:SNARE4", "face:MACRO_T", "full:MACRO_W",
           "full:8083", "full:BELL", "face:808F3", "full:808P3", "full:808F3", "face:BELL", "full:8083", "full:808F3",
           "face:8083", "full:808F3", "face:8083",
-          "full:LAZER", "full:808F2", "face:HAT2", "full:BELLF", "face:808F2", "full:LAZER", "full:SNARE", "full:HAT2",
+          "full:808F2", "face:HAT2", "full:BELLF", "face:808F2", "full:LAZER", "full:SNARE", "full:HAT2",
           "face:808F2", "full:BELLF", "face:PLUGIN", "full:HAT2",
-          "full:MACRO_D", "face:MACRO_T", "full:MACRO", "face:MACRO_D", "full:MACRO_W", "face:MACRO_T", "full:MACRO_D", "face:MACRO_W"]
+          "face:MACRO_W", "full:SNARE4_R", "full:OH4_R", "face:SNARE4_R", "full:LAZER_R", "full:SNARE_R", "face:PLUGIN",
+          "full:SNARE4_R", "face:SNARE4_R", "full:LAZER_R", "face:MACRO_W"]
     REACT_J = 35 / 4
 else:                    # B: same sync, more mixer / Soft Clipper / Smooth Operator
     B_ = [0, 3, 5.5, 8, 10.5, 13, 16, 19, 21.5, 24, 26.5, 28, 32, 35, 38, 41, 44, 47, 50, 53.5, 56, 59, 61.5,
-          64, 67, 69.5, 72, 75, 78, 80, 82.25, 85, 88, 90.5, 93, 96, 100, 104, 108, 112, 116, 120, 124, 128]
+          64, 67, 69.5, 72, 75, 78, 80, 82.25, 85, 88, 90.5, 93] + TAIL
     L_ = ["full:OH4", "face:HAT4", "full:SNARE4", "face:OH4", "full:HAT4", "face:SNARE4", "full:HAT4", "full:SNARE4",
           "face:HAT4", "full:SNARE4", "full:MACRO_D", "face:MACRO_W",
           "full:808F3", "face:BELL", "full:8083", "full:808P3", "face:808F3", "full:BELL", "face:8083", "full:808F3",
-          "face:MACRO_D", "full:8083", "face:808F3",
+          "face:8083", "full:808F3", "face:8083",
           "face:MIXER", "full:808F2", "face:BELLF", "full:MIXER_T", "full:808F2", "face:LAZER", "full:SNARE", "face:HAT2",
           "full:808F2", "face:PLUGIN", "full:MIXER_T", "face:HAT2",
-          "full:MACRO_D", "face:MACRO_T", "full:MACRO", "face:PLUGIN", "full:MACRO_D", "face:MACRO_W", "full:MACRO_T", "face:MACRO"]
+          "full:MACRO_W", "face:SNARE4_R", "full:OH4_R", "full:SNARE4_R", "face:LAZER_R", "full:SNARE_R", "face:PLUGIN",
+          "full:SNARE4_R", "face:SNARE4_R", "full:LAZER_R", "face:MACRO"]
     REACT_J = 32 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
@@ -199,6 +208,9 @@ for i in range(len(CUT_BARS) - 1):
     since_face = 0 if lay == "face" else since_face + 1
 shots[-1]["n1"] = NF
 VAL = json.load(open(f"{HERE}/validate.json")) if os.path.exists(f"{HERE}/validate.json") else {}
+for _k, _sh in (("SNARE4", 24), ("OH4", 24), ("LAZER", 8), ("SNARE", 8)):
+    if _k in VAL:
+        VAL[_k + "_R"] = {"cross": [(c[0] + _sh * BAR,) + tuple(c[1:]) for c in VAL[_k]["cross"]]}
 for x in shots:
     vv = VAL.get(x["view"])
     if not vv:

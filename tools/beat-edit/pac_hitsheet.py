@@ -4,6 +4,8 @@ import json, cv2, numpy as np, sys
 name = sys.argv[1]
 v = json.load(open("validate.json")); d = json.load(open(f"out/pac_{name}_events.json"))
 
+for _k, _sh in (("SNARE4", 24), ("OH4", 24), ("LAZER", 8), ("SNARE", 8)):
+    v[_k + "_R"] = {"cross": [(c[0] + _sh * 1.2,) + tuple(c[1:]) for c in v[_k]["cross"]]}
 ST = d["start"]
 class Lazy:
     def __init__(self, p): self.cap = cv2.VideoCapture(p); self.n = int(self.cap.get(7))
