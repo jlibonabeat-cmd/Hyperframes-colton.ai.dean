@@ -146,3 +146,12 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - Hi-hat roll: don't centre on the crossed row alone. The F#4 rolls sit below the C5 eighths, so keep both rows in frame.
 - Before the drums enter, arrangement crops on the drum rows show empty tracks, so use sample/bongo rows there.
 - Crop `xmin=462` keeps the piano keyboard strip out of tight roll shots.
+
+### PACKMAN (200 BPM, Nov 1): `build_pac.py`, `VARIANT=A|B`
+
+- Window bars 9-40 (0:09.66-0:48.06). Pattern 4 intro, bar 16 drop-out, pattern 3 drop at bar 17, pattern 2 at bar 25, pattern 1 at bar 33.
+- New FL layout (browser docked left): clock crop `140:50:925:8`, with the small B:S:T label masked.
+- Jack recorded pattern 2 in **pattern mode**: the clock reads pattern time, so song = clip + Dp + 24 bars (confirmed by audio location and note hits, right after pattern 3 as he said). Several other recordings were also pattern-mode loops, so locate every recording by its own audio first.
+- **Smooth-scroll rolls** (hi-hats, 808 pattern 3, bell full) play at the keyboard edge (x≈450). Take px/bar from two ruler numbers on screen, then fit only the play x. Phase-correlating the ruler strip locks onto the static toolbar, so don't use it. Wide 808 notes have no visible edge at that zoom, so their hits come from master sub onsets inside the covered stretch.
+- Pattern 1 (bars 33-40) has no roll recording and doesn't reuse the pattern 4 hats (57% match), so it uses the arrangement view, the face shots and Smooth Operator.
+- Face: the new copy_99ED92DA_1.MOV is a CapCut export of the same take as GLOCK (mirrored, with a CapCut end card after 29.2 s). hflip it and trim before 29.2 s.
