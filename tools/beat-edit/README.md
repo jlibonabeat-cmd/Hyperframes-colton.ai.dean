@@ -159,3 +159,27 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - Every roll shot must open within ~1 beat of a visible hit.
   - When a section has no recording, test every recorded view shifted by whole phrases against the master (per-hit, <30 ms) and reuse the ones that repeat: pattern-4 snare +24 bars (6/6), lazer +8 (4/4), pattern-2 snare +8 (only between its undrawn notes), pattern-4 open hats +24 (windowed).
   - Arrangement shots are now only the wide entry/exit of a section.
+
+### WALK THIS WAY (98 BPM, Nov 1): `build_wtw.py`, `VARIANT=A|B`
+
+- Jack asked for about 30 s, so the window is bars 21–32 (0:49.00–1:18.39, 29.4 s). The drums come in at bar 21, there's a fill in bar 28, and the drop is at bar 29. Face: the cap clip from Packman (`face_pac.mp4`).
+- **Beige FL theme.** For the clock OCR, use an Otsu threshold (the fixed threshold returns nothing). Crop `140:50:925:8`.
+  - Playhead: the red column (R−G > 45, R > 200), taking the median column.
+  - Notes are either brown boxes or thin dark bars (hats, open hats and rims). Mask both.
+  - Drop any entries in the velocity lane (y ≥ 880).
+- **Hybrid page → follow rolls.** The playhead moves across the page, then parks at x≈926 while the notes scroll. `wtw_validate2.py` handles each stretch differently:
+  - Page stretches: playhead crossings with an interpolated playhead x.
+  - Parked stretches: hits predicted from the median page-mode playhead speed.
+  - Follow-mode estimates are noisy (±50 ms, and some are spurious). For checks, cluster them and snap each cluster to the master onset in that instrument's band. `wtw_hitsheet.py` does this.
+- **The drop (bars 29–32) is an exported drum bounce.** It's the "Drums exported" audio clip in the playlist, so there's no MIDI for it. `wtw_reuse.py` shifts every validated hit by 4 bars (`*_R`) and 8 bars (`*_8`). It keeps a hit only where the master's onset in that band, within ±35 ms, is at least 0.6× the original's:
+  - Rim: repeats exactly at +8.
+  - Hats: repeat at +8 in 35.5–38 and 44.8–46 (beats from bar 21). Elsewhere the hat at bar 31 beat 0.7 is missing.
+  - Open hat at +8: its bar 32 note doesn't sound, so it isn't used.
+  - Toms: don't repeat in the drop.
+  - Bar 28 (+4): hats, rim and the fill tom all match.
+  - So the drop is rim and hat rolls with the face every 2–3 shots, and only short waveform, guitar and plugin cutaways in between. That avoids the macro run near the end that Jack flagged on Packman.
+- **Sync check on the output.** `wtw_rendercheck.py` tracks the rendered notes against the rendered playhead and compares the extrapolated crossings to master onsets. Watch for two things:
+  - Back-to-back 16th notes merge into one box.
+  - The playhead glow hides the note for ~2 frames, so "note under the glow on the heard frame" is the real test.
+  - Source and output are both 30 fps, so a shifted reuse can land ±1 frame (≈33 ms) differently from the original.
+- Open-hat notes are pink and thin, so in a tile sheet they look like they sit right of the playhead. Check at full size before "fixing" them.
