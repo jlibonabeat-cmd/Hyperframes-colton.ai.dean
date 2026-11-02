@@ -183,3 +183,27 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - The playhead glow hides the note for ~2 frames, so "note under the glow on the heard frame" is the real test.
   - Source and output are both 30 fps, so a shifted reuse can land ±1 frame (≈33 ms) differently from the original.
 - Open-hat notes are pink and thin, so in a tile sheet they look like they sit right of the playhead. Check at full size before "fixing" them.
+
+### MOVE (143 BPM, B minor, Nov 2): `build_move.py`, `VARIANT=A|B`
+
+- Jack asked for 0:17–0:49. The window is bars 11–28 (0:16.8–0:47.0, 30.2 s). Bar 29 restarts the drop note for note, so ending there loops cleanly; going on to 0:49 would cut mid-phrase.
+  - Bars 11–12: sample intro plus the fill/riser, shown on the arrangement view.
+  - Bar 13: the drop.
+  - Bars 21–28: repeat bars 13–20 exactly.
+- **Purple FL theme.**
+  - Recordings are 60 fps OBS. Clock crop `140:50:925:8`.
+  - The playhead and the notes share the same pink-purple (B > 190, R > 150, 55 < G < 130). The playhead is the only column covering more than 55% of the grid rows.
+  - Roll crops clamp to y 185–902 (`ymin` / `ymax`) so the title bar, ruler and velocity lane stay out.
+- **Every recording plays in song mode at its real position.** song = clip + Dp + 0.02. Audio location agreed with the clock, except New Jazz, which correlates best at other phrases because the pattern repeats.
+  - Spinz 808 and the snare: page mode, then follow mode.
+  - Sample chops: one slice per beat.
+- `move_validate.py` tracks each note across frames using its velocity, so follow-mode scrolling doesn't break the track. It fits note x minus playhead x and extrapolates where that reaches 0. Results against master onsets:
+  - spinz −12 ms
+  - phantom −20 ms
+  - snare +6 ms
+  - chops 0 ms
+- **Note ends that FL splits off at the playhead** (the box edge sits 1–7 px right of it) are ignored, so they don't count as false hits.
+- `move_reuse.py` shifts every picture hit +8 bars and keeps it only where the master has it. Kept: 9/9 spinz, 4/5 phantom, 9/9 snare, 28/29 chops. So bars 21–28 reuse the drop recordings (`*_8`).
+- **Clap recording:** the clap notes are 5 px ticks at this zoom and don't read in a 9:16 crop, so there are no clap shots.
+- **Mixer pass:** it's at song bars 44–63, which is the third drop and identical to bars 13–28, so it's mapped back by −36 bars. Strips 1–10 are framed: chops, loop, percloop, both 808s, fill, FX, percloop 2, clap, snare.
+- Smooth Operator is from this session, synced. Its whole window sits in the split panel.
