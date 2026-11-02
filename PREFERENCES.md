@@ -87,3 +87,4 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 
 - Never build a beat edit without me (face-cam) in it. (2026-10-19)
 - Never cut screen recordings together randomly or label them with text. (2026-10-19)
+- Move (2026-11-02): when a roll recording starts with him putting notes in, don't use that stretch for a heard note. If the pattern repeats, use the follow-along part shifted by whole phrases instead. Don't follow the sample slices with yet another 808 roll: break that kind of run with an aesthetic cutaway (tight mixer on the active strips, Smooth Operator, Soft Clipper if recorded). He likes a 6 s opening of wide arrangement → split → tilted riser → 808 on the drop.

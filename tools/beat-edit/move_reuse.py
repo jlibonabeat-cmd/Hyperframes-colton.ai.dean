@@ -23,6 +23,11 @@ for v, band in BAND.items():
         (keep if fl(band, t + 8 * BAR) >= max(0.02, 0.6 * fl(band, t)) else drop).append((t + 8 * BAR, yy))
     out[v + "_8"] = {"cross": keep, "dropped": drop}
     print(v, len(h), "hits;", v + "_8", len(keep), "kept", [round((d[0] - START) / (BAR / 4), 2) for d in drop], "dropped (beats)")
+# SPINZ_M4: the follow-along part of the Spinz recording (clip >= 7.5) shown 4 bars early (pattern repeats every 4 bars)
+h = [x for x in json.load(open("spinz_hits.json")) if x[2] >= 7.5]
+keep = [(t - 4 * BAR, yy) for t, yy, c in h if fl("sub", t - 4 * BAR) >= max(0.02, 0.6 * fl("sub", t))]
+out["SPINZ_M4"] = {"cross": keep}
+print("SPINZ_M4", len(keep), "of", len(h), "kept")
 json.dump(out, open("validate_x.json", "w"))
 H = {}
 for nm, band in (("kick", "sub"), ("snare", "snare"), ("hat", "hi")):

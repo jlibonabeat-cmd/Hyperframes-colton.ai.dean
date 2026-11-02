@@ -39,7 +39,7 @@ T, X = [], []
 EDGE = []
 for s in d["shots"]:
     vv = v.get(s["view"]); face = s["layout"] == "face"
-    if s["view"] in ("PLUGIN", "MACRO_W", "MACRO_T", "MACRO_K", "FUNK", "MIXER"):
+    if s["view"] in ("PLUGIN", "PLUGIN_F", "MACRO_W", "MACRO_T", "MACRO_K", "FUNK", "MIXER", "MIXER_T"):
         for u in (0.1, 0.5, 0.9):
             n = int((s["t0"] + (s["t1"] - s["t0"]) * u) * 30); X.append(tile(F[n], f"{s['view']} n{n}", False))
     if not vv: continue

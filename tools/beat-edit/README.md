@@ -207,3 +207,8 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **Clap recording:** the clap notes are 5 px ticks at this zoom and don't read in a 9:16 crop, so there are no clap shots.
 - **Mixer pass:** it's at song bars 44–63, which is the third drop and identical to bars 13–28, so it's mapped back by −36 bars. Strips 1–10 are framed: chops, loop, percloop, both 808s, fill, FX, percloop 2, clap, snare.
 - Smooth Operator is from this session, synced. Its whole window sits in the split panel.
+- **Move revision (Jack's feedback, Nov 2):**
+  - **A 0:06–0:08:** "808 note isn't always seen". That stretch of the Spinz recording is him still putting notes in. The Spinz pattern repeats every 4 bars, so `SPINZ_M4` shows the follow-along part 4 bars early, framed wider so the incoming note is on screen from the cut.
+  - **A 0:13:** an 808 shot right after the sample slices was "kind of boring footage". Replaced with a tight mixer framing (`MIXER_T`, strips 3–10). B uses a Smooth Operator cutaway there (`PLUGIN_F`, non-synced, the spectrum has no visible timing).
+  - **B:** "from 0:16 great, before that clunky". B now uses A's opening 6 s, which Jack liked. A from 0:15 was "flawless".
+  - There's no Soft Clipper footage: it's only listed in the mixer inserts, never opened.

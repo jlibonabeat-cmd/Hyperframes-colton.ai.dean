@@ -65,6 +65,13 @@ V = {
     # mixer pass at bars 44-63 (the third drop = bars 13-28 note for note): channels 1-10 with the 808s, clap, snare, percloop
     "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(8.75, 32.3, 71.789 + OF - 36 * BAR)], cy=560, h=1000, hs=900, fx=790, xmin=0),
 }
+# the Spinz 808 pattern repeats every 4 bars: SPINZ_M4 shows the follow-along part (clip 7.5-16.4, every note drawn)
+# 4 bars early, for bars 13-17 where the recording is still him putting notes in (Jack: "808 note isn't always seen")
+V["SPINZ_M4"] = dict(ROLL, clip="spinz.mp4", inst="808", segs=[(7.5, 16.45, 16.227 + OF - 4 * BAR)], cy=728, h=560, hs=400, tz=1.0)   # wider: the incoming 808 is on screen from the cut
+# tighter mixer framing: strips 3-10 (percloop, both 808s, fill, FX, percloop 2, clap, snare) with meters moving
+V["MIXER_T"] = dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(8.75, 32.3, 71.789 + OF - 36 * BAR)], cy=470, h=800, hs=760, fx=822, xmin=0)
+# Smooth Operator as a free (non-synced) cutaway where the synced pass doesn't cover the song: a spectrum, no visible timing
+V["PLUGIN_F"] = dict(clip="smooth.mp4", inst="ARR", kind="fixed", free=True, split_only=True, segs=[(1.8, 12.7, 0.0)], cy=470, h=850, fx=800, xmin=0)
 V.update(_r("SPINZ", "spinz.mp4", "808", [(3.85, 16.45, 16.227 + OF), (16.8, 17.4, 16.236 + OF)], 728, 480, 400, 1.3))
 V.update(_r("PHANTOM", "phantom.mp4", "808", [(3.05, 12.8, 17.07 + OF)], 593, 420, 360, 1.3))
 V.update(_r("SNARE", "snare.mp4", "SNARE", [(2.3, 15.85, 17.856 + OF)], 710, 340, 300, 1.4))
@@ -113,16 +120,19 @@ def act(inst, t0, t1):
 if VARIANT == "A":
     B_ = [0, 2.5, 5.5, 8, 10.5, 12.5, 15, 17.5, 20, 23.5, 27.5, 30.5, 33, 35.3, 38,
           40, 41.5, 43.5, 46.5, 49, 51.5, 55.5, 58.5, 61, 63.5, 65.5, 68, 72]
-    L_ = ["full:MACRO_W", "face:MACRO_T", "full:MACRO_K", "full:SPINZ", "face:SPINZ", "full:CHOPS", "full:SPINZ", "face:SNARE",
-          "full:PHANTOM", "full:SPINZ", "face:CHOPS", "full:SPINZ", "face:CHOPS", "full:SNARE", "face:MACRO_K",
+    # Jack (Nov 2): 0:06-0:08 808 note not always seen -> SPINZ_M4; 0:13 808 again after the slices was boring -> mixer
+    L_ = ["full:MACRO_W", "face:MACRO_T", "full:MACRO_K", "full:SPINZ", "face:SPINZ", "full:CHOPS", "full:SPINZ_M4", "face:SNARE",
+          "full:PHANTOM", "full:SPINZ", "face:CHOPS", "full:MIXER_T", "face:CHOPS", "full:SNARE", "face:MACRO_K",
           "full:FUNK", "face:SPINZ_8", "full:CHOPS_8", "full:SPINZ_8", "face:SNARE_8", "full:PHANTOM_8", "face:PLUGIN",
           "full:SPINZ_8", "full:MIXER", "face:SPINZ_8", "full:SNARE_8", "face:MACRO_T"]
     REACT_J = 10.5 / 4
 else:
-    B_ = [0, 2, 4.5, 8, 10.5, 12.5, 15.5, 17.5, 20, 23.5, 27.5, 30.5, 33, 35.3, 38,
+    # Jack (Nov 2): B from 0:16 is great; its first 16 s were clunky -> A's first 6 s (his favourite opening), then the
+    # fixed 808 shot, a Smooth Operator cutaway instead of a second 808 after the slices
+    B_ = [0, 2.5, 5.5, 8, 10.5, 12.5, 15, 17.5, 20, 23.5, 27.5, 30.5, 33, 35.3, 38,
           40, 42.5, 44.5, 46.5, 49, 51.5, 55.5, 58.5, 61, 63.5, 66, 68, 72]
-    L_ = ["full:MACRO_W", "face:MACRO_K", "full:MACRO_T", "full:SPINZ", "face:SPINZ", "full:CHOPS", "full:SPINZ", "face:SNARE",
-          "full:PHANTOM", "full:SPINZ", "face:CHOPS", "full:SPINZ", "face:CHOPS", "full:SNARE", "face:MACRO_K",
+    L_ = ["full:MACRO_W", "face:MACRO_T", "full:MACRO_K", "full:SPINZ", "face:SPINZ", "full:CHOPS", "full:SPINZ_M4", "face:SNARE",
+          "full:PHANTOM", "face:SPINZ", "full:CHOPS", "face:PLUGIN_F", "full:SNARE", "full:MIXER_T", "face:MACRO_K",
           "full:FUNK", "face:SPINZ_8", "full:CHOPS_8", "full:SPINZ_8", "face:SNARE_8", "full:PHANTOM_8", "full:MIXER",
           "face:PLUGIN", "full:CHOPS_8", "face:SPINZ_8", "full:SNARE_8", "face:MACRO_K"]
     REACT_J = 10.5 / 4
@@ -223,7 +233,7 @@ for s in shots:
     s["theta"] = 0.0
     if s["idx"] == 0:
         s["zm"] = "impact"
-    elif s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "COMP"):
+    elif s["view"] in ("MIXER", "MIXER_T", "PLUGIN", "PLUGIN_F", "COMP"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and (v["kind"] == "roll" or v.get("follow")):
         s["zm"] = "track"                       # tight macro, camera follows the playhead
