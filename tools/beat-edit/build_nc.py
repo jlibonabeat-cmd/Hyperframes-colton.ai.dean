@@ -135,7 +135,7 @@ elif VARIANT == "B":
           "full:B808F_8", "face:B808_8", "full:KICK_16", "face:MACRO_W", "full:B808F_8", "full:KICK_16", "face:B808_8",
           "full:B808F_8", "face:COMP", "full:KICK_20", "full:B808F_8", "face:MACRO_T"]
     REACT_J = 34.5 / 4
-else:
+elif VARIANT == "C":
     # C: beats from 0:40.3 (bar 31); drop beat 8 (bar 33), riser 32-40, second drop beat 40 (bar 41). Hits (beats):
     # RESO 0 4 | KICK_R4 0 5 6.5 7.5 | HATS_8 9 12 13 14 16 | B808/B808F 9.5 11 16 20 24 25.5 27 30 32 36 |
     # *_8 41.5 43 48 52 56 57.5 59 62 64 68 | KICK_16 48 53 54.5 55.5 | KICK_20 64 69 70.5 71.5
@@ -146,6 +146,15 @@ else:
           "full:B808_8", "face:B808F_8", "full:MACRO_W", "full:KICK_16", "face:B808_8", "full:KICK_16", "face:COMP",
           "full:B808F_8", "face:MACRO_T", "full:KICK_20", "full:B808_8", "face:KICK_20"]
     REACT_J = 10.5 / 4
+else:
+    # D (Jack, Nov 3: "not similar in any way ... don't have to do as many jump cuts if it's captivating"): bars 25-48,
+    # 19 shots instead of 37. Opens on the face (A-C open on a roll), long holds where the picture carries itself: whole
+    # 808 phrases scrolling past the parked playhead, a 2-bar melody split, a long tilted riser.
+    B_ = [0, 8, 16, 20, 28, 32, 39.5, 43.5, 47.5, 52, 57.5, 62, 64, 68, 75, 80, 84, 92, 96]
+    L_ = ["face:RESO", "full:KICK", "full:HATS_R4", "face:MELODY", "full:KICK_R4", "full:B808F", "face:B808", "full:B808",
+          "full:B808F", "face:MELODY", "full:PREDROP", "face:PLUGIN", "full:B808F_8", "face:B808_8",
+          "full:KICK_16", "face:COMP", "full:B808F_8", "face:KICK_20"]
+    REACT_J = 39.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 33 - 1 - START_J                    # 0:42.9 = the drop (bar 33)

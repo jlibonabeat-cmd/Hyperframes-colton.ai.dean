@@ -234,3 +234,7 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - Soft Clipper sits in the master chain but was never opened.
 - **Camera:** the hi-hat roll is zoomed (one C5 row, notes about 350 px apart), so the camera's playhead smoothing was lightened from 0.7/0.3 to 0.3/0.7. With 0.7/0.3 it lagged and one hat hit landed at the panel edge.
 - **Variant C (Jack, Nov 3: "without the first 8 seconds, slightly different edit"):** bars 31–48 (0:40.3–1:04.4, 24.2 s). The drop lands 2.7 s in, after a reso → face/arrangement → kick run-up. `START_J` and `NBARS` now depend on `VARIANT`, and `DROP_J` / `TRANS_FORCE` are derived from `START_J`.
+- **Variant D (Jack, Nov 3: "not similar in any way ... fewer jump cuts if it is captivating"):** bars 25–48 with 18 shots instead of 37.
+  - It opens on the face split (A–C open on a roll).
+  - Long holds where the picture carries itself: 2-bar reso and kick rides, the 808 follow-along phrase scrolling past the parked playhead for ~2.5 s, a 2-bar melody split, and a longer tilted riser.
+  - Cuts come only on phrase changes. Faces alternate every 1–2 shots.
