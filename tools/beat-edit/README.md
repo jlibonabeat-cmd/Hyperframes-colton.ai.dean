@@ -233,3 +233,4 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - Melody arrangement and the pre-drop arrangement, both with the playhead parked at the recorded x.
   - Soft Clipper sits in the master chain but was never opened.
 - **Camera:** the hi-hat roll is zoomed (one C5 row, notes about 350 px apart), so the camera's playhead smoothing was lightened from 0.7/0.3 to 0.3/0.7. With 0.7/0.3 it lagged and one hat hit landed at the panel edge.
+- **Variant C (Jack, Nov 3: "without the first 8 seconds, slightly different edit"):** bars 31–48 (0:40.3–1:04.4, 24.2 s). The drop lands 2.7 s in, after a reso → face/arrangement → kick run-up. `START_J` and `NBARS` now depend on `VARIANT`, and `DROP_J` / `TRANS_FORCE` are derived from `START_J`.

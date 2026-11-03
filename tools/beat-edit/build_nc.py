@@ -20,8 +20,11 @@ BPM = 179.0
 BEAT = 60.0 / BPM
 BAR = 4 * BEAT
 B0 = 0.035                           # FL bar 1 in the mp3 (fitted on note crossings vs onsets)
-START_J = 24                         # bar 25 (0:32.2)
-NBARS = 24                           # bars 25-48 -> ends on the bar-49 downbeat (1:04.4), where the beat breaks down
+VARIANT = os.environ.get("VARIANT", "A")
+# A/B: bars 25-48 (0:32.2-1:04.4). C (Jack, Nov 3: "without the first 8 seconds"): bars 31-48 (0:40.3-1:04.4), the drop
+# lands 2.7 s in. All end on the bar-49 downbeat, where the beat breaks down.
+START_J = 30 if VARIANT == "C" else 24
+NBARS = 48 - START_J
 START_BAR = START_J + 1
 START = B0 + START_J * BAR
 DUR = NBARS * BAR
@@ -122,7 +125,7 @@ if VARIANT == "A":
           "full:B808_8", "face:B808F_8", "full:KICK_16", "face:MACRO_W", "full:B808_8", "full:KICK_16", "face:COMP",
           "full:B808_8", "face:B808F_8", "full:KICK_20", "full:B808_8", "face:KICK_20"]
     REACT_J = 34.5 / 4
-else:
+elif VARIANT == "B":
     B_ = [0, 2.5, 5, 7.5, 10.5, 13.5, 16, 18.5, 21, 23.5, 26, 28.5, 30, 32, 34.5, 37, 39.5, 42.5, 45, 47.5, 50, 52.5, 55,
           57.5, 61.5, 64, 66.5, 70.5, 73.5, 76, 78, 80.5, 82.5, 85, 87.5, 90, 93, 96]
     L_ = ["full:HATS", "face:RESO", "full:MACRO_T", "full:KICK", "face:RESO", "full:KICK", "full:HATS_R4", "face:RESO",
@@ -132,10 +135,21 @@ else:
           "full:B808F_8", "face:B808_8", "full:KICK_16", "face:MACRO_W", "full:B808F_8", "full:KICK_16", "face:B808_8",
           "full:B808F_8", "face:COMP", "full:KICK_20", "full:B808F_8", "face:MACRO_T"]
     REACT_J = 34.5 / 4
+else:
+    # C: beats from 0:40.3 (bar 31); drop beat 8 (bar 33), riser 32-40, second drop beat 40 (bar 41). Hits (beats):
+    # RESO 0 4 | KICK_R4 0 5 6.5 7.5 | HATS_8 9 12 13 14 16 | B808/B808F 9.5 11 16 20 24 25.5 27 30 32 36 |
+    # *_8 41.5 43 48 52 56 57.5 59 62 64 68 | KICK_16 48 53 54.5 55.5 | KICK_20 64 69 70.5 71.5
+    B_ = [0, 2.5, 4.5, 8, 10.5, 13, 15, 17.5, 19.5, 23.5, 26.5, 31, 33.5, 37.5, 40, 42.5, 45, 47.5, 50, 53, 56, 58.5,
+          61.5, 64, 66.5, 69, 72]
+    L_ = ["full:RESO", "face:MACRO_W", "full:KICK_R4", "full:B808F", "face:B808", "full:HATS_8", "full:B808", "face:MELODY",
+          "full:B808F", "face:B808", "full:B808F", "face:B808", "full:PREDROP", "face:PLUGIN",
+          "full:B808_8", "face:B808F_8", "full:MACRO_W", "full:KICK_16", "face:B808_8", "full:KICK_16", "face:COMP",
+          "full:B808F_8", "face:MACRO_T", "full:KICK_20", "full:B808_8", "face:KICK_20"]
+    REACT_J = 10.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
-TRANS_FORCE = {8: "zoom", 16: "zoom"}
-DROP_J = 8                                   # 0:42.9 = the drop (bar 33)
+DROP_J = 33 - 1 - START_J                    # 0:42.9 = the drop (bar 33)
+TRANS_FORCE = {DROP_J: "zoom", DROP_J + 8: "zoom"}
 SILENT_J = -1
 shots = []
 last_view, last_layout, since_face = None, None, 9
