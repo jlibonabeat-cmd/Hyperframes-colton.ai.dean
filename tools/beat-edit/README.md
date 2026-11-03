@@ -246,3 +246,7 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - **Bongo:** the bongo in the split panel shows its velocity lane. The bongo at beat 24.5 is still being drawn, so it reads as an empty grid.
   - **Open hats:** one thin note per bar reads empty even framed wide. Use them only right around their hits.
   - **Hat roll:** paused before clip 4.9 s.
+- **Rack D/E revision (Jack, Nov 3):**
+  - At 0:28–0:30 "the midi pauses": the hat recording stops scrolling at clip 13.6 s even though the clock run goes on to 14.3. The hats now end at beat 70, and a split drum-arrangement shot bridges into the drop.
+  - Two hat shots back to back (0:21, 0:24) showed the same MIDI. The second one is now the compressor (D) or Smooth Operator (E).
+  - **QA:** every render now gets a frozen-picture scan (consecutive near-identical frames). The clock alone does not catch a recording that stopped scrolling.

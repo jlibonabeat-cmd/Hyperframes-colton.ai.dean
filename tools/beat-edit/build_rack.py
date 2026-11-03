@@ -172,18 +172,21 @@ elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current sty
     # (one note a bar) read as empty grids -> wider OH1_W, and the drop / drop-2 open-hat shots replaced.
     # QA pass 2: the bongo roll at 24.5 is still being drawn (empty grid) -> one long bass ride; the open-hat rolls
     # (one thin note a bar) read empty even wide -> tilted drum-arrangement ride, then OH2/OH1 only around their hits.
-    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 72, 76, 81, 92, 97, 103, 108, 111.5, 118.5, 124,
+    # Jack (Nov 3, D/E): the hat recording stops scrolling at clip 13.6 s (0:28-0:30 "the midi pauses") -> hats end at
+    # beat 70, a split drum-arrangement shot bridges to the drop; the second hat shot right after the first one
+    # (0:21 -> 0:24) was the same MIDI -> compressor cutaway (D) / Smooth Operator (E) in between instead.
+    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 70, 72, 76, 81, 92, 97, 103, 108, 111.5, 118.5, 124,
           127.5, 136]
     L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:PLUGIN", "full:MACRO_W",
-          "face:OH2", "full:OH1", "full:HAT", "face:HAT", "full:HAT", "full:MACRO_D", "face:808", "full:808B", "face:808_4",
+          "face:OH2", "full:OH1", "full:HAT", "face:COMP", "full:HAT", "face:MACRO_D", "full:MACRO_D", "face:808", "full:808B", "face:808_4",
           "full:808B", "face:808B_4", "full:MIXER_T", "face:808_R", "full:808B_R", "full:MACRO_D", "face:808B_R"]
     REACT_J = 76 / 4
 else:                    # E: same style as D, different order (opens on the intro roll full-screen, long hat ride)
-    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 66, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
+    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 66, 70, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
           127.5, 131, 136]
     L_ = ["full:INTRO", "face:BASS", "full:BONGO", "full:BASS", "face:BASS", "full:BONGO", "full:BASS", "face:COMP",
-          "full:MACRO_W", "face:OH2", "full:OH1", "full:HAT", "face:HAT", "full:HAT", "full:MACRO_D", "full:808B", "face:808B",
-          "full:808_4", "face:808B", "full:808B_4", "face:PLUGIN", "full:808_R", "face:808B_R", "full:MACRO_D", "full:808B_R",
+          "full:MACRO_W", "face:OH2", "full:OH1", "full:HAT", "face:PLUGIN", "full:HAT", "face:MACRO_D", "full:MACRO_D",
+          "full:808B", "face:808B", "full:808_4", "face:808B", "full:808B_4", "face:MIXER_T", "full:808_R", "face:808B_R", "full:MACRO_D", "full:808B_R",
           "face:808B_R"]
     REACT_J = 86 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
