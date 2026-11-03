@@ -150,10 +150,12 @@ else:
     # D (Jack, Nov 3: "not similar in any way ... don't have to do as many jump cuts if it's captivating"): bars 25-48,
     # 19 shots instead of 37. Opens on the face (A-C open on a roll), long holds where the picture carries itself: whole
     # 808 phrases scrolling past the parked playhead, a 2-bar melody split, a long tilted riser.
-    B_ = [0, 8, 16, 20, 28, 32, 39.5, 43.5, 47.5, 52, 57.5, 62, 64, 68, 75, 80, 84, 92, 96]
-    L_ = ["face:RESO", "full:KICK", "full:HATS_R4", "face:MELODY", "full:KICK_R4", "full:B808F", "face:B808", "full:B808",
-          "full:B808F", "face:MELODY", "full:PREDROP", "face:PLUGIN", "full:B808F_8", "face:B808_8",
-          "full:KICK_16", "face:COMP", "full:B808F_8", "face:KICK_20"]
+    # Jack's D notes: the melody arrangement split at 0:07-0:09 was boring (not showing what's going on) -> hats + reso
+    # rolls there (and the same melody split at 0:17 -> 808 page roll); at 0:25 stay on the 808 page shot instead of cutting to the kick (it ends on its 4th hit, beat 80).
+    B_ = [0, 8, 16, 22, 28, 32, 39.5, 43.5, 47.5, 52, 57.5, 62, 64, 68, 80, 87.5, 96]
+    L_ = ["face:RESO", "full:KICK", "full:HATS_R4", "face:RESO", "full:KICK_R4", "full:B808F", "face:B808", "full:B808",
+          "full:B808F", "face:B808", "full:PREDROP", "face:PLUGIN", "full:B808F_8", "face:B808_8",
+          "full:B808F_8", "face:KICK_20"]
     REACT_J = 39.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}

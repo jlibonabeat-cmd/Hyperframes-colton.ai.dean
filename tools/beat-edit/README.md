@@ -238,3 +238,6 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - It opens on the face split (A–C open on a roll).
   - Long holds where the picture carries itself: 2-bar reso and kick rides, the 808 follow-along phrase scrolling past the parked playhead for ~2.5 s, a 2-bar melody split, and a longer tilted riser.
   - Cuts come only on phrase changes. Faces alternate every 1–2 shots.
+- **D revision (Jack, Nov 3):**
+  - The melody-arrangement split at 0:07–0:09 was "a boring shot, not really showing what is going on". It is now hats then reso rolls; the second melody split at 0:17 was swapped for the 808 page roll too.
+  - At 0:25 the cut from the 808 to the kick broke a shot he liked. It now stays on the 808 page view for the whole phrase (4 s), and the kick and compressor shots after it were dropped.
