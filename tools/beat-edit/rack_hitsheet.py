@@ -2,9 +2,7 @@
 channel-rack shot. sheets/<v>_hits.png, sheets/<v>_fixed.png"""
 import json, cv2, numpy as np, sys
 name = sys.argv[1]; R8 = 8 * 240 / 144
-v = json.load(open("validate.json")); d = json.load(open(f"out/rack_{name}_events.json"))
-for k in ("808", "808B"):
-    v[k + "_R"] = {"cross": [(c[0] + R8,) + tuple(c[1:]) for c in v[k]["cross"] if 46.6 <= c[0] < 48.4]}
+v = json.load(open("validate_x.json")); d = json.load(open(f"out/rack_{name}_events.json"))   # rack_reuse.py
 ST = d["start"]
 class Lazy:
     def __init__(self, p): self.cap = cv2.VideoCapture(p); self.n = int(self.cap.get(7))
@@ -23,8 +21,10 @@ for s in d["shots"]:
         for u in (0.1, 0.5, 0.9):
             n = int((s["t0"] + (s["t1"] - s["t0"]) * u) * 30); X.append(tile(F[n], f"{s['view']} n{n}", False))
     if not vv: continue
-    ts = [c[0] - ST for c in vv["cross"] if s["t0"] <= c[0] - ST < s["t1"]]
-    if len(ts) > 6: ts = ts[::max(1, len(ts) // 6)]           # dense hats: sample
+    hs = sorted(c[0] - ST for c in vv["cross"] if s["t0"] <= c[0] - ST < s["t1"]); ts = []
+    for h in hs:                                               # one frame per heard hit (cluster the estimates)
+        if not ts or h - ts[-1] > 0.1: ts.append(h)
+    if len(ts) > 8: ts = ts[::max(1, len(ts) // 8)]           # dense hats: sample
     for tv in ts:
         n = int(round(tv * 30))
         if n < len(F): T.append(tile(F[n], f"{s['view']} {tv:.2f} n{n}", face))

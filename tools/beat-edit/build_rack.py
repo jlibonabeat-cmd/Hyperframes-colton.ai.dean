@@ -41,6 +41,7 @@ FACES = {
     # copy_99ED92DA (GLOCK clip, mirror-corrected 1080x1920 proxy)
     "C": ("face2_flip.mp4", 1080, 1920, 460, [(0.6, 2.2), (3.4, 4.0), (5.0, 9.2), (9.9, 17.7), (18.6, 22.3), (22.9, 26.4)], 19.0),
 }
+FACES["D"] = FACES["E"] = FACES["C"]           # D/E: rack C re-cut in the No Competition D style (same face clip)
 FACE_FILE, FACE_W, FACE_H, FACE_Y0, FACE_SEGS, REACT_T = FACES[VARIANT]
 
 out_path = sys.argv[1]
@@ -75,6 +76,11 @@ V = {
     # follow views: playhead parked at x=570, notes scroll in
     "HAT": dict(clip="hat.mp4", inst="HAT", kind="fixed", follow=True, ph=570, xmin=462, segs=[(1.15, 14.65, 25.713 + OF)], cy=713, h=420, hs=330, tz=1.1),
     "808B": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF)], cy=490, h=600, hs=480, tz=1.05),
+    "808_4": dict(ROLL, clip="s808.mp4", inst="808", segs=[(3.7, 15.9, 37.832 + OF + 4 * BAR)], cy=540, h=560, hs=460),
+    "808B_4": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + 4 * BAR)], cy=490, h=600, hs=480, tz=1.05),
+    "OH1_8": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 8 * BAR)], cy=540, h=720, hs=560, tz=1.0),
+    "OH1_20": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 20 * BAR)], cy=540, h=720, hs=560, tz=1.0),
+    "OH1_W": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF)], cy=540, h=720, hs=560, tz=1.0),   # D/E: wider
     "808B_R": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + R8)], cy=490, h=600, hs=480, tz=1.05),
     # mixer: strips with moving meters = master, hat (7), samples (10-11, 15), 808 (12). Split = master..15 whole;
     # full = tight on hat..808 with names, meters and faders
@@ -131,7 +137,7 @@ if VARIANT == "A":       # drum focus (yellow tee): bass / bongo / open hats / h
     B_ = [0, 4, 8, 12, 14, 16, 19.5, 23, 25, 28, 30, 33, 36, 40, 42.5, 44.5, 46.5, 48.5, 50, 53, 56, 58, 61, 64, 66, 70,
           72, 74, 76, 79, 81.5, 84, 87, 90, 93, 96, 99, 101, 104, 106, 109, 111.5, 114.5, 117, 120, 122, 124, 127, 130, 132, 136]
     L_ = ["full:INTRO", "face:MACRO_W", "full:BASS", "full:BONGO", "face:MACRO_T", "full:BASS", "face:BASS", "full:BASS",
-          "full:MACRO", "face:BONGO", "full:BASS", "full:MACRO_T", "face:MACRO_W", "full:OH1", "full:MACRO_D", "face:OH2",
+          "full:MACRO", "face:BONGO", "full:BASS", "full:MACRO_T", "face:MACRO_W", "full:OH1", "full:MACRO_W", "face:OH2",
           "full:MACRO", "full:OH1", "face:HAT", "full:HAT", "full:MACRO_D", "face:HAT", "full:HAT", "full:MACRO_W", "face:HAT",
           "full:HAT", "full:MACRO_D", "face:MACRO", "full:808", "full:808B", "face:808", "full:808B", "full:808", "face:808B",
           "full:808", "full:808B", "face:808", "full:808B", "full:MACRO_D", "face:MIXER", "full:MIXER_T", "face:PLUGIN",
@@ -148,7 +154,7 @@ elif VARIANT == "B":     # navy tee: same sync, more mixer + Smooth Operator + c
           "full:MIXER_T", "face:MACRO", "full:MACRO_D", "face:COMP", "full:808_R", "full:808B_R", "face:MACRO", "full:MACRO_D",
           "full:MACRO_T", "face:MACRO_W"]
     REACT_J = 76 / 4
-else:                    # C (GLOCK face clip): drum focus, different order; 808B leads the drop
+elif VARIANT == "C":      # C (GLOCK face clip): drum focus, different order; 808B leads the drop
     B_ = [0, 4, 8, 11.5, 14, 16, 19.5, 23, 26, 28, 30, 33, 36, 40, 42.5, 44.5, 46.5, 48.5, 50, 53, 56, 59, 61, 64, 66, 69,
           72, 76, 78, 80.5, 83.5, 86, 88.5, 91.5, 94, 96.5, 99.5, 102, 104, 107, 110, 113, 116, 120, 122, 124, 127, 130, 133, 136]
     L_ = ["full:MACRO_W", "face:INTRO", "full:BASS", "full:BONGO", "full:MACRO_T", "face:BASS", "full:BASS", "full:MACRO",
@@ -158,6 +164,28 @@ else:                    # C (GLOCK face clip): drum focus, different order; 808
           "full:808", "full:808B", "face:808", "full:808B", "full:MACRO_D", "face:MIXER", "full:MIXER_T", "face:MACRO",
           "full:MACRO_D", "full:808_R", "face:808B_R", "full:MACRO", "face:MACRO_T", "full:MACRO_D", "face:MACRO_W"]
     REACT_J = 76 / 4
+elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current style" (No Competition D): ~half the cuts,
+    # long holds on rolls with notes landing, no static arrangement splits, stay on the 808 for whole phrases. Drop 2
+    # (beats 104-136) now uses per-hit-checked 808/808B/open-hat shifts (rack_reuse.py); the 808 notes drop 2 doesn't
+    # play (beats 108.5 110.5 124.5 126.5) are kept off screen.
+    # QA fixes: bongo in the split panel showed its velocity lane -> bongo full-screen only; zoomed open-hat shots
+    # (one note a bar) read as empty grids -> wider OH1_W, and the drop / drop-2 open-hat shots replaced.
+    # QA pass 2: the bongo roll at 24.5 is still being drawn (empty grid) -> one long bass ride; the open-hat rolls
+    # (one thin note a bar) read empty even wide -> tilted drum-arrangement ride, then OH2/OH1 only around their hits.
+    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 72, 76, 81, 92, 97, 103, 108, 111.5, 118.5, 124,
+          127.5, 136]
+    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:PLUGIN", "full:MACRO_W",
+          "face:OH2", "full:OH1", "full:HAT", "face:HAT", "full:HAT", "full:MACRO_D", "face:808", "full:808B", "face:808_4",
+          "full:808B", "face:808B_4", "full:MIXER_T", "face:808_R", "full:808B_R", "full:MACRO_D", "face:808B_R"]
+    REACT_J = 76 / 4
+else:                    # E: same style as D, different order (opens on the intro roll full-screen, long hat ride)
+    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 66, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
+          127.5, 131, 136]
+    L_ = ["full:INTRO", "face:BASS", "full:BONGO", "full:BASS", "face:BASS", "full:BONGO", "full:BASS", "face:COMP",
+          "full:MACRO_W", "face:OH2", "full:OH1", "full:HAT", "face:HAT", "full:HAT", "full:MACRO_D", "full:808B", "face:808B",
+          "full:808_4", "face:808B", "full:808B_4", "face:PLUGIN", "full:808_R", "face:808B_R", "full:MACRO_D", "full:808B_R",
+          "face:808B_R"]
+    REACT_J = 86 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 TRANS_FORCE = {2: "zoom", 10: "zoom", 18: "zoom", 26: "zoom"}
@@ -207,10 +235,7 @@ for i in range(len(CUT_BARS) - 1):
     used[V[vn]["clip"]] = used.get(V[vn]["clip"], 0) + 1
     since_face = 0 if lay == "face" else since_face + 1
 shots[-1]["n1"] = NF
-VAL = json.load(open(f"{HERE}/validate.json")) if os.path.exists(f"{HERE}/validate.json") else {}
-for _k in ("808", "808B"):                     # bar 37 repeats bar 29 (song 46.69-48.35)
-    if _k in VAL:
-        VAL[_k + "_R"] = {"cross": [(c[0] + R8,) + tuple(c[1:]) for c in VAL[_k]["cross"] if 46.6 <= c[0] < 48.4]}
+VAL = json.load(open(f"{HERE}/validate_x.json"))     # rack_reuse.py: validate.json + per-hit-checked phrase shifts
 for x in shots:
     vv = VAL.get(x["view"])
     if not vv:

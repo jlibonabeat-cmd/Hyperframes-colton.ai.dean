@@ -241,3 +241,8 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **D revision (Jack, Nov 3):**
   - The melody-arrangement split at 0:07–0:09 was "a boring shot, not really showing what is going on". It is now hats then reso rolls; the second melody split at 0:17 was swapped for the 808 page roll too.
   - At 0:25 the cut from the 808 to the kick broke a shot he liked. It now stays on the 808 page view for the whole phrase (4 s), and the kick and compressor shots after it were dropped.
+- **Rack D/E (Jack, Nov 3: "variants of rack C in the style you've just done"):** the same face clip as C. These use the No Competition D style: 23–26 shots instead of 49, long holds on rolls with notes landing, few arrangement shots, and the 808 held through whole phrases.
+  - **Drop 2 coverage:** `rack_reuse.py` tests every recording at every phrase shift. The 808 and 808B repeat +4 bars, and +8 bars into drop 2. Drop 2 changes the first bar of each 4-bar 808 phrase, so the unheard notes (beats 108.5 110.5 124.5 126.5 from 0:10.02) are kept off screen. In C, drop 2 was mostly arrangement shots.
+  - **Bongo:** the bongo in the split panel shows its velocity lane. The bongo at beat 24.5 is still being drawn, so it reads as an empty grid.
+  - **Open hats:** one thin note per bar reads empty even framed wide. Use them only right around their hits.
+  - **Hat roll:** paused before clip 4.9 s.
