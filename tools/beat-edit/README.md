@@ -250,3 +250,7 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - At 0:28–0:30 "the midi pauses": the hat recording stops scrolling at clip 13.6 s even though the clock run goes on to 14.3. The hats now end at beat 70, and a split drum-arrangement shot bridges into the drop.
   - Two hat shots back to back (0:21, 0:24) showed the same MIDI. The second one is now the compressor (D) or Smooth Operator (E).
   - **QA:** every render now gets a frozen-picture scan (consecutive near-identical frames). The clock alone does not catch a recording that stopped scrolling.
+- **Rack D v3 (Jack, Nov 3):**
+  - The zoom-punch plus shake at 0:03 felt juddery, so D and E now hard-cut on the bar-9 bass downbeat.
+  - The Smooth Operator cutaway at 0:15 was not synced (it is from the Dope Boy session), so it is now a synced arrangement split.
+  - At the drop, D follows the 808 follow view full-screen for about 3 s (0:31.7–0:34.8) before cutting.

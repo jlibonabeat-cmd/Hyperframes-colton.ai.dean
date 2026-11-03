@@ -175,12 +175,15 @@ elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current sty
     # Jack (Nov 3, D/E): the hat recording stops scrolling at clip 13.6 s (0:28-0:30 "the midi pauses") -> hats end at
     # beat 70, a split drum-arrangement shot bridges to the drop; the second hat shot right after the first one
     # (0:21 -> 0:24) was the same MIDI -> compressor cutaway (D) / Smooth Operator (E) in between instead.
-    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 70, 72, 76, 81, 92, 97, 103, 108, 111.5, 118.5, 124,
+    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 70, 72, 76, 83.5, 88, 92, 97, 103, 108, 111.5, 118.5, 124,
           127.5, 136]
-    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:PLUGIN", "full:MACRO_W",
-          "face:OH2", "full:OH1", "full:HAT", "face:COMP", "full:HAT", "face:MACRO_D", "full:MACRO_D", "face:808", "full:808B", "face:808_4",
+    # Jack (Nov 3, D v2): Smooth Operator at 0:15 isn't synced (Dope Boy cutaway) -> synced arrangement split; at the
+    # drop follow the 808 for ~3 s -> full-screen 808 follow view 0:31.7-0:34.8, then 808 page / follow.
+    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:MACRO_T", "full:MACRO_W",
+          "face:OH2", "full:OH1", "full:HAT", "face:COMP", "full:HAT", "face:MACRO_D", "full:MACRO_D", "full:808B", "face:808",
+          "full:808B", "face:808_4",
           "full:808B", "face:808B_4", "full:MIXER_T", "face:808_R", "full:808B_R", "full:MACRO_D", "face:808B_R"]
-    REACT_J = 76 / 4
+    REACT_J = 83.5 / 4
 else:                    # E: same style as D, different order (opens on the intro roll full-screen, long hat ride)
     B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 66, 70, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
           127.5, 131, 136]
@@ -192,6 +195,8 @@ else:                    # E: same style as D, different order (opens on the int
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 TRANS_FORCE = {2: "zoom", 10: "zoom", 18: "zoom", 26: "zoom"}
+if VARIANT in ("D", "E"):                    # Jack: 0:03-0:04 transition juddery (zoom punch + shake) -> hard cut
+    TRANS_FORCE[2] = "hard"
 DROP_J = 18                                  # 0:40.02 = the 808 drop
 SILENT_J = -1
 shots = []
