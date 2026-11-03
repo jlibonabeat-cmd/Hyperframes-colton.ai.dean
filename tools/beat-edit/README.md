@@ -212,3 +212,24 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - **A 0:13:** an 808 shot right after the sample slices was "kind of boring footage". Replaced with a tight mixer framing (`MIXER_T`, strips 3–10). B uses a Smooth Operator cutaway there (`PLUGIN_F`, non-synced, the spectrum has no visible timing).
   - **B:** "from 0:16 great, before that clunky". B now uses A's opening 6 s, which Jack liked. A from 0:15 was "flawless".
   - There's no Soft Clipper footage: it's only listed in the mixer inserts, never opened.
+
+### NO COMPETITION (179 BPM, F minor, Nov 3): `build_nc.py`, `VARIANT=A|B`
+
+- **Window:** bars 25–48 (0:32.2–1:04.4, 32.2 s), Jack's "golden" 0:32–1:04, ending where the beat breaks down at bar 49.
+  - Bars 25–32: reso bass, kick, hats and melody.
+  - Bar 33: drop (808 pattern 7).
+  - Bars 39–40: upsweep riser.
+  - Bar 41: second drop.
+- **FL layout:** same purple theme as Move, but the clock sits further left. Crop `160:50:902:8`, label mask `c[:18, 126:]`.
+  - The two "808 follow along" uploads were byte-identical.
+  - Each recording plays in song mode at its real position (audio location matched the clock). Picture offset +0.03 s.
+- **Phrase reuse:** `nc_reuse.py` checks every hit at the shifted position against the master.
+  - Kick: repeats +4 bars, and again at +16/+20 (it rests in bars 33–40).
+  - Hats: repeat +4 and +8 (they stop at bar 38.5).
+  - 808 (page and follow views): repeat +8 for the second drop.
+- **Cutaways:**
+  - Smooth Operator on the master, synced, with the whole window in the split panel.
+  - MJUC jr compressor on the melody bus, VU needle moving.
+  - Melody arrangement and the pre-drop arrangement, both with the playhead parked at the recorded x.
+  - Soft Clipper sits in the master chain but was never opened.
+- **Camera:** the hi-hat roll is zoomed (one C5 row, notes about 350 px apart), so the camera's playhead smoothing was lightened from 0.7/0.3 to 0.3/0.7. With 0.7/0.3 it lagged and one hat hit landed at the panel edge.
