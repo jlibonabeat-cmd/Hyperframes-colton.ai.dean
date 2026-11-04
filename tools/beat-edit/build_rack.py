@@ -75,15 +75,15 @@ V = {
     "808_R": dict(ROLL, clip="s808.mp4", inst="808", segs=[(3.7, 15.9, 37.832 + OF + R8)], cy=540, h=560, hs=460),
     # follow views: playhead parked at x=570, notes scroll in
     "HAT": dict(clip="hat.mp4", inst="HAT", kind="fixed", follow=True, ph=570, xmin=462, segs=[(1.15, 14.65, 25.713 + OF)], cy=713, h=420, hs=330, tz=1.1),
-    "808B": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF)], cy=490, h=600, hs=480, tz=1.05),
+    "808B": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF)], cy=490, h=600, hs=480, tz=1.05, pic=0.028),
     "808_4": dict(ROLL, clip="s808.mp4", inst="808", segs=[(3.7, 15.9, 37.832 + OF + 4 * BAR)], cy=540, h=560, hs=460),
-    "808B_4": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + 4 * BAR)], cy=490, h=600, hs=480, tz=1.05),
+    "808B_4": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + 4 * BAR)], cy=490, h=600, hs=480, tz=1.05, pic=0.028),
     "OH1_8": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 8 * BAR)], cy=540, h=720, hs=560, tz=1.0),
     "OH1_20": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 20 * BAR)], cy=540, h=720, hs=560, tz=1.0),
     "OH1_4": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 4 * BAR)], cy=540, h=480, hs=380, tz=1.4),
     "OH2_4": dict(ROLL, clip="oh2.mp4", inst="HAT", segs=[(2.1, 8.8, 24.509 + OF + 4 * BAR)], cy=540, h=480, hs=380, tz=1.4),
     "OH1_W": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF)], cy=540, h=720, hs=560, tz=1.0),   # D/E: wider
-    "808B_R": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + R8)], cy=490, h=600, hs=480, tz=1.05),
+    "808B_R": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + R8)], cy=490, h=600, hs=480, tz=1.05, pic=0.028),
     # mixer: strips with moving meters = master, hat (7), samples (10-11, 15), 808 (12). Split = master..15 whole;
     # full = tight on hat..808 with names, meters and faders
     "MIXER": dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=[(2.05, 22.65, 38.498 + OF)], cy=560, h=900, fx=880, xmin=0),
@@ -92,6 +92,30 @@ V = {
     "PLUGIN": dict(clip="plugin.mp4", inst="ARR", kind="fixed", free=True, segs=[(0.85, 6.15, 0.0)], cy=450, h=820, fx=792, xmin=0),
     "COMP": dict(clip="comp.mp4", inst="ARR", kind="fixed", free=True, segs=[(1.2, 6.05, 0.0)], cy=400, h=770, fx=768, xmin=0),
 }
+if VARIANT in ("D", "E"):
+    # Jack (Nov 4): "removing notes to put them back in" + "808 notes not synced". Coverage = the frame-exact clock runs,
+    # runs with the same offset merged (gaps there are clock misreads, playback is continuous), minus the windows where
+    # he is editing notes on screen (found by diffing note pixels frame to frame, checked by eye).
+    EDITS = {"bass": [(5.25, 6.65), (8.35, 9.75)], "bongo": [(1.0, 3.5)], "s808": [(5.45, 7.3)], "oh2": [(1.0, 3.85)],
+             "hat": [(13.55, 99.0)]}                       # hat roll stops scrolling at clip 13.6 s
+    _CLK = json.load(open(f"{HERE}/clock2.json"))
+    for _vn, _v in V.items():
+        _ck = _v.get("clip", "").replace(".mp4", "")
+        if _v.get("free") or _ck not in _CLK:
+            continue
+        _runs = []
+        for r in sorted(_CLK[_ck]["runs"]):
+            if r[1] - r[0] < 0.3:
+                continue
+            if _runs and abs(r[2] - _runs[-1][2]) < 0.03:
+                _runs[-1][1] = r[1]
+            else:
+                _runs.append([r[0], r[1], r[2]])
+        _iv = [(ra, rb) for ra, rb, _ in _runs]
+        for ea, eb in EDITS.get(_ck, []):
+            _iv = [q for (ra, rb) in _iv for q in ((ra, min(rb, ea)), (max(ra, eb), rb)) if q[1] - q[0] > 0.3]
+        _v["segs"] = [(max(a, ra) + 0.05, min(b, rb) - 0.05, D) for (a, b, D) in _v["segs"] for (ra, rb) in _iv
+                      if min(b, rb) - max(a, ra) > 0.4]
 _free_t = {}
 
 
@@ -166,38 +190,29 @@ elif VARIANT == "C":      # C (GLOCK face clip): drum focus, different order; 80
           "full:808", "full:808B", "face:808", "full:808B", "full:MACRO_D", "face:MIXER", "full:MIXER_T", "face:MACRO",
           "full:MACRO_D", "full:808_R", "face:808B_R", "full:MACRO", "face:MACRO_T", "full:MACRO_D", "face:MACRO_W"]
     REACT_J = 76 / 4
-elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current style" (No Competition D): ~half the cuts,
-    # long holds on rolls with notes landing, no static arrangement splits, stay on the 808 for whole phrases. Drop 2
-    # (beats 104-136) now uses per-hit-checked 808/808B/open-hat shifts (rack_reuse.py); the 808 notes drop 2 doesn't
-    # play (beats 108.5 110.5 124.5 126.5) are kept off screen.
-    # QA fixes: bongo in the split panel showed its velocity lane -> bongo full-screen only; zoomed open-hat shots
-    # (one note a bar) read as empty grids -> wider OH1_W, and the drop / drop-2 open-hat shots replaced.
-    # QA pass 2: the bongo roll at 24.5 is still being drawn (empty grid) -> one long bass ride; the open-hat rolls
-    # (one thin note a bar) read empty even wide -> tilted drum-arrangement ride, then OH2/OH1 only around their hits.
-    # Jack (Nov 3, D/E): the hat recording stops scrolling at clip 13.6 s (0:28-0:30 "the midi pauses") -> hats end at
-    # beat 70, a split drum-arrangement shot bridges to the drop; the second hat shot right after the first one
-    # (0:21 -> 0:24) was the same MIDI -> compressor cutaway (D) / Smooth Operator (E) in between instead.
-    # Jack (Nov 4): 0:17 macro shot not engaging -> open-hat roll (C's framing) on its hit; borrowed compressor at 0:25
-    # (not this session, not synced) -> open hats +4 bars (heard, checked per hit) between the two hat rides.
-    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 58, 63.5, 66, 70, 72, 76, 83.5, 88, 92, 97, 103, 108, 111.5, 118.5, 124,
-          127.5, 136]
-    # Jack (Nov 3, D v2): Smooth Operator at 0:15 isn't synced (Dope Boy cutaway) -> synced arrangement split; at the
-    # drop follow the 808 for ~3 s -> full-screen 808 follow view 0:31.7-0:34.8, then 808 page / follow.
-    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:MACRO_T", "full:OH1",
-          "face:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT", "face:MACRO_D", "full:MACRO_D", "full:808B", "face:808",
-          "full:808B", "face:808_4",
-          "full:808B", "face:808B_4", "full:MIXER_T", "face:808_R", "full:808B_R", "full:MACRO_D", "face:808B_R"]
-    REACT_J = 83.5 / 4
-else:                    # E: same style as D, different order (opens on the intro roll full-screen, long hat ride)
-    # Jack (Nov 4, E): Smooth Operator at 0:24-0:27 and the compressor at 0:15 are borrowed (not synced) -> synced
-    # arrangement split / open hats +4; 0:17 macro -> open-hat roll on its hit.
-    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 63.5, 66, 70, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
-          127.5, 131, 136]
-    L_ = ["full:INTRO", "face:BASS", "full:BONGO", "full:BASS", "face:BASS", "full:BONGO", "full:BASS", "face:MACRO_T",
-          "full:OH1", "face:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT", "face:MACRO_D", "full:MACRO_D",
-          "full:808B", "face:808B", "full:808_4", "face:808B", "full:808B_4", "face:MIXER_T", "full:808_R", "face:808B_R", "full:MACRO_D", "full:808B_R",
-          "face:808B_R"]
-    REACT_J = 86 / 4
+elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current style" (No Competition D): long holds on
+    # rolls with notes landing, face every 2-3 shots, no borrowed (unsynced) plugin cutaways, no shake on the 808.
+    # Nov 4 rebuild: (1) no note-editing on screen (EDITS above); (2) 808 reuse checked on the AUDIO bar by bar (808 band
+    # spectrogram, corr 1.00): drop 1 repeats every 4 bars, but drop 2 (beats 104-136) is a different 808 pattern except
+    # beats 120-124 -> 808 rolls in drop 2 only there; the rest of drop 2 is mixer / arrangement / open hats (all synced);
+    # (3) at the drop, hold the 808 follow view ~3.4 s; (4) the 808 page view never crosses its page flip (beat 91.5).
+    B_ = [0, 8, 10.05, 13.95, 17.55, 21.35, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 60.3, 63.5, 66, 69.9, 72, 76, 84.5, 88,
+          92, 96, 100, 104, 108, 113, 117, 120, 124, 128, 131, 136]
+    L_ = ["face:INTRO", "full:BASS", "face:INTRO", "full:BASS", "face:MACRO_T", "full:BASS", "face:MACRO_W", "full:BONGO",
+          "face:BASS", "full:MACRO", "full:OH1", "face:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT",
+          "face:MACRO_T", "full:MACRO_D", "full:808B", "face:808", "full:MIXER_T", "face:808B_4", "full:808B", "face:808",
+          "full:MIXER", "face:MACRO_D", "full:MACRO", "face:MIXER_T", "full:808B_R", "face:MACRO_W", "full:OH1_20",
+          "face:MACRO_D"]
+    REACT_J = 84.5 / 4
+else:                    # E: same rules as D, different order (opens full-screen on the intro, faces on the bass)
+    B_ = [0, 8, 10.05, 13.95, 17.55, 21.35, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 60.3, 63.5, 66, 69.9, 72, 76, 84.5, 88,
+          91.4, 96, 100, 104, 108, 113, 117, 120, 124, 128, 131, 136]
+    L_ = ["full:INTRO", "face:BASS", "full:INTRO", "face:BASS", "full:MACRO_T", "face:BASS", "full:MACRO_W", "full:BONGO",
+          "face:BASS", "full:MACRO_D", "face:OH1", "full:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT",
+          "face:MACRO_T", "full:MACRO", "full:808B", "face:MIXER", "full:808", "face:808B", "full:808B_4", "face:MIXER_T",
+          "full:MACRO_D", "face:MIXER", "full:MACRO_W", "full:MIXER_T", "face:808B_R", "full:MACRO", "full:OH1_20",
+          "face:MACRO_W"]
+    REACT_J = 84.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 TRANS_FORCE = {2: "zoom", 10: "zoom", 18: "zoom", 26: "zoom"}
@@ -257,7 +272,8 @@ for x in shots:
     s0_, s1_ = START + x["t0"], START + x["t1"]
     ys = [c[1] for c in vv["cross"] if s0_ <= c[0] < s1_]
     x["n_cross"] = len(ys)
-    if ys and x["view"] != "HAT":            # hats: keep both rows (C5 8ths + F#4 rolls) in frame
+    if ys and x["view"] != "HAT" and not (VARIANT in ("D", "E") and x["view"].startswith("808")):
+        # hats: keep both rows (C5 8ths + F#4 rolls) in frame; D/E: 808s keep the whole 808 range centred
         x["cy"] = 0.5 * (min(ys) + max(ys))
 bad = [(round(x["t0"], 2), x["view"]) for x in shots if x["tau"] is None]
 if bad:
@@ -458,6 +474,8 @@ for s, t in cand:
     if not near_hit and all(abs(t - u) > 2.0 for u, _ in jolts) and all(abs(fr(t) - w) > 6 for w in whip_in) and len(jolts) < 2:
         jolts.append((float(t), 0.8))
 jolts.sort()
+if VARIANT in ("D", "E"):                    # Jack (Nov 4): the shake on the 808 at 0:47 looked weird -> no jolts
+    jolts = []
 DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 PROF = [1.0, 0.5, 0.2, 0.06, 0.0]           # offset (as fraction of amp) at the end of each frame
 jx = np.zeros(NF + 10)

@@ -28,4 +28,7 @@ for k, band, sh in SPEC:
     out[name] = {"cross": keep, "dropped": drop}
     print(f"{name:8s} kept {sorted(set(round((k_[0] - START) / BEAT, 1) for k_ in keep))} dropped {sorted(set(round((d[0] - START) / BEAT, 1) for d in drop))}")
 out["OH1_W"] = v["OH1"]
+for k in list(out):                            # 808B picture delayed 28 ms in the renderer (pic=0.028)
+    if k.startswith("808B"):
+        out[k] = dict(out[k], cross=[(c[0] + 0.028,) + tuple(c[1:]) for c in out[k]["cross"]])
 json.dump(out, open("validate_x.json", "w"))

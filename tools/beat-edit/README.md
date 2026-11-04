@@ -259,3 +259,15 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - 0:17 macro shot not engaging: replaced with the open-hat roll in C's framing, on its hit.
   - Borrowed Smooth Operator (E, 0:24–0:27) and compressor (D 0:25, E 0:15) cutaways were not synced: replaced with open hats shifted +4 bars (checked per hit, `OH1_4` / `OH2_4`) and a synced arrangement split.
   - Rack D/E now use no borrowed plugin footage at all; the only plugin/mixer shot is the synced mixer.
+- **Rack D/E v5 (Jack, Nov 4): sync and editing rebuild.**
+  - **No note editing on screen.** Per-recording `EDITS` windows (bass clip 5.25–6.65 / 8.35–9.75, bongo < 3.5, s808 5.45–7.3, oh2 < 3.85, hat > 13.55) are found by diffing note pixels frame to frame and checked by eye. Coverage = clock runs, with same-offset runs merged (those gaps are OCR misreads), minus the edit windows.
+  - **Phrase reuse must be checked on the audio, both ways.** The old per-hit check only asked whether each drawn note had an onset, not whether each heard 808 had a drawn note or the same pitch. Now 4-beat chunks of the 808-band log spectrogram are correlated:
+    - drop 1 repeats every 4 bars (corr 1.00);
+    - drop 2 (beats 104–136) is a different 808 pattern except beats 120–124.
+    - So drop 2 shows the 808 only there, and the rest is mixer, arrangement and open hats, all synced.
+  - **Picture offset and camera fixes:**
+    - The 808B follow view was a constant 28 ms early: `pic=0.028`.
+    - No jolts in D/E.
+    - The 808 framing is not re-centred per shot.
+    - The 808 page view avoids its page flip (beat 91.5).
+  - **QA added:** a frame at every heard 808 onset, from the master and not from the picture hits (`sheets/<v>_808heard.png`).
