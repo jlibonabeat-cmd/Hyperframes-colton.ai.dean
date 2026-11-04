@@ -287,3 +287,6 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - **Loop return:** a zoom into chapter 3, the mix (open hat, Smooth Operator, clipper).
   - **Recap:** a fast pass through every part on its hit.
   - **End:** a 2.5 s hold on the face over the same 808 it opened with, so the story loops.
+- **KUSH v2 (Jack, Nov 4: "blank looking screen 0:09-0:10"):** the 808 follow-along recording runs past its pattern end onto an empty grey page (clip 10.15–11.9 s) before looping. The clock still ticks there, so it looked like clean playback. It is now excluded (`EDITS["m808f"]`), and the A/B/C slots that used it now show the clipper, the mixer or the next-cycle 808.
+  - The sparse second-808 view is framed wider, so its next notes are always on screen.
+  - **QA added:** a per-shot sheet (4 frames per shot) to catch empty grids that a hit sheet misses.

@@ -22,7 +22,8 @@ def same(a, b, bands=("808", "mid", "hi")):
         if m < 10 or np.corrcoef(x[:, :m].ravel(), y_[:, :m].ravel())[0, 1] < 0.97: return False
     return True
 # clean playback per recording (clip seconds): majority-offset clock runs merged, minus editing windows (checked by eye)
-EDITS = {"s808_in": [(0.0, 9.95)]}           # second 808 is being drawn until clip ~9.9 s
+EDITS = {"s808_in": [(0.0, 9.95)],          # second 808 is being drawn until clip ~9.9 s
+         "m808f": [(10.15, 11.9)]}          # follow-along runs past the pattern end (empty grey page) before looping
 def clean(rec):
     runs = [r for r in C[rec]["runs"] if r[1] - r[0] >= 0.3]
     w = {}

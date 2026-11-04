@@ -62,8 +62,10 @@ for _vn, _segs in COVER.items():
     _sg = [tuple(x) for x in _segs]
     if _base in INST:
         V[_vn] = dict(ROLL, clip=CLIPS[_base] + ".mp4", inst=INST[_base], segs=_sg)
-        if _base in ("M808", "S808"):          # one C5 row: go tighter so the 808 notes read fat, labels visible
+        if _base == "M808":                    # one C5 row: go tighter so the 808 notes read fat, labels visible
             V[_vn].update(h=330, hs=300)
+        elif _base == "S808":                  # sparse pattern: wide enough that the next notes are always on screen
+            V[_vn].update(h=620, hs=520, tz=1.0)
         elif _base in ("PERC", "PERC2", "OH"):  # one small note per bar: tight on it
             V[_vn].update(h=300, hs=270, tz=1.2)
     elif _base == "MIXER":
@@ -116,18 +118,18 @@ def act(inst, t0, t1):
 # beats from 0:00. Drawn + heard hits (beats): SNARE 15.6 47.6 | PERC_24 17.6 | PERC 49.6 | OH_24 22.1 | OH 38.1 54.1 |
 # PERC2_24 24.1 | PERC2 56.1 | 808s: every bar. Bars 8 and 16 (beats 28-32, 60-64) are fills -> mixer / clipper there.
 if VARIANT == "A":
-    B_ = [0, 3, 5.5, 8, 11.5, 14.5, 16.5, 19, 21.5, 23, 25.5, 28, 32, 35, 37.5, 39.75, 43.2, 46, 47.75, 51, 53.5, 55, 57.5,
+    B_ = [0, 3, 5.5, 8, 11.5, 14.5, 16.5, 19, 21.5, 23, 25.5, 27.8, 32, 35, 37.5, 39.75, 43.2, 46, 47.75, 51, 53.5, 55, 57.5,
           59.75, 64, 72]
     L_ = ["full:M808", "face:MIXER", "full:CLIP", "full:M808", "face:PLUGIN", "full:SNARE", "face:PERC_24", "full:S808_M8",
-          "full:OH_24", "face:PERC2_24", "full:M808", "full:MIXER_T", "full:M808_8", "face:MIXER", "full:OH", "full:M808_8",
-          "face:CLIP_48", "full:SNARE", "face:PERC", "full:S808", "full:OH", "face:PERC2", "full:M808_8", "full:CLIP_48",
+          "full:OH_24", "face:PERC2_24", "full:CLIP", "full:MIXER_T", "full:M808_8", "face:MIXER", "full:OH", "full:M808_8",
+          "face:CLIP_48", "full:SNARE", "face:PERC", "full:S808", "full:OH", "face:PERC2", "full:MIXER_T", "full:CLIP_48",
           "face:M808_16"]
     REACT_J = 3 / 4
 elif VARIANT == "B":
-    B_ = [0, 2.5, 6, 8.5, 12, 14.5, 16.5, 19, 21.5, 23, 25.5, 28, 32, 35, 37.5, 39.75, 43.2, 46, 47.75, 51, 53.5, 55, 57.5,
+    B_ = [0, 2.5, 6, 8.5, 12, 14.5, 16.5, 19, 21.5, 23, 25.5, 27.8, 32, 35, 37.5, 39.75, 43.2, 46, 47.75, 51, 53.5, 55, 57.5,
           60, 64, 72]
     L_ = ["full:MIXER_T", "face:M808", "full:CLIP", "full:M808", "face:PLUGIN", "full:SNARE", "full:PERC_24", "face:S808_M8",
-          "full:OH_24", "full:PERC2_24", "face:M808", "full:MIXER", "full:M808_8", "face:MIXER_T", "full:OH", "face:M808_8",
+          "full:OH_24", "full:PERC2_24", "face:CLIP", "full:MIXER", "full:M808_8", "face:MIXER_T", "full:OH", "face:M808_8",
           "full:CLIP_48", "full:SNARE", "face:PERC", "full:M808_8", "full:OH", "face:PERC2", "full:S808", "full:MIXER_T",
           "face:M808_16"]
     REACT_J = 2.5 / 4
@@ -137,9 +139,11 @@ else:
     # on its own hit (snare 15.6, perc 17.6, second 808 22.1, perc2 24.1) -> bar 8 fill on the mixer -> the loop comes
     # round (zoom) -> ch.3 the mix (open hat, Smooth Operator, clipper) -> fast recap of every part on its hit -> end on
     # the face over the mixer, so it loops.
-    B_ = [0, 2.5, 4, 8.5, 12, 14.5, 17, 19, 23, 25, 28, 32, 36, 39, 43.2, 45.9, 47.8, 50.5, 53.2, 55, 57, 60, 64, 72]
+    # Jack (Nov 4): blank screen 0:09-0:10 = the follow-along 808 recording running past its pattern end before it
+    # loops (clip 10.15-11.9, now excluded in kush_reuse.py) -> those slots are clipper / M808_8 now.
+    B_ = [0, 2.5, 4, 8.5, 12, 14.5, 17, 19, 23, 25, 27.8, 32, 35.8, 37.6, 39.2, 43.2, 45.9, 47.8, 50.5, 53.2, 55, 57, 60, 64, 72]
     L_ = ["full:M808", "face:MIXER_T", "full:M808", "face:CLIP", "full:MIXER", "full:SNARE", "face:PERC_24",
-          "full:S808_M8", "face:PERC2_24", "full:M808", "face:MIXER", "full:M808", "full:OH", "face:PLUGIN",
+          "full:S808_M8", "face:PERC2_24", "full:CLIP", "face:MIXER", "full:M808_8", "full:MIXER_T", "full:OH", "face:PLUGIN",
           "full:CLIP_48", "face:SNARE", "full:PERC", "face:M808_8", "full:OH", "face:PERC2", "full:MIXER_T", "full:CLIP_48",
           "face:M808_16"]                    # ends back on the 808 it opened with (2.5 s hold), so the story loops
     REACT_J = 2.5 / 4
