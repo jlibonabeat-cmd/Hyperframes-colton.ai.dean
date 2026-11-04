@@ -279,3 +279,11 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **Coverage built from the audio, not from shifted hits** (`kush_reuse.py` → `cover.json`): every view is (recording, whole-bar shift); a target bar is allowed only if its log spectrogram correlates ≥ 0.97 with the source bar in the bands that instrument lives in (808 rolls: 25–160 Hz; drums: 808 + hi + snare bands; mixer / plugins: all), and only inside clean playback (majority-offset clock runs, minus note-editing windows).
 - "Putting in" recordings: the main-808 one is all editing (follow-along recording used instead); the second 808 is drawn until clip 9.9 s.
 - Mixer: meters measured — master, 808 #1/#2, 808, clap, countersnare, perc, snare move; MIXER frames master + strips 1–7, MIXER_T tight on the 808 strips; both get the downbeat punch zoom. Soft Clipper framed tight on its window (meters moving), punch on downbeats. Smooth Operator whole window in the split. No jolts.
+- **KUSH C (Jack, Nov 4: "keep retention, tell a story by showing the different parts of the beat"):** a story cut.
+  - **Hook:** 808 + tight mixer in the first 4 beats.
+  - **Chapter 1, the 808:** a 808 ride, then a Soft Clipper punch.
+  - **Chapter 2, the drums:** each element in turn, cut on its own hit (snare, perc, second 808, perc 2).
+  - **Bar 8 fill:** on the mixer.
+  - **Loop return:** a zoom into chapter 3, the mix (open hat, Smooth Operator, clipper).
+  - **Recap:** a fast pass through every part on its hit.
+  - **End:** a 2.5 s hold on the face over the same 808 it opened with, so the story loops.

@@ -123,13 +123,25 @@ if VARIANT == "A":
           "face:CLIP_48", "full:SNARE", "face:PERC", "full:S808", "full:OH", "face:PERC2", "full:M808_8", "full:CLIP_48",
           "face:M808_16"]
     REACT_J = 3 / 4
-else:
+elif VARIANT == "B":
     B_ = [0, 2.5, 6, 8.5, 12, 14.5, 16.5, 19, 21.5, 23, 25.5, 28, 32, 35, 37.5, 39.75, 43.2, 46, 47.75, 51, 53.5, 55, 57.5,
           60, 64, 72]
     L_ = ["full:MIXER_T", "face:M808", "full:CLIP", "full:M808", "face:PLUGIN", "full:SNARE", "full:PERC_24", "face:S808_M8",
           "full:OH_24", "full:PERC2_24", "face:M808", "full:MIXER", "full:M808_8", "face:MIXER_T", "full:OH", "face:M808_8",
           "full:CLIP_48", "full:SNARE", "face:PERC", "full:M808_8", "full:OH", "face:PERC2", "full:S808", "full:MIXER_T",
           "face:M808_16"]
+    REACT_J = 2.5 / 4
+else:
+    # C (Jack, Nov 4: "keep the retention more, tell a story by showing the different parts of the beat"):
+    # hook (808 + tight mixer in 4 beats) -> ch.1 the 808 ride + Soft Clipper punch -> ch.2 the drums one by one, each cut
+    # on its own hit (snare 15.6, perc 17.6, second 808 22.1, perc2 24.1) -> bar 8 fill on the mixer -> the loop comes
+    # round (zoom) -> ch.3 the mix (open hat, Smooth Operator, clipper) -> fast recap of every part on its hit -> end on
+    # the face over the mixer, so it loops.
+    B_ = [0, 2.5, 4, 8.5, 12, 14.5, 17, 19, 23, 25, 28, 32, 36, 39, 43.2, 45.9, 47.8, 50.5, 53.2, 55, 57, 60, 64, 72]
+    L_ = ["full:M808", "face:MIXER_T", "full:M808", "face:CLIP", "full:MIXER", "full:SNARE", "face:PERC_24",
+          "full:S808_M8", "face:PERC2_24", "full:M808", "face:MIXER", "full:M808", "full:OH", "face:PLUGIN",
+          "full:CLIP_48", "face:SNARE", "full:PERC", "face:M808_8", "full:OH", "face:PERC2", "full:MIXER_T", "full:CLIP_48",
+          "face:M808_16"]                    # ends back on the 808 it opened with (2.5 s hold), so the story loops
     REACT_J = 2.5 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
