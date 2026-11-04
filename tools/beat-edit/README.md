@@ -271,3 +271,11 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
     - The 808 framing is not re-centred per shot.
     - The 808 page view avoids its page flip (beat 91.5).
   - **QA added:** a frame at every heard 808 onset, from the master and not from the picture hits (`sheets/<v>_808heard.png`).
+
+### KUSH (193 BPM, C minor, Nov 4): `build_kush.py`, `VARIANT=A|B`
+
+- Window bars 1–18 (0:00–0:22.4); the beat is an 8-bar loop (bars 8 / 16 are fills). Face: the cap clip.
+- **Pink FL theme** (light grid): playhead core and notes are hot pink — mask R > 175, R−G > 75, 110 < B < 220; clock crop as No Competition (`160:50:902:8`). Several recordings show clock jumps of exactly 2 / 6 bars mid-run (OCR reading "8" as "6", "16" as "10") — merge same-offset runs across them.
+- **Coverage built from the audio, not from shifted hits** (`kush_reuse.py` → `cover.json`): every view is (recording, whole-bar shift); a target bar is allowed only if its log spectrogram correlates ≥ 0.97 with the source bar in the bands that instrument lives in (808 rolls: 25–160 Hz; drums: 808 + hi + snare bands; mixer / plugins: all), and only inside clean playback (majority-offset clock runs, minus note-editing windows).
+- "Putting in" recordings: the main-808 one is all editing (follow-along recording used instead); the second 808 is drawn until clip 9.9 s.
+- Mixer: meters measured — master, 808 #1/#2, 808, clap, countersnare, perc, snare move; MIXER frames master + strips 1–7, MIXER_T tight on the 808 strips; both get the downbeat punch zoom. Soft Clipper framed tight on its window (meters moving), punch on downbeats. Smooth Operator whole window in the split. No jolts.
