@@ -80,6 +80,8 @@ V = {
     "808B_4": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + 4 * BAR)], cy=490, h=600, hs=480, tz=1.05),
     "OH1_8": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 8 * BAR)], cy=540, h=720, hs=560, tz=1.0),
     "OH1_20": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 20 * BAR)], cy=540, h=720, hs=560, tz=1.0),
+    "OH1_4": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF + 4 * BAR)], cy=540, h=480, hs=380, tz=1.4),
+    "OH2_4": dict(ROLL, clip="oh2.mp4", inst="HAT", segs=[(2.1, 8.8, 24.509 + OF + 4 * BAR)], cy=540, h=480, hs=380, tz=1.4),
     "OH1_W": dict(ROLL, clip="oh1.mp4", inst="HAT", segs=[(8.15, 14.85, 18.471 + OF)], cy=540, h=720, hs=560, tz=1.0),   # D/E: wider
     "808B_R": dict(clip="s808b.mp4", inst="808", kind="fixed", follow=True, ph=570, xmin=462, segs=[(2.15, 14.9, 39.434 + OF + R8)], cy=490, h=600, hs=480, tz=1.05),
     # mixer: strips with moving meters = master, hat (7), samples (10-11, 15), 808 (12). Split = master..15 whole;
@@ -175,20 +177,24 @@ elif VARIANT == "D":      # Jack (Nov 3): "variants of rack C in the current sty
     # Jack (Nov 3, D/E): the hat recording stops scrolling at clip 13.6 s (0:28-0:30 "the midi pauses") -> hats end at
     # beat 70, a split drum-arrangement shot bridges to the drop; the second hat shot right after the first one
     # (0:21 -> 0:24) was the same MIDI -> compressor cutaway (D) / Smooth Operator (E) in between instead.
-    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 60, 66, 70, 72, 76, 83.5, 88, 92, 97, 103, 108, 111.5, 118.5, 124,
+    # Jack (Nov 4): 0:17 macro shot not engaging -> open-hat roll (C's framing) on its hit; borrowed compressor at 0:25
+    # (not this session, not synced) -> open hats +4 bars (heard, checked per hit) between the two hat rides.
+    B_ = [0, 8, 12, 15.5, 24.5, 35.75, 40, 44.5, 48, 50, 58, 63.5, 66, 70, 72, 76, 83.5, 88, 92, 97, 103, 108, 111.5, 118.5, 124,
           127.5, 136]
     # Jack (Nov 3, D v2): Smooth Operator at 0:15 isn't synced (Dope Boy cutaway) -> synced arrangement split; at the
     # drop follow the 808 for ~3 s -> full-screen 808 follow view 0:31.7-0:34.8, then 808 page / follow.
-    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:MACRO_T", "full:MACRO_W",
-          "face:OH2", "full:OH1", "full:HAT", "face:COMP", "full:HAT", "face:MACRO_D", "full:MACRO_D", "full:808B", "face:808",
+    L_ = ["face:INTRO", "full:BASS", "full:BONGO", "face:BASS", "full:BASS", "face:MACRO_T", "full:OH1",
+          "face:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT", "face:MACRO_D", "full:MACRO_D", "full:808B", "face:808",
           "full:808B", "face:808_4",
           "full:808B", "face:808B_4", "full:MIXER_T", "face:808_R", "full:808B_R", "full:MACRO_D", "face:808B_R"]
     REACT_J = 83.5 / 4
 else:                    # E: same style as D, different order (opens on the intro roll full-screen, long hat ride)
-    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 66, 70, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
+    # Jack (Nov 4, E): Smooth Operator at 0:24-0:27 and the compressor at 0:15 are borrowed (not synced) -> synced
+    # arrangement split / open hats +4; 0:17 macro -> open-hat roll on its hit.
+    B_ = [0, 8, 12, 16, 24.5, 28.3, 32, 35.75, 40, 44.5, 48, 50, 58, 63.5, 66, 70, 72, 76, 86, 92, 97, 103, 108, 111.5, 118, 124,
           127.5, 131, 136]
-    L_ = ["full:INTRO", "face:BASS", "full:BONGO", "full:BASS", "face:BASS", "full:BONGO", "full:BASS", "face:COMP",
-          "full:MACRO_W", "face:OH2", "full:OH1", "full:HAT", "face:PLUGIN", "full:HAT", "face:MACRO_D", "full:MACRO_D",
+    L_ = ["full:INTRO", "face:BASS", "full:BONGO", "full:BASS", "face:BASS", "full:BONGO", "full:BASS", "face:MACRO_T",
+          "full:OH1", "face:OH2", "full:OH1", "full:HAT", "face:OH2_4", "full:OH1_4", "full:HAT", "face:MACRO_D", "full:MACRO_D",
           "full:808B", "face:808B", "full:808_4", "face:808B", "full:808B_4", "face:MIXER_T", "full:808_R", "face:808B_R", "full:MACRO_D", "full:808B_R",
           "face:808B_R"]
     REACT_J = 86 / 4
@@ -626,7 +632,7 @@ for s in shots:
         zp = zoom_at(s, n - 1) if n > s["n0"] else (1.45 if s.get("zm") == "impact" else z)
         th = theta_at(s, n)
         thp = theta_at(s, n - 1) if n > s["n0"] else th
-        if s.get("zm") == "track" and x is not None:
+        if (s.get("zm") == "track" or (VARIANT in ("D", "E") and s["layout"] == "face" and v["kind"] == "roll")) and x is not None:
             xs_ = st.get("xs")
             xs_ = x if xs_ is None else 0.7 * xs_ + 0.3 * x
             st["xs"] = xs_
@@ -645,7 +651,10 @@ for s in shots:
             fsrc = next(frd)
             img[:FH] = fsrc[FACE_Y0:FACE_Y0 + FH]
             bh = H - FH
-            r = held(st, v, x, W / bh)
+            if VARIANT in ("D", "E") and v["kind"] == "roll" and st.get("xs") is not None:
+                r = view_rect(v, st["xs"], W / bh, lead=0.45)    # split panel rides the playhead too (no page jumps)
+            else:
+                r = held(st, v, x, W / bh)
             img[FH:] = panel(src, r, (W, bh), v, x, z, zp)
             if v.get("draw_ph"):
                 draw_playhead(img, FH, H, zoomed(r, z, v, x), v, (W, bh))

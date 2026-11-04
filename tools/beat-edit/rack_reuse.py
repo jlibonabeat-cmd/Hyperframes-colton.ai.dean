@@ -15,7 +15,7 @@ for nm, lo, hi in [("sub", 30, 100), ("mid", 300, 3000), ("hi", 5000, 11000)]:
 def fl(k, t):
     i = (T >= t - 0.035) & (T <= t + 0.035)
     return F[k][i].max() if i.any() else 0.0
-SPEC = [("BONGO", "mid", 12), ("BONGO", "mid", 28), ("OH1", "hi", 8), ("OH1", "hi", 20), ("808", "sub", 4), ("808", "sub", 8),
+SPEC = [("OH1", "hi", 4), ("OH2", "hi", 4), ("BONGO", "mid", 12), ("BONGO", "mid", 28), ("OH1", "hi", 8), ("OH1", "hi", 20), ("808", "sub", 4), ("808", "sub", 8),
         ("808B", "sub", 4), ("808B", "sub", 8)]
 out = dict(v)
 for k, band, sh in SPEC:

@@ -254,3 +254,8 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - The zoom-punch plus shake at 0:03 felt juddery, so D and E now hard-cut on the bar-9 bass downbeat.
   - The Smooth Operator cutaway at 0:15 was not synced (it is from the Dope Boy session), so it is now a synced arrangement split.
   - At the drop, D follows the 808 follow view full-screen for about 3 s (0:31.7–0:34.8) before cutting.
+- **Rack D/E v4 (Jack, Nov 4):**
+  - Rough transition at 0:03–0:04: the split-panel bass roll was page-jumping (the held crop re-centres when the playhead leaves the panel). Split panels with rolls now ride the playhead smoothly, as in build_wtw.
+  - 0:17 macro shot not engaging: replaced with the open-hat roll in C's framing, on its hit.
+  - Borrowed Smooth Operator (E, 0:24–0:27) and compressor (D 0:25, E 0:15) cutaways were not synced: replaced with open hats shifted +4 bars (checked per hit, `OH1_4` / `OH2_4`) and a synced arrangement split.
+  - Rack D/E now use no borrowed plugin footage at all; the only plugin/mixer shot is the synced mixer.
