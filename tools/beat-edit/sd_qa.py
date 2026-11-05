@@ -15,7 +15,7 @@ for v in sys.argv[1:]:
         ok, f = cap.read()
         if not ok: break
         s = sh.get(i); mm = f.mean(2); edge += sum(sl.mean() < 8 for sl in (mm[:6], mm[-6:], mm[:, :6], mm[:, -6:]))
-        if s and not s['view'].startswith('MACRO'):
+        if s and not s['view'].startswith(('MACRO', 'CLIP', 'PLUGIN')):   # rolls only
             p = (f[800:] if s['layout'] == 'face' else f)[::4, ::4].astype(int); R, G, B = p[..., 2], p[..., 1], p[..., 0]
             m = (R > 175) & (R - G > 75) & (B > 110) & (B < 220); colc = m.sum(0); m[:, colc > m.shape[0] * 0.4] = False
             if m.sum() < 6: empty.append(i)

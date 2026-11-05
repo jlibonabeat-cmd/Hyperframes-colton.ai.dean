@@ -315,3 +315,7 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - Arrangement: 3 short shots per edit (A: 15 shots, B: 15 shots), never back to back.
   - Still not usable: the follow-along hat recording (one thin tick a bar) and the scratch (one note with the cursor parked on it). No open-hat recording was supplied.
   - `sd_qa.py A B`: shot sheet + empty-roll + frozen + dark-edge scans in one go.
+- **v4 (Jack, Nov 5: "edit is close to how I want it", sent Soft Clipper + Smooth Operator recordings):**
+  - Both are same-session, song-mode recordings with the clock visible (`sd_clock.py clipper smooth`: D = 36.352 / 39.017, bars 25–40). OBS windows at the start / end are excluded in `EDITS`.
+  - They replace the section-2 arrangement shots (A: Smooth Operator split at the post-drop reaction, Soft Clipper full with downbeat punches at bars 36–37; B: the other way round). One wide arrangement shot stays early in each edit.
+  - Framing: the renderer uses `h` for fixed views in both layouts (`hs` is ignored when `fx` is set). Soft Clipper `h=760` (window + punch room in the 9:16 panel), Smooth Operator `h=900` (whole window in the split).

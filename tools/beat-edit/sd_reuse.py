@@ -28,7 +28,9 @@ EDITS = {"hats_in": [(0.0, 15.75)],         # putting the hats in until 15.7 s, 
          "snaps": [(0.0, 13.7)],            # putting the snaps in (box-select / drawing) until ~13.6 s
          "horn": [(0.0, 6.8)],              # horn notes drawn in at 6.0-6.6 s
          "monarch": [(0.0, 13.0)],          # bottom notes deleted and re-added 6.4-12.9 s
-         "hats": [(13.6, 99.0)]}            # end of the follow-along
+         "hats": [(13.6, 99.0)],            # end of the follow-along
+         "clipper": [(0.0, 3.9), (28.6, 99.0)],   # OBS window over the mixer until ~3.5 s; loops back at 28.6 s
+         "smooth": [(0.0, 0.95), (25.95, 99.0)]}  # OBS window at the start and end            # end of the follow-along
 def clean(rec):
     runs = [r for r in C[rec]["runs"] if r[1] - r[0] >= 0.3]
     w = {}
@@ -49,7 +51,8 @@ def clean(rec):
     return iv, D
 VIEWS = {"H808": ("h808", 0), "H808_8": ("h808", 8), "HORN": ("horn", 0), "HORN_8": ("horn", 8), "MON": ("monarch", 0),
          "MON_8": ("monarch", 8), "SNAP": ("snaps", 0), "SNAP_8": ("snaps", 8), "SNAP_4": ("snaps", 4), "SNAP_12": ("snaps", 12),
-         "HAT": ("hats", 0), "HAT_8": ("hats", 8), "HIN": ("hats_in", 0), "HIN_8": ("hats_in", 8), "SCR": ("scratch", 0), "SCR_M8": ("scratch", -8), "MACRO": ("macro", 0)}
+         "HAT": ("hats", 0), "HAT_8": ("hats", 8), "HIN": ("hats_in", 0), "HIN_8": ("hats_in", 8), "SCR": ("scratch", 0), "SCR_M8": ("scratch", -8), "MACRO": ("macro", 0),
+         "CLIP": ("clipper", 0), "PLUGIN": ("smooth", 0)}
 # Jack (Nov 5): every 8-bar section uses the same pattern clips (playlist: Hi Hat Basic IV, 808 Chorus, 808 Monarch, Clap 6,
 # Rim 25, Snap 8 appear in both sections) except 808 16 -> 808 16 #2, horn (section 1 only), open hat / rim 11 (section 2
 # only) and rim / snaps absent in bars 33-34. The whole-band audio test fails for hats / snaps / monarch in section 2 only

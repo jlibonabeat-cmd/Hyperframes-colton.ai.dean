@@ -76,6 +76,10 @@ for _vn, _segs in COVER.items():
         elif _base == "HIN":                          # the full hat page (end of 'putting in hi-hats'): dense 8ths on row
             # 396 + rolls on rows 500-680; picture 26 ms early vs the master hi onsets -> pic
             V[_vn].update(h=420, hs=420, tz=1.0, cy=470, fixcy=True, xmin=460, pic=0.026)   # xmin 460: keyboard out
+    elif _base == "PLUGIN":   # Smooth Operator on the master (Nov 5 recording, same session): whole window in the split
+        V[_vn] = dict(clip="smooth.mp4", inst="ARR", kind="fixed", split_only=True, segs=_sg, cy=472, h=900, fx=798, xmin=0)   # 868 px wide: the window (783) + room for the push and punch
+    elif _base == "CLIP":     # Fruity Soft Clipper (master), meters moving: tight on the window (485-830 x 300-495), punch
+        V[_vn] = dict(clip="clipper.mp4", inst="ARR", kind="fixed", segs=_sg, cy=420, h=760, fx=657, xmin=0)   # 427 px wide in the full layout: whole window + punch room
     elif _base == "MACRO":
         # arrangement in page mode: the playhead (pink core) is detected in the empty tracks 4-5 at the top and ridden
         _A = dict(clip="macro.mp4", inst="ARR", kind="roll", pink=True, ph_rows=(195, 320), lo=705, xmin=705, segs=_sg,
@@ -146,15 +150,17 @@ def act(inst, t0, t1):
 # Jack (Nov 5, v2 review by QA): still 9 arrangement shots -> rebuilt with 3 per edit, never back to back. 808 16 notes
 # are ~330 px apart in follow view, so it is only used around its hits (0, 16, 24/27, 56); the snaps page is held wide
 # (both clusters in view) through its hit at 27 (the 808 16 note there has already passed the playhead). Section 2 bars 33-36 have only the hat page (HIN_8); bars 37-38 snaps; 39-40 monarch.
+# Jack (Nov 5, v3: "close to how I want it"): Soft Clipper + Smooth Operator recorded (same session) -> they replace
+# the section-2 arrangement shots; one wide arrangement shot stays early on.
 if VARIANT == "A":
     B_ = [0, 1.4, 5, 6.5, 12.9, 15.6, 18, 28.4, 32, 36, 38.5, 44, 49.5, 55.9, 59.4, 64]
     L_ = ["full:H808", "face:HIN", "full:MACRO_8", "full:HIN", "face:HORN", "full:H808", "face:SNAP",
-          "full:MON", "full:HIN_8", "face:MACRO_8", "full:HIN_8", "full:MACRO_D", "face:SNAP_8", "full:H808_8", "face:MON_8"]
+          "full:MON", "full:HIN_8", "face:PLUGIN", "full:HIN_8", "full:CLIP", "face:SNAP_8", "full:H808_8", "face:MON_8"]
     REACT_J = 36 / 4
 else:
     B_ = [0, 2, 6.5, 8.5, 12.9, 15.6, 18, 28.4, 32, 36, 39, 47.6, 49.5, 56.6, 59.4, 64]
     L_ = ["face:H808", "full:HIN", "face:MACRO_W", "full:HIN", "full:HORN", "face:H808", "full:SNAP",
-          "face:MON", "full:HIN_8", "face:MACRO_D", "full:HIN_8", "face:MACRO_8", "full:SNAP_8", "full:H808_8", "face:MON_8"]
+          "face:MON", "full:HIN_8", "face:PLUGIN", "full:HIN_8", "face:CLIP", "full:SNAP_8", "full:H808_8", "face:MON_8"]
     REACT_J = 36 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
