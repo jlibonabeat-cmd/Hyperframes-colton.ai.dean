@@ -290,3 +290,21 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
 - **KUSH v2 (Jack, Nov 4: "blank looking screen 0:09-0:10"):** the 808 follow-along recording runs past its pattern end onto an empty grey page (clip 10.15–11.9 s) before looping. The clock still ticks there, so it looked like clean playback. It is now excluded (`EDITS["m808f"]`), and the A/B/C slots that used it now show the clipper, the mixer or the next-cycle 808.
   - The sparse second-808 view is framed wider, so its next notes are always on screen.
   - **QA added:** a per-shot sheet (4 frames per shot) to catch empty grids that a hit sheet misses.
+
+### SO DOPE (144 BPM, C minor, Nov 5): `build_sd.py`, `VARIANT=A|B`
+
+- **Window:** bars 25–40 (0:40.0–1:06.7). It is two 8-bar sections: the 808 16 + horn section, then the 808 16 #2 + open hat section, where the rim and snaps are absent for its first 2 bars. Pink theme, same as KUSH. Face: the cap clip.
+- **Several recordings are sparse:**
+  - 808 16: a few long notes; it is one of four 808 layers.
+  - Hats: thin ticks.
+  - Scratch: one note, off the page.
+  - The hats and scratch read as empty grids at any framing, so they aren't used.
+- **Don't trust "heard sub onsets" for one 808 layer.** The chorus / monarch / horn layers make the same onsets, so check the roll's own picture notes.
+- **Editing windows** (shown on screen, so excluded):
+  - snaps < 13.7 s
+  - horn < 6.8 s
+  - monarch < 13.0 s (notes deleted and re-added)
+  - hats > 13.6 s
+  - the whole "putting in hi-hats" recording
+- **Section 2 audio check:** the 808 #2 pattern, open hat and rim don't match section 1 in bars 34 / 36 / 38. With no roll recording for those bars, they're carried by arrangement crops (808 tracks / drum tracks, with the camera riding the page-mode playhead in empty tracks 4–5).
+- **New QA:** an empty-roll scan, which flags any roll shot showing fewer than about 6 note pixels for 12 or more frames.
