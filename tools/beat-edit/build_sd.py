@@ -157,6 +157,15 @@ if VARIANT == "A":
     L_ = ["full:H808", "face:HIN", "full:MACRO_8", "full:HIN", "face:HORN", "full:H808", "face:SNAP",
           "full:MON", "full:HIN_8", "face:PLUGIN", "full:HIN_8", "full:CLIP", "face:SNAP_8", "full:H808_8", "face:MON_8"]
     REACT_J = 36 / 4
+elif VARIANT == "C":
+    # story cut, the rolls carry it: ch.1 the groove (808 hit -> hats -> clipper -> hats hold) | ch.2 the layers come in,
+    # each on its own notes (horn 13/14 -> 808 16 -> snaps 24/25.6/27.1 -> monarch 29.1/30.6) | ch.3 the drop (hats +
+    # Smooth Operator + hats + clipper punches) | ch.4 fast recap on the hits (snaps -> 808 56 -> snaps 57.6/59.1 ->
+    # monarch 61.1/62.6 with the face). No arrangement shots.
+    B_ = [0, 1.5, 4, 5.5, 12.9, 15.6, 22, 28.4, 32, 36, 40, 44, 49.5, 55.9, 57.4, 59.4, 64]
+    L_ = ["full:H808", "full:HIN", "face:CLIP", "full:HIN", "full:HORN", "face:H808", "full:SNAP", "face:MON",
+          "full:HIN_8", "face:PLUGIN", "full:HIN_8", "full:CLIP", "face:SNAP_8", "full:H808_8", "full:SNAP_8", "face:MON_8"]
+    REACT_J = 36 / 4
 else:
     B_ = [0, 2, 6.5, 8.5, 12.9, 15.6, 18, 28.4, 32, 36, 39, 47.6, 49.5, 56.6, 59.4, 64]
     L_ = ["face:H808", "full:HIN", "face:MACRO_W", "full:HIN", "full:HORN", "face:H808", "full:SNAP",

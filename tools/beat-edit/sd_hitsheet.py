@@ -55,6 +55,6 @@ for s in d["shots"]:
         if n < len(F): T.append(tile(F[n], f"{s['view']} {tv:.2f} n{n}", face))
 def sheet(t, fn):
     rows = [np.hstack(t[i:i + 8] + [np.zeros_like(t[0])] * (8 - len(t[i:i + 8]))) for i in range(0, len(t), 8)]
-    cv2.imwrite(fn, np.vstack(rows))
+    if rows: cv2.imwrite(fn, np.vstack(rows))
 sheet(T, f"sheets/{name}_hits.png"); sheet(X, f"sheets/{name}_fixed.png"); print(name, len(T), "hit frames", len(X), "fixed frames", len(F), "frames")
 print("playhead position in panel at hits (flag <0.2 or >0.8):", [e for e in EDGE if not 0.2 <= e[2] <= 0.8] or "all inside")
