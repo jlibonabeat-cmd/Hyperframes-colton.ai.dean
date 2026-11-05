@@ -18,12 +18,14 @@ BANDS = {k: S[(fr >= lo) & (fr < hi)] for k, (lo, hi) in {"808": (25, 160), "mid
 def bar(L, b):
     i = (T >= b * BAR) & (T < (b + 1) * BAR); return L[:, i]
 def same(a, b, bands=("808", "mid", "hi")):
+    if not bands: return True
     for L in (BANDS[k] for k in bands):
         x, y_ = bar(L, a), bar(L, b); m = min(x.shape[1], y_.shape[1])
         if m < 10 or np.corrcoef(x[:, :m].ravel(), y_[:, :m].ravel())[0, 1] < 0.97: return False
     return True
 # clean playback per recording (clip seconds): majority-offset clock runs merged, minus editing windows (checked by eye)
-EDITS = {"snaps": [(0.0, 13.7)],            # putting the snaps in (box-select / drawing) until ~13.6 s
+EDITS = {"hats_in": [(0.0, 15.75)],         # putting the hats in until 15.7 s, then the full page plays (bars 25-28.9)
+         "snaps": [(0.0, 13.7)],            # putting the snaps in (box-select / drawing) until ~13.6 s
          "horn": [(0.0, 6.8)],              # horn notes drawn in at 6.0-6.6 s
          "monarch": [(0.0, 13.0)],          # bottom notes deleted and re-added 6.4-12.9 s
          "hats": [(13.6, 99.0)]}            # end of the follow-along
@@ -47,9 +49,13 @@ def clean(rec):
     return iv, D
 VIEWS = {"H808": ("h808", 0), "H808_8": ("h808", 8), "HORN": ("horn", 0), "HORN_8": ("horn", 8), "MON": ("monarch", 0),
          "MON_8": ("monarch", 8), "SNAP": ("snaps", 0), "SNAP_8": ("snaps", 8), "SNAP_4": ("snaps", 4), "SNAP_12": ("snaps", 12),
-         "HAT": ("hats", 0), "HAT_8": ("hats", 8), "SCR": ("scratch", 0), "SCR_M8": ("scratch", -8), "MACRO": ("macro", 0)}
-BCHK = {"h808": ("808",), "horn": ("808",), "monarch": ("808",), "snaps": ("hi", "snr"), "hats": ("hi",),
-        "scratch": ("mid", "hi")}
+         "HAT": ("hats", 0), "HAT_8": ("hats", 8), "HIN": ("hats_in", 0), "HIN_8": ("hats_in", 8), "SCR": ("scratch", 0), "SCR_M8": ("scratch", -8), "MACRO": ("macro", 0)}
+# Jack (Nov 5): every 8-bar section uses the same pattern clips (playlist: Hi Hat Basic IV, 808 Chorus, 808 Monarch, Clap 6,
+# Rim 25, Snap 8 appear in both sections) except 808 16 -> 808 16 #2, horn (section 1 only), open hat / rim 11 (section 2
+# only) and rim / snaps absent in bars 33-34. The whole-band audio test fails for hats / snaps / monarch in section 2 only
+# because the open hat, 808 #2 and rim 11 are added on top -> those views reuse by pattern identity (no band test); the
+# snaps' own bars 33-34 are excluded by hand (absent there).
+BCHK = {"h808": ("808",), "horn": ("808",), "monarch": (), "snaps": (), "hats": (), "hats_in": (), "scratch": ("mid", "hi")}
 cover = {}
 for v, (rec, sh) in VIEWS.items():
     iv, D = clean(rec)

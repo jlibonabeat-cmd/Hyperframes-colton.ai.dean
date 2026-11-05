@@ -52,8 +52,8 @@ def fr(t):
 # segments: (clip_a, clip_b, D) with song = clip + D (picture), from kush_reuse.py (audio-checked per bar).
 COVER = json.load(open(f"{HERE}/cover.json"))
 ROLL = dict(kind="roll", lo=100, xmin=100, pink=True, ymin=185, ymax=890, cy=540, h=440, hs=380, tz=1.3)
-CLIPS = {"H808": "h808", "HORN": "horn", "MON": "monarch", "SNAP": "snaps", "HAT": "hats", "SCR": "scratch"}
-INST = {"H808": "808", "HORN": "808", "MON": "808", "SNAP": "SNARE", "HAT": "HAT", "SCR": "SNARE"}
+CLIPS = {"H808": "h808", "HORN": "horn", "MON": "monarch", "SNAP": "snaps", "HAT": "hats", "SCR": "scratch", "HIN": "hats_in"}
+INST = {"H808": "808", "HORN": "808", "MON": "808", "SNAP": "SNARE", "HAT": "HAT", "SCR": "SNARE", "HIN": "HAT"}
 V = {}
 for _vn, _segs in COVER.items():
     _base = _vn.split("_")[0]
@@ -70,9 +70,12 @@ for _vn, _segs in COVER.items():
         elif _base == "MON":                          # two rows (344 / 734): keep both
             V[_vn].update(h=700, hs=700, tz=1.0, cy=540, fixcy=True)
         elif _base == "SNAP":
-            V[_vn].update(h=520, hs=520, tz=1.0, cy=656, fixcy=True)
-        elif _base == "HAT":                          # thin hat ticks: tight, full-screen only, keyboard kept out
-            V[_vn].update(h=400, hs=400, tz=1.0, cy=434, fixcy=True, xmin=170)
+            V[_vn].update(h=700, hs=600, tz=1.0, cy=620, fixcy=True)   # snap clusters ~540 px apart -> wide enough to keep one in view
+        elif _base == "HAT":                          # follow-along hats: very zoomed, few ticks -> tight so they read big
+            V[_vn].update(h=300, hs=360, tz=1.0, cy=434, fixcy=True, xmin=170)
+        elif _base == "HIN":                          # the full hat page (end of 'putting in hi-hats'): dense 8ths on row
+            # 396 + rolls on rows 500-680; picture 26 ms early vs the master hi onsets -> pic
+            V[_vn].update(h=420, hs=420, tz=1.0, cy=470, fixcy=True, xmin=460, pic=0.026)   # xmin 460: keyboard out
     elif _base == "MACRO":
         # arrangement in page mode: the playhead (pink core) is detected in the empty tracks 4-5 at the top and ridden
         _A = dict(clip="macro.mp4", inst="ARR", kind="roll", pink=True, ph_rows=(195, 320), lo=705, xmin=705, segs=_sg,
@@ -133,22 +136,26 @@ def act(inst, t0, t1):
 # QA pass 2: the hat roll (thin ticks, sparse) reads empty at any framing -> no hat shots. 808 16 notes (heard, from the
 # master sub onsets, all on screen): 0.1 8.1 9.8 11.2 16.1 24.1 27.1 | section 2: 40.1 41.8 56.1. Bars 33-38 (beats 32-56)
 # have no roll recording that matches the audio -> arrangement crops (808 #2 / drum tracks) alternating with the face.
+# Jack (Nov 5): "far too much macro; no hi-hats / open hats / snaps / other MIDI". Rebuilt around the hat page from the
+# 'putting in hi-hats' recording (clean 15.75-22.25 s = bars 25-28.9, dense 8ths) and pattern-identity reuse (+8 bars):
+# HIN 0-15.6 | HIN_8 32-47.5 | HAT (follow, ticks 17.6 18.8) | HAT_8 (48.1 49.6 50.8) | 808 16: 0 16 27 | HORN 13 14 |
+# SNAP 24 25.5 27 | SNAP_8 56 57.5 59 | MON 29 30.6 | MON_8 61 62.6. Arrangement only in short gaps (7 shots, ~24%).
+# No open-hat recording was supplied.
+# QA: the hat page in the split shows the keyboard at the page start and tiny ticks -> hats full-screen only; the
+# follow-along hat recording (one tick a bar) reads empty -> not used.
+# Jack (Nov 5, v2 review by QA): still 9 arrangement shots -> rebuilt with 3 per edit, never back to back. 808 16 notes
+# are ~330 px apart in follow view, so it is only used around its hits (0, 16, 24/27, 56); the snaps page is held wide
+# (both clusters in view) through its hit at 27 (the 808 16 note there has already passed the playhead). Section 2 bars 33-36 have only the hat page (HIN_8); bars 37-38 snaps; 39-40 monarch.
 if VARIANT == "A":
-    B_ = [0, 1.4, 3, 5, 7.6, 11.6, 12.8, 15.6, 17.3, 19.2, 21.5, 23.6, 26.6, 28.4, 32, 34, 36, 38, 40, 42.3, 44, 46.5, 49,
-          52, 54, 56, 57.2, 59.45, 64]
-    L_ = ["full:H808", "face:MACRO_D", "full:MACRO_W", "face:MACRO_8", "full:MACRO_D", "face:MACRO_W", "full:HORN", "face:H808",
-          "full:MACRO_8", "face:MACRO_D", "full:MACRO_W", "full:SNAP", "face:H808", "full:MON", "face:MACRO_8", "full:MACRO_D",
-          "face:MACRO_W", "full:MACRO_8", "face:MACRO_D", "full:MACRO_8", "face:MACRO_W", "full:MACRO_8", "face:MACRO_D",
-          "full:MACRO_W", "face:MACRO_8", "full:H808_8", "full:SNAP_8", "face:MON_8"]
-    REACT_J = 32 / 4
+    B_ = [0, 1.4, 5, 6.5, 12.9, 15.6, 18, 28.4, 32, 36, 38.5, 44, 49.5, 55.9, 59.4, 64]
+    L_ = ["full:H808", "face:HIN", "full:MACRO_8", "full:HIN", "face:HORN", "full:H808", "face:SNAP",
+          "full:MON", "full:HIN_8", "face:MACRO_8", "full:HIN_8", "full:MACRO_D", "face:SNAP_8", "full:H808_8", "face:MON_8"]
+    REACT_J = 36 / 4
 else:
-    B_ = [0, 1.4, 3, 5, 7.6, 11.6, 12.8, 15.6, 17.3, 19.2, 21.5, 23.6, 26.6, 28.4, 32, 34, 36, 38, 40, 42.3, 44, 46.5, 49,
-          52, 54, 56, 57.2, 59.45, 64]
-    L_ = ["face:H808", "full:MACRO_8", "face:MACRO_W", "full:MACRO_D", "face:MACRO_8", "full:MACRO_W", "face:HORN", "full:H808",
-          "face:MACRO_8", "full:MACRO_D", "full:MACRO_W", "face:SNAP", "full:H808", "face:MON", "full:MACRO_W", "face:MACRO_8",
-          "full:MACRO_D", "face:MACRO_W", "full:MACRO_8", "face:MACRO_D", "full:MACRO_D", "full:MACRO_W", "face:MACRO_8",
-          "full:MACRO_D", "face:MACRO_W", "full:H808_8", "full:SNAP_8", "face:MON_8"]
-    REACT_J = 34 / 4
+    B_ = [0, 2, 6.5, 8.5, 12.9, 15.6, 18, 28.4, 32, 36, 39, 47.6, 49.5, 56.6, 59.4, 64]
+    L_ = ["face:H808", "full:HIN", "face:MACRO_W", "full:HIN", "full:HORN", "face:H808", "full:SNAP",
+          "face:MON", "full:HIN_8", "face:MACRO_D", "full:HIN_8", "face:MACRO_8", "full:SNAP_8", "full:H808_8", "face:MON_8"]
+    REACT_J = 36 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 8                                   # bar 33: section 2 (zoom punch + flash)

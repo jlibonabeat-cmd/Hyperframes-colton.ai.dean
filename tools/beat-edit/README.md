@@ -308,3 +308,10 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - the whole "putting in hi-hats" recording
 - **Section 2 audio check:** the 808 #2 pattern, open hat and rim don't match section 1 in bars 34 / 36 / 38. With no roll recording for those bars, they're carried by arrangement crops (808 tracks / drum tracks, with the camera riding the page-mode playhead in empty tracks 4–5).
 - **New QA:** an empty-roll scan, which flags any roll shot showing fewer than about 6 note pixels for 12 or more frames.
+- **v3 (Jack, Nov 5: "far too much macro; no hats, open hats, snaps or other MIDI"):** rebuilt around the rolls.
+  - The clean hat page at the end of "putting in hi-hats" (clip 15.75–22.25 s, bars 25–28.9, dense 8ths) is the hat shot (`HIN`), reused 8 bars later (`HIN_8`, pattern identity from the playlist; `BCHK` = `()`). `xmin=460` keeps the piano keyboard out when the playhead is at the page start.
+  - Snaps are framed wide (`h=700`): the two snap clusters are ~540 px apart, so a tight crop showed an empty grid between them.
+  - The 808 16 follow view has notes ~330 px apart: only use it around its hits (0, 16, 24, 56).
+  - Arrangement: 3 short shots per edit (A: 15 shots, B: 15 shots), never back to back.
+  - Still not usable: the follow-along hat recording (one thin tick a bar) and the scratch (one note with the cursor parked on it). No open-hat recording was supplied.
+  - `sd_qa.py A B`: shot sheet + empty-roll + frozen + dark-edge scans in one go.
