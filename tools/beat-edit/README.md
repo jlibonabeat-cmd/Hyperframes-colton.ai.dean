@@ -320,3 +320,16 @@ Jack approved B2 and asked for more variants: same footage, different parts at d
   - They replace the section-2 arrangement shots (A: Smooth Operator split at the post-drop reaction, Soft Clipper full with downbeat punches at bars 36–37; B: the other way round). One wide arrangement shot stays early in each edit.
   - **C (Jack, Nov 5: "more emphasis on the MIDI notes as the beat goes along, more storytelling"):** no arrangement shots. Ch.1 the groove (808 hit → hats → Soft Clipper with the face → hats hold), ch.2 each layer enters on its own notes (horn 13/14 → 808 16 at 16 → snaps 24/25.6/27.1 full screen → Monarch 29.1/30.6), ch.3 the drop (hats → Smooth Operator reaction → hats → clipper punches), ch.4 a fast recap on the hits (snaps → 808 at 56 → snaps 57.6/59.1 → Monarch with the face).
   - Framing: the renderer uses `h` for fixed views in both layouts (`hs` is ignored when `fx` is set). Soft Clipper `h=760` (window + punch room in the 9:16 panel), Smooth Operator `h=900` (whole window in the split).
+
+## MERSEY (198 BPM, D minor, Nov 9) — `build_mer.py` + `mer_reuse.py`
+
+Window bars 9–25 (0:09.70–0:30.30, 17 bars): the pre-drop bar with the "OK" vox at bar 9.92, the drop at bar 10, section 1 (bars 10–17; 808 + perc in the last bar), section 2 (bars 18–25; rims added, 808 again in the last bar).
+- **Brown FL theme:** notes salmon (~176,128,96 RGB), pink inside a time selection (~220,128,128); playhead a light beige 3-px line (~170,149,126) with an orange glow. `mer_scan.py` masks for both; the builder has a `brown` playhead branch and draws a brown-style playhead.
+- **Three kinds of roll in one session:**
+  - page mode (bass, kick, rim, 808 end-of-section): the notes stand still and the playhead sweeps an 8-bar page; hits = playhead crossing a note's left edge (`mer_hits.py`).
+  - smooth follow with a visible playhead (OK vox at x=646, perc at x=762).
+  - smooth follow with the playhead **hidden** (snare follow-along). The scroll is jerky (the view updates every 2–5 frames), so the hidden playhead was solved from the continuous scroll position (phase correlation) plus every note's content position, matched against the master snare onsets: x=1682. The builder draws it (`draw_ph`).
+- **"Putting in" passes:** the kick, bass and rim recordings add notes during the pass (pencil, notes popping in just ahead of the playhead). Only stretches where no note is drawn, dragged or pops in inside the crop are used (`REC` windows in `mer_reuse.py`). `snare` (putting in snares) wasn't used: tiny ticks being drawn.
+- **Reuse:** bass and kick repeat every 2 bars in bars 10–15 and every 8 bars (11–17 → 19–25) on the audio (sub/bass bands ≥ 0.97), so they're shifted ±2/+6/+8/+10 bars where the audio matches; snare uses pattern identity (+8; section 2's extra hits are the rims); the end-of-section 808 is shifted −8 (sub band checked).
+- **Crop clamp bit again:** fixed/follow views without `xmin` got the default 745 and cut the vox notes off → `FOLLOW` sets `xmin=470`.
+- Two cuts: A (22 shots, face every other shot) and B (19 shots, longer snare holds, wide arrangement first). 2 arrangement shots each.
