@@ -76,13 +76,54 @@ for _vn, _segs in COVER.items():
     elif _base == "MACRO":    # arrangement (page mode); framed on the clip lanes, the camera rides the playhead
         V["MACRO"] = dict(clip="macro.mp4", inst="ARR", kind="roll", brown=True, lo=240, xmin=230, segs=_sg,
                           ymin=60, ymax=1040, cy=560, h=900, hs=860, tz=1.0, fixcy=True)
+# Soft Clipper + Smooth Operator weren't recorded in the MERSEY session. Jack (Nov 9): "just find a clip that makes it look
+# synced up". Borrowed from KUSH (Nov 4, 193 BPM, same master chain) and played 198/193 = 2.6% fast so KUSH bars line up
+# with MERSEY bars; for each shot the KUSH bar offset is picked so its low-end hits land where MERSEY's do (envelope match).
+KUSH_BAR = 240 / 193.0
+WARP = BAR and KUSH_BAR / BAR
+V["CLIPK"] = dict(clip="kush_clipper.mp4", inst="ARR", kind="fixed", warp=True, kbeat="kush_beat.mp3",
+                  runs=[(2.9, 10.36, 67.978)], cy=410, h=760, fx=618, xmin=0)          # KUSH clean clipper run
+V["PLUGK"] = dict(clip="kush_smooth.mp4", inst="ARR", kind="fixed", warp=True, kbeat="kush_beat.mp3", split_only=True,
+                  runs=[(1.2, 4.85, -1.162), (6.25, 8.7, -1.162), (11.2, 17.2, -1.162), (17.4, 19.7, -1.162)],
+                  cy=600, h=860, fx=588, xmin=0)
 _free_t = {}
 
 
 PIC_LEAD = 0.0                       # offset fitted on the picture directly (note crossings vs master onsets)
 
 
+import subprocess as _sp
+from scipy.signal import stft as _stft
+def _env(path, t0, dur, speed=1.0):
+    y = np.frombuffer(_sp.run(["ffmpeg", "-v", "error", "-ss", f"{max(t0, 0):.3f}", "-t", f"{dur * speed:.3f}", "-i", path, "-ac", "1",
+                               "-ar", "11025", "-f", "f32le", "-"], capture_output=True).stdout, np.float32)
+    f, _, Z = _stft(y, 11025, nperseg=512, noverlap=512 - 64)
+    e = np.log1p(np.abs(Z)[(f >= 30) & (f < 160)].sum(0)); e = np.maximum(0, np.diff(e, prepend=e[0]))
+    tt = np.arange(len(e)) * 64 / 11025 / speed
+    return np.interp(np.arange(0, dur, 0.01), tt, e)
+_warp_cache = {}
+def coverage_warp(view, s0, s1):
+    """clip time at s0 for a borrowed plugin view: KUSH song = (MERSEY bar position + n) * KUSH_BAR, n whole bars."""
+    key = (view, round(s0, 3), round(s1, 3))
+    if key in _warp_cache: return _warp_cache[key]
+    v = V[view]; dur = s1 - s0
+    em = _env(f"{HERE}/beat.mp3", s0, dur)
+    best = None
+    for a, b, D in v["runs"]:
+        for n in range(-80, 120):
+            sk0 = (s0 / BAR + n) * KUSH_BAR
+            c0 = sk0 - D - 0.02; c1 = c0 + dur * WARP
+            if c0 < a or c1 > b: continue
+            ek = _env(f"{HERE}/{v['kbeat']}", sk0, dur, WARP)
+            m = min(len(em), len(ek))
+            sc = np.corrcoef(em[:m], ek[:m])[0, 1]
+            if best is None or sc > best[0]: best = (sc, c0, n)
+    _warp_cache[key] = None if best is None else best[1]
+    if best: print(f"  {view} {s0:.2f}-{s1:.2f}: KUSH bar offset {best[2]}, low-end match {best[0]:.2f}")
+    return _warp_cache[key]
 def coverage(view, s0, s1):
+    if V[view].get("warp"):
+        return coverage_warp(view, s0, s1)
     if V[view].get("free"):
         a, b, _ = V[view]["segs"][0]
         if s1 - s0 > b - a: return None
@@ -126,6 +167,12 @@ if VARIANT == "A":       # fast J Sewell cut, face every other shot, one element
           "face:SNARE", "full:MACRO", "face:KICK", "full:E808_M8", "full:PERC", "face:SNARE_8", "full:RIM", "face:BASS_8",
           "full:SNARE_8", "face:KICK_8", "full:BASS_8", "face:SNARE_8", "full:RIM", "face:E808"]
     REACT_J = 5.6 / 4
+elif VARIANT == "C":     # A + Soft Clipper / Smooth Operator (borrowed, warped) + the J Sewell blackout before the drop
+    B_ = [0, 3.6, 5.6, 8.0, 12.4, 16.0, 19.6, 21.4, 24.0, 27.8, 30.2, 33.4, 35.65, 37.6, 40.4, 44.2, 47.2, 50.4, 54.6, 57.4, 59.8, 65.0, 68]
+    L_ = ["face:MACRO", "full:VOX", "face:BASS_M2", "full:SNARE", "face:KICK_M2", "full:SNARE", "face:VOX", "full:BASS_2",
+          "face:PLUGK", "full:CLIPK", "face:KICK", "full:E808_M8", "full:PERC", "face:SNARE_8", "full:RIM", "face:BASS_8",
+          "full:SNARE_8", "face:KICK_8", "full:CLIPK", "face:SNARE_8", "full:RIM", "face:E808"]
+    REACT_J = 5.6 / 4
 else:                    # longer holds on the snare roll, different opening (wide arrangement first, face on the OK vox)
     B_ = [0, 3.6, 5.6, 8.0, 13.0, 16.4, 19.6, 21.4, 27.8, 30.2, 33.4, 35.65, 37.6, 44.2, 48.0, 51.4, 54.6, 59.8, 65.0, 68]
     L_ = ["full:MACRO", "face:VOX", "full:BASS_M2", "face:SNARE", "full:KICK_M2", "face:BASS_M2", "full:VOX", "face:SNARE",
@@ -134,8 +181,12 @@ else:                    # longer holds on the snare roll, different opening (wi
     REACT_J = 8.0 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
-DROP_J = 1                                   # bar 10: the drop (soft flash)
-TRANS_FORCE = {}
+DROP_J = 1                                   # bar 10
+# the real impact: after "oh" (beat 3.7) / "okay" (4.7) the beat drops out (beats 5.05-5.65, -29 dB) and slams in at 5.66
+# (kick + bass + 808). C: J Sewell blackout for exactly that gap, back on the hit with the flash.
+DROP_T = 5.66 * BEAT if VARIANT == "C" else DROP_J * BAR
+BLACK = (5.05 * BEAT, 5.62 * BEAT) if VARIANT == "C" else None
+TRANS_FORCE = {1.4: "hard", 6.0: "soft", 6.95: "zoom", 13.65: "soft"} if VARIANT == "C" else {}
 SILENT_J = -1
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -230,7 +281,7 @@ for s in shots:
     s["theta"] = 0.0
     if s["idx"] == 0:
         s["zm"] = "impact"
-    elif s["view"].split("_")[0] in ("MIXER", "PLUGIN", "CLIP", "COMP") or s["view"].startswith("MIXER_T"):
+    elif s["view"].split("_")[0] in ("MIXER", "PLUGIN", "CLIP", "COMP", "CLIPK", "PLUGK") or s["view"].startswith("MIXER_T"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and (v["kind"] == "roll" or v.get("follow")):
         s["zm"] = "track"                       # tight macro, camera follows the playhead
@@ -381,7 +432,7 @@ for i_, s_ in enumerate(shots):
         trans[n_] = "hard"
 whip_in = {n for n, t in trans.items() if t != "hard"}
 # jolts: rare — the drop downbeat and the 3 strongest 808 hits in the drop that are not on a cut
-drop_t = DROP_J * BAR
+drop_t = DROP_T
 cand = [(s, t) for t, s in zip(kt, ks) if t > drop_t + 0.5 and t < DUR - 2 * BAR and s >= 0.45]
 cand.sort(reverse=True)
 jolts = []   # the drop itself gets a whip + soft flash, not a jolt
@@ -409,7 +460,7 @@ shx = np.zeros(NF + 12); shy = np.zeros(NF + 12)
 if SHAKE:
     rs = np.random.default_rng(149)
     for n0_, kind_ in trans.items():
-        if kind_ == "hard":
+        if kind_ in ("hard", "soft"):
             continue
         amp = 26.0 if kind_ == "zoom" else 18.0
         ang = rs.uniform(0, 2 * np.pi)
@@ -425,8 +476,9 @@ for k, a in enumerate([0.35, 0.18, 0.07]):
 # ----------------------------------------------------------------------------- helpers
 
 
-def reader(path, ss, nframes, w, h_):
-    cmd = ["ffmpeg", "-nostats", "-v", "error", "-ss", f"{max(ss, 0):.3f}", "-i", path, "-vf", f"fps={FPS}",
+def reader(path, ss, nframes, w, h_, speed=1.0):
+    vf = f"fps={FPS}" if speed == 1.0 else f"setpts=(PTS-STARTPTS)/{speed:.5f},fps={FPS}"
+    cmd = ["ffmpeg", "-nostats", "-v", "error", "-ss", f"{max(ss, 0):.3f}", "-i", path, "-vf", vf,
            "-frames:v", str(nframes), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"]
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     last = np.zeros((h_, w, 3), np.uint8)
@@ -571,7 +623,7 @@ for s in shots:
     off = (f0 - s["n0"]) / FPS
     k = f1 - f0
     v = dict(V[s["view"]], **({"cy": s["cy"]} if "cy" in s else {}))
-    rd = reader(f"{HERE}/{v['clip']}", s["tau"] + off, k, SRC_W, SRC_H)
+    rd = reader(f"{HERE}/{v['clip']}", s["tau"] + off * (WARP if v.get("warp") else 1.0), k, SRC_W, SRC_H, WARP if v.get("warp") else 1.0)
     frd = reader(f"{HERE}/{FACE_FILE}", s["face_t"] + off, k, FACE_W, FACE_H) if s["layout"] == "face" else None
     st = {}
     lastx = [None]
@@ -634,20 +686,28 @@ for s in shots:
             img = motion_blur_path(img, 0, 0, 0, -220, 14)
         elif tn == "zoom":
             img = zoom_blur(img, 1.0, 1.35)
+        elif tn == "soft":
+            img = motion_blur_path(img, 0, 0, -50, 0, 8)
         if ti == "whipH":
             img = motion_blur_path(img, 220, 0, 80, 0, 14)
         elif ti == "whipV":
             img = motion_blur_path(img, 0, 300, 0, 100, 14)
         elif ti == "zoom":
             img = zoom_blur(img, 1.35, 1.12)
+        elif ti == "soft":
+            img = motion_blur_path(img, 70, 0, 25, 0, 8)
         if tp == "whipH":
             img = motion_blur_path(img, 80, 0, 0, 0, 10)
         elif tp == "whipV":
             img = motion_blur_path(img, 0, 100, 0, 0, 10)
         elif tp == "zoom":
             img = zoom_blur(img, 1.12, 1.0)
+        elif tp == "soft":
+            img = motion_blur_path(img, 25, 0, 0, 0, 6)
         if SHAKE and (abs(shx[n]) + abs(shy[n]) > 0.5):
             img = motion_blur_path(img, shx[n - 1] if n > 0 else 0.0, shy[n - 1] if n > 0 else 0.0, shx[n], shy[n], 10)
+        if BLACK and fr(BLACK[0]) <= n < fr(BLACK[1]):
+            img = np.zeros_like(img)                 # blackout: the beat drops out
         if flash[n] > 0:
             img = cv2.addWeighted(img, 1 - flash[n], np.full_like(img, 255), flash[n], 0)
         enc.stdin.write(np.ascontiguousarray(img).tobytes())

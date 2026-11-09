@@ -333,3 +333,8 @@ Window bars 9–25 (0:09.70–0:30.30, 17 bars): the pre-drop bar with the "OK" 
 - **Reuse:** bass and kick repeat every 2 bars in bars 10–15 and every 8 bars (11–17 → 19–25) on the audio (sub/bass bands ≥ 0.97), so they're shifted ±2/+6/+8/+10 bars where the audio matches; snare uses pattern identity (+8; section 2's extra hits are the rims); the end-of-section 808 is shifted −8 (sub band checked).
 - **Crop clamp bit again:** fixed/follow views without `xmin` got the default 745 and cut the vox notes off → `FOLLOW` sets `xmin=470`.
 - Two cuts: A (22 shots, face every other shot) and B (19 shots, longer snare holds, wide arrangement first). 2 arrangement shots each.
+- **C (Jack, Nov 9: "absolutely love these", wants Soft Clipper + Smooth Operator, a J Sewell blackout on the first "oh okay", a couple of gentle transitions):**
+  - No plugin footage was recorded in the MERSEY session, and Jack OK'd borrowing ("find a clip that makes it look synced up"). Soft Clipper + Smooth Operator come from KUSH (193 BPM, same master chain), played 198/193 = 2.6 % fast (`setpts` in the reader) so KUSH bars line up with MERSEY bars; per shot the whole-bar KUSH offset is chosen by matching the low-end onset envelopes (`coverage_warp`).
+  - Blackout: after "oh" (beat 3.7) / "okay" (4.7) the master drops out (beats 5.05–5.65, −29 dB) and slams in at 5.66 (kick + bass + 808). The screen is black for exactly that gap; the flash moves to the slam (`DROP_T`, `BLACK`).
+  - New `soft` transition: 50–70 px slide with light motion blur, no shake (into Smooth Operator and the second clipper shot); a zoom punch into the first clipper.
+  - The borrowed plugin shots are in the pink KUSH theme, so their surroundings look different from MERSEY's brown session.
