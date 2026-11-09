@@ -183,9 +183,10 @@ CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 1                                   # bar 10
 # the real impact: after "oh" (beat 3.7) / "okay" (4.7) the beat drops out (beats 5.05-5.65, -29 dB) and slams in at 5.66
-# (kick + bass + 808). C: J Sewell blackout for exactly that gap, back on the hit with the flash.
+# (kick + bass + 808). C: J Sewell blackout from the "oh" through "okay" and the gap, back on the hit with the flash
+# (Jack: "when he goes oh it needs to go black and stay black until ok has finished, then the beat drops").
 DROP_T = 5.66 * BEAT if VARIANT == "C" else DROP_J * BAR
-BLACK = (5.05 * BEAT, 5.62 * BEAT) if VARIANT == "C" else None
+BLACK = (3.66 * BEAT, 5.62 * BEAT) if VARIANT == "C" else None
 TRANS_FORCE = {1.4: "hard", 6.0: "soft", 6.95: "zoom", 13.65: "soft"} if VARIANT == "C" else {}
 SILENT_J = -1
 shots = []
