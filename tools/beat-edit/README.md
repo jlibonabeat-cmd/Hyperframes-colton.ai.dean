@@ -338,3 +338,15 @@ Window bars 9–25 (0:09.70–0:30.30, 17 bars): the pre-drop bar with the "OK" 
   - Blackout: after "oh" (beat 3.7) / "okay" (4.7) the master drops out (beats 5.05–5.65, −29 dB) and slams in at 5.66 (kick + bass + 808). Jack: black from the "oh" (beat 3.66), staying black through "okay" and the gap, back on the slam with the flash (`DROP_T`, `BLACK`).
   - New `soft` transition: 50–70 px slide with light motion blur, no shake (into Smooth Operator and the second clipper shot); a zoom punch into the first clipper.
   - The borrowed plugin shots are in the pink KUSH theme, so their surroundings look different from MERSEY's brown session.
+
+## CREEPIN THROUGH THE MANSION (193 BPM, B minor, Nov 10) — `build_cr.py` + `cr_reuse.py`
+
+From the start of the beat. Bar 1 = melody intro, the 808 drops at bar 2; 8-bar sections bars 2–9, 10–17, 18–25. The last bar of each section has the counter snare and then the beat drops out (bar 9: 10.76–11.19 s, the OK vox inside the gap; bar 25: OK vox at 30.8 s). A = bars 1–17 (0:00–0:21.14), B = bars 1–25 (0:00–0:31.09, ends on the OK vox note).
+- Same brown FL theme as MERSEY; `mer_scan.py` works unchanged.
+- Page-mode rolls: melody, clap, snare (clean only after 13.45 s — before that he's drawing snares in), 808 pattern (notes dragged until 5.2 s).
+- Smooth-follow rolls with a hidden playhead (`cr_xp.py`: content position by phase correlation + every note's content x, playhead x solved against master onsets): second 808 at x=1358. Follow rolls with a visible playhead: counter snare 1297, OK vox 1634, dj fx 623.
+- Closed hi-hat not used: a pair every ~2 bars and the solved crossings didn't line up with the master hats (6/21 within 30 ms).
+- Second 808: after clip 9.5 s the page runs past the pattern end (empty) → excluded.
+- Reuse: everything repeats every 4 bars on the sub band (≥0.99), so shifts are multiples of 4 bars, each target bar audio-checked in its band (808 sub, melody mid, clap/snare snr, plugins/mixer all bands).
+- Blackout (Jack liked it on MERSEY): black from the end of the bar-9 counter snare to the bar-10 downbeat (beats 34.62–36), hard cut back in.
+- Same-session Smooth Operator (window 600–1375 × 250–720, split only), Soft Clipper (596–924 × 244–432), mixer, Analog Lab "LEADS" preset window (split only).
