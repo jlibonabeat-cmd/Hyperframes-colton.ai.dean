@@ -52,7 +52,7 @@ def fr(t):
 # segments: (clip_a, clip_b, D) with song = clip + D (picture), from kush_reuse.py (audio-checked per bar).
 COVER = json.load(open(f"{HERE}/cover.json"))
 ROLL = dict(kind="roll", lo=570, xmin=565, green=True, ymin=195, ymax=935, cy=560, h=600, hs=500, tz=1.0, fixcy=True)
-FOLLOW = dict(kind="fixed", follow=True, ymin=195, ymax=935, tz=1.0, xmin=565, green=True, fixcy=True)   # fixcy: stray notes in other rows pulled the auto-centre off the chops
+FOLLOW = dict(kind="fixed", follow=True, ymin=195, ymax=935, tz=1.0, xmin=500, green=True, fixcy=True)   # fixcy: stray notes in other rows pulled the auto-centre off the chops
 V = {}
 for _vn, _segs in COVER.items():
     _base = _vn.split("_")[0]
@@ -65,12 +65,16 @@ for _vn, _segs in COVER.items():
             V[_vn].update(cy=575, h=460, hs=420, pic=0.032)   # hat rows 534 / 615; page hits 32 ms late vs master hats
         if _base == "CLAP":
             V[_vn].update(cy=561, h=380, hs=360, pic=0.02)    # small clap ticks on one row: tight
-    elif _base == "CHOPS":    # sample chops (slicer), smooth follow, playhead hidden at x=736 (bar lines + master mid onsets)
-        V[_vn] = dict(FOLLOW, clip="chops.mp4", inst="ARR", segs=_sg, ph=736, draw_ph=True, cy=790, h=470, hs=470)   # chop rows 781-861
-    elif _base == "SNARE":    # jerk snare, smooth follow, playhead hidden at x=720 (+55 ms correction)
-        V[_vn] = dict(FOLLOW, clip="snare.mp4", inst="SNARE", segs=_sg, ph=720, draw_ph=True, cy=420, h=460, hs=440)
-    elif _base == "N808":     # nocturne 808 (the drop), smooth follow, playhead hidden at x=1152 (checked by eye: note starts on the line at the bar-17 and bar-17.5 onsets)
-        V[_vn] = dict(FOLLOW, clip="n808.mp4", inst="808", segs=_sg, ph=1152, draw_ph=True, cy=561, h=520, hs=480)
+    # Smooth-follow rolls: FL keeps the play position at the LEFT EDGE of the grid, hidden under the keyboard edge. The
+    # piano roll's overview strip proves it (its play marker sits exactly on the left edge of the visible-window box),
+    # and the black bar lines give the same x to a pixel. (v1 drew the line 1-2 bars further right: those notes looked
+    # in time only where the pattern repeats bar to bar, the jerk snare was out of time. Jack: "totally out of time".)
+    elif _base == "CHOPS":    # sample chops (slicer): keyboard is wider here, grid edge x=582 -> play line 583
+        V[_vn] = dict(FOLLOW, clip="chops.mp4", inst="ARR", segs=_sg, ph=583, ph_lead=0.1, draw_ph=True, cy=790, h=470, hs=470)
+    elif _base == "SNARE":    # jerk snare: grid edge 557 -> play line 559
+        V[_vn] = dict(FOLLOW, clip="snare.mp4", inst="SNARE", segs=_sg, ph=559, ph_lead=0.1, draw_ph=True, cy=420, h=460, hs=440)
+    elif _base == "N808":     # nocturne 808 (the drop): play line 558
+        V[_vn] = dict(FOLLOW, clip="n808.mp4", inst="808", segs=_sg, ph=558, ph_lead=0.1, draw_ph=True, cy=561, h=520, hs=480)
     elif _base == "BASS":     # phantom new jazz II bass, smooth follow, FL's playhead visible at x=668
         V[_vn] = dict(FOLLOW, clip="bass.mp4", inst="808", segs=_sg, ph=668, cy=385, h=420, hs=400)
     elif _base == "MIXER":    # mixer: master + inserts 1-12 (melody, 808s, clap, snare) with names, meters, faders
@@ -544,7 +548,7 @@ def view_rect(v, x, aspect, lead=0.3):
     xmin = v.get("xmin", 500 if v["kind"] == "roll" else 745)
     if v["kind"] == "fixed":
         if "ph" in v:                      # playlist in follow mode: playhead parked at x=ph, the song scrolls under it
-            x0 = v["ph"] - 0.35 * cw
+            x0 = v["ph"] - v.get("ph_lead", 0.35) * cw
         elif "fxl" in v:                   # piano roll in smooth-follow: notes stream left and play at the keyboard edge
             x0 = v["fxl"]
         else:

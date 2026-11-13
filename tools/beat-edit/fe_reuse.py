@@ -32,11 +32,12 @@ def runs(rec, excl=(), lo=0.0, hi=999.0):
             iv = [q for x, y in iv for q in ([x, min(y, ea)], [max(x, eb), y]) if q[1] - q[0] > 0.3]
         out += [(x, y, D) for x, y in iv if y - x > 0.5]
     return out
-FOLLOW_X = {"chops": 736, "snare": 720, "n808": 1152, "bass": 668}
+FOLLOW_X = {"chops": 583, "snare": 559, "n808": 558, "bass": 668}
 def with_notes(rec, wins):
     """follow rolls: keep only frames with a note between X-130 and X+250 (the 9:16 crop around the playhead)."""
     S = json.load(open(f"{rec}_scan.json")); X = FOLLOW_X[rec]
-    ok = np.array([any(X - 130 < b[0] < X + 250 or (b[0] < X < b[1]) for b in s_[1] if b[2] > 195) for s_ in S], float)
+    L, Rr = ((130, 250) if rec == "bass" else (10, 260))     # bass: FL's own playhead mid-view; the others play at the grid edge
+    ok = np.array([any(X - L < b[0] < X + Rr or (b[0] < X + 5 < b[1]) for b in s_[1] if b[2] > 195) for s_ in S], float)
     ok = np.convolve(ok, np.ones(31) / 31, "same") > 0.15          # ignore single empty frames; drop >~0.4 s gaps
     out = []
     for a, b, D in wins:
