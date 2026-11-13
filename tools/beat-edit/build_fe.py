@@ -72,7 +72,7 @@ for _vn, _segs in COVER.items():
     elif _base == "CHOPS":    # sample chops (slicer): keyboard is wider here, grid edge x=582 -> play line 583
         V[_vn] = dict(FOLLOW, clip="chops.mp4", inst="ARR", segs=_sg, ph=583, ph_lead=0.1, draw_ph=True, cy=790, h=470, hs=470)
     elif _base == "SNARE":    # jerk snare: grid edge 557 -> play line 559
-        V[_vn] = dict(FOLLOW, clip="snare.mp4", inst="SNARE", segs=_sg, ph=559, ph_lead=0.1, draw_ph=True, cy=420, h=460, hs=440)
+        V[_vn] = dict(FOLLOW, clip="snare.mp4", inst="SNARE", segs=_sg, ph=559, ph_lead=0.1, draw_ph=True, cy=560, h=700, hs=680)   # v3: wide on every pitch (rows 270-860); v2 cropped to the C5 rows and upscaled 4x (soft)
     elif _base == "N808":     # nocturne 808 (the drop): play line 558
         V[_vn] = dict(FOLLOW, clip="n808.mp4", inst="808", segs=_sg, ph=558, ph_lead=0.1, draw_ph=True, cy=561, h=520, hs=480)
     elif _base == "BASS":     # phantom new jazz II bass, smooth follow, FL's playhead visible at x=668
@@ -160,15 +160,19 @@ def act(inst, t0, t1):
 # edit beats from bar 9 (0:17.45); the drop = beat 32 (bar 17). Coverage (edit beats): CHOPS 0.5-29.8 | SNARE 1.2-29.5 |
 # BASS 8-13.5, 18-31.4 | CLAP 0.1-7.3, 12-13.7, 15.7-17.2, 32-42.7 | CLAP_4 16.1-20 | MIXER 3.1-39.6 | MACRO 0-38.5, 39.7-48
 # | N808 32.1-42.6 | HAT 32-48. Starts on the chops (the hook), drop held on the nocturne 808 for ~3 s.
-if VARIANT == "A":       # fast cut, face every other shot
-    B_ = [0, 4, 8, 10, 12.5, 16.2, 20, 24, 27, 32, 37.5, 40.5, 44, 48]
-    L_ = ["face:CHOPS_m4", "full:SNARE", "face:MIXER", "full:BASS", "face:CHOPS", "full:CLAP_4", "face:SNARE", "full:BASS",
-          "face:MIXER", "full:N808", "face:CLAP", "full:MACRO", "face:HAT"]
+# v3 (Jack, Nov 13): no clap shots (one row of tiny ticks = "nothing happening on screen" at 0:20-0:22), the jerk snare
+# full screen and wide so all its pitches and rolls are in view, twice per edit.
+# The jerk snare's multi-pitch rolls are in edit beats ~4-14 only; after that the pattern is single ticks -> snare
+# shots only there.
+if VARIANT == "A":       # fast cut
+    B_ = [0, 4, 11, 13.5, 16.2, 20, 24, 27, 32, 37.5, 41, 44, 48]
+    L_ = ["face:CHOPS_m4", "full:SNARE", "face:BASS", "full:CHOPS", "face:MIXER", "full:BASS", "face:CHOPS", "full:MIXER",
+          "full:N808", "face:HAT", "full:N808", "face:HAT"]
     REACT_J = 37.5 / 4
 else:                    # longer holds, wide arrangement first
-    B_ = [0, 2.5, 8, 12, 18, 22, 26, 29.5, 32, 38, 41, 48]
-    L_ = ["full:MACRO", "face:CHOPS", "full:BASS", "face:SNARE", "full:MIXER", "face:BASS", "full:CHOPS", "face:MIXER",
-          "full:N808", "full:CLAP", "face:HAT"]
+    B_ = [0, 2.5, 6, 14, 18, 22, 26, 32, 38, 41.5, 44.5, 48]
+    L_ = ["full:MACRO", "face:CHOPS", "full:SNARE", "face:MIXER", "full:CHOPS", "face:BASS", "full:MIXER",
+          "full:N808", "face:HAT", "full:N808", "face:HAT"]
     REACT_J = 38 / 4
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
