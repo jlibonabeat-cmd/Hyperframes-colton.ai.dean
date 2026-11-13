@@ -350,3 +350,11 @@ From the start of the beat. Bar 1 = melody intro, the 808 drops at bar 2; 8-bar 
 - Reuse: everything repeats every 4 bars on the sub band (≥0.99), so shifts are multiples of 4 bars, each target bar audio-checked in its band (808 sub, melody mid, clap/snare snr, plugins/mixer all bands).
 - Blackout (Jack liked it on MERSEY): black from the end of the bar-9 counter snare to the bar-10 downbeat (beats 34.62–36), hard cut back in.
 - Same-session Smooth Operator (window 600–1375 × 250–720, split only), Soft Clipper (596–924 × 244–432), mixer, Analog Lab "LEADS" preset window (split only).
+
+## FEAR (110 BPM, B minor, Nov 13) — `build_fe.py` + `fe_reuse.py`
+
+No window given; picked bars 9–20 (0:17.45–0:43.64): bars 9–16 the second pass of the 808 + sample-chops loop (bars 1–8 = 9–16 on the audio), the drop at bar 17 (nocturne 808, hats, claps, kick).
+- **New layout:** OBS 1920×1200, green FL theme. Notes teal (~R32 G224 B144), playhead a thin dark-teal line (~R9 G43 B46), bar lines black. `fe_scan.py` (notes), `fe_ph.py` (FL's playhead), clock crop `140:46:945:2`.
+- **Smooth-follow rolls with the playhead hidden** (chops, jerk snare, nocturne 808): the scroll speed and bar phase come from the black bar lines, so the playhead is only ambiguous by whole bars; candidates were checked by eye on frames at master onsets (`sheets/xcheck.png`): nocturne 808 x=1152, chops 736, snare 720. Bass (new jazz II) shows FL's playhead at 668. Hats and claps are page mode.
+- `fixcy=True` on follow views: stray notes in other rows pulled the auto-centre off the chops.
+- Not used: "putting in phantom 808" (notes drawn throughout), "DJ scratch" and "kick pattern" (one note at a time, mostly empty grid).
