@@ -16,7 +16,18 @@ import cv2
 import numpy as np
 
 HERE = os.environ.get("BEAT_EDIT_DIR", os.getcwd())
-W, H, FPS = 1080, 1920, 30
+# Output resolution (Jack, Nov 13): always Full HD 1080x1920; when the footage was filmed in 4K (every source video
+# >= 3840 px wide) render native 4K 2160x3840 instead of throwing the detail away. RES=1080|4k forces one.
+def _src_width(path):
+    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width", "-of", "csv=p=0",
+                        path], capture_output=True, text=True).stdout.strip()
+    return int(r) if r.isdigit() else 0
+_res = os.environ.get("RES", "auto").lower()
+_srcs = [f for f in os.listdir(".") if f.endswith(".mp4") and not f.startswith(("fe_", "out"))]
+UHD = _res == "4k" or (_res == "auto" and _srcs and min(_src_width(f) for f in _srcs) >= 3840)
+W, H, FPS = (2160, 3840, 30) if UHD else (1080, 1920, 30)
+S_ = W / 1080                                  # layout/motion sizes below are written for 1080 wide; scale them
+print(f"output {W}x{H} ({'4K: source filmed in 4K' if UHD else 'Full HD'})")
 BPM = 110.0
 BEAT = 60.0 / BPM
 BAR = 4 * BEAT
@@ -28,13 +39,14 @@ START_BAR = START_J + 1
 START = B0 + START_J * BAR
 DUR = NBARS * BAR
 NF = int(round(DUR * FPS))
-FH = 800                             # face panel height (wide framing)
-DIV = 3                              # half-height of the mint divider
+FH = int(800 * S_)                   # face panel height (wide framing), 42% of the frame
+DIV = int(3 * S_)                    # half-height of the mint divider
 MINT = (160, 230, 46)                # BGR
 SRC_W, SRC_H = 1920, 1200
 VARIANT = os.environ.get("VARIANT", "A")
 # one face clip per edit (no outfit change mid-beat); only stretches where he's quietly listening at the screen
-FACE_FILE, FACE_W, FACE_H, FACE_Y0 = "face_pac.mp4", 1080, 1920, 460
+FACE_FILE = "face_pac.mp4"
+FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int(460 * S_)   # face clip read at the output width (native if 4K)
 FACE_SEGS = [(0.6, 2.2), (3.4, 4.0), (5.0, 9.2), (9.9, 17.7), (18.6, 22.3), (22.9, 26.4)]   # same take as GLOCK
 REACT_T = 19.0
 
@@ -379,7 +391,7 @@ def cam(src, r, z, th, v, x, size):
     R = np.array([[math.cos(a), -math.sin(a)], [math.sin(a), math.cos(a)]]) * sc
     t = np.array([size[0] / 2, size[1] / 2]) - R @ np.array([cx, cy])
     M = np.float32(np.hstack([R, t[:, None]]))
-    return cv2.warpAffine(src, M, size, flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return cv2.warpAffine(src, M, size, flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)   # sharpest resample
 
 
 def panel(src, r, size, v, x, z, zprev, th=0.0, thprev=0.0):
@@ -448,7 +460,7 @@ jy = np.zeros(NF + 10)
 for k, (t, a) in enumerate(jolts):
     n = fr(t)
     dx, dy = DIRS[k % 4]
-    amp = 90 * a
+    amp = 90 * a * S_
     for q, p in enumerate(PROF):
         if n + q < len(jx):
             jx[n + q] = dx * amp * p
@@ -460,7 +472,7 @@ if SHAKE:
     for n0_, kind_ in trans.items():
         if kind_ in ("hard", "soft"):
             continue
-        amp = 26.0 if kind_ == "zoom" else 18.0
+        amp = (26.0 if kind_ == "zoom" else 18.0) * S_
         ang = rs.uniform(0, 2 * np.pi)
         for k in range(1, 8):                     # starts right after the transition lands
             a_ = amp * math.exp(-(k - 1) / 1.8) * (1 if k % 2 else -1)
@@ -474,8 +486,10 @@ for k, a in enumerate([0.35, 0.18, 0.07]):
 # ----------------------------------------------------------------------------- helpers
 
 
-def reader(path, ss, nframes, w, h_, speed=1.0):
+def reader(path, ss, nframes, w, h_, speed=1.0, scale=False):
     vf = f"fps={FPS}" if speed == 1.0 else f"setpts=(PTS-STARTPTS)/{speed:.5f},fps={FPS}"
+    if scale:
+        vf += f",scale={w}:{h_}:flags=lanczos"
     cmd = ["ffmpeg", "-nostats", "-v", "error", "-ss", f"{max(ss, 0):.3f}", "-i", path, "-vf", vf,
            "-frames:v", str(nframes), "-f", "rawvideo", "-pix_fmt", "bgr24", "-"]
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -543,7 +557,7 @@ def warp(src, rect, size):
     x0, y0, cw, ch = rect
     sx, sy = size[0] / cw, size[1] / ch
     M = np.float32([[sx, 0, -x0 * sx], [0, sy, -y0 * sy]])
-    return cv2.warpAffine(src, M, size, flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return cv2.warpAffine(src, M, size, flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)   # sharpest resample
 
 
 def view_rect(v, x, aspect, lead=0.3):
@@ -618,7 +632,7 @@ enc = subprocess.Popen([
     "ffmpeg", "-nostats", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
     "-ss", f"{START + n_a / FPS:.3f}", "-t", f"{(n_b - n_a) / FPS:.3f}", "-i", f"{HERE}/beat.mp3",
     "-map", "0:v", "-map", "1:a", "-af", f"afade=t=out:st={(n_b - n_a) / FPS - 0.12:.3f}:d=0.12",
-    "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-profile:v", "high",
+    "-c:v", "libx264", "-preset", "slow", "-crf", "14", "-pix_fmt", "yuv420p", "-profile:v", "high",   # near-lossless master for upload
     "-movflags", "+faststart", "-c:a", "aac", "-b:a", "192k", "-shortest", out_path], stdin=subprocess.PIPE)
 
 whip_out = {n - 1 for n in whip_in}
@@ -631,7 +645,7 @@ for s in shots:
     k = f1 - f0
     v = dict(V[s["view"]], **({"cy": s["cy"]} if "cy" in s else {}))
     rd = reader(f"{HERE}/{v['clip']}", s["tau"] + off * (WARP if v.get("warp") else 1.0), k, SRC_W, SRC_H, WARP if v.get("warp") else 1.0)
-    frd = reader(f"{HERE}/{FACE_FILE}", s["face_t"] + off, k, FACE_W, FACE_H) if s["layout"] == "face" else None
+    frd = reader(f"{HERE}/{FACE_FILE}", s["face_t"] + off, k, FACE_W, FACE_H, scale=True) if s["layout"] == "face" else None
     st = {}
     lastx = [None]
     for n in range(f0, f1):
@@ -688,29 +702,29 @@ for s in shots:
         ti = trans.get(n)
         tp = trans.get(n - 1)
         if tn == "whipH":
-            img = motion_blur_path(img, 0, 0, -160, 0, 14)
+            img = motion_blur_path(img, 0 * S_, 0 * S_, -160 * S_, 0 * S_, 14)
         elif tn == "whipV":
-            img = motion_blur_path(img, 0, 0, 0, -220, 14)
+            img = motion_blur_path(img, 0 * S_, 0 * S_, 0 * S_, -220 * S_, 14)
         elif tn == "zoom":
             img = zoom_blur(img, 1.0, 1.35)
         elif tn == "soft":
-            img = motion_blur_path(img, 0, 0, -50, 0, 8)
+            img = motion_blur_path(img, 0 * S_, 0 * S_, -50 * S_, 0 * S_, 8)
         if ti == "whipH":
-            img = motion_blur_path(img, 220, 0, 80, 0, 14)
+            img = motion_blur_path(img, 220 * S_, 0 * S_, 80 * S_, 0 * S_, 14)
         elif ti == "whipV":
-            img = motion_blur_path(img, 0, 300, 0, 100, 14)
+            img = motion_blur_path(img, 0 * S_, 300 * S_, 0 * S_, 100 * S_, 14)
         elif ti == "zoom":
             img = zoom_blur(img, 1.35, 1.12)
         elif ti == "soft":
-            img = motion_blur_path(img, 70, 0, 25, 0, 8)
+            img = motion_blur_path(img, 70 * S_, 0 * S_, 25 * S_, 0 * S_, 8)
         if tp == "whipH":
-            img = motion_blur_path(img, 80, 0, 0, 0, 10)
+            img = motion_blur_path(img, 80 * S_, 0 * S_, 0 * S_, 0 * S_, 10)
         elif tp == "whipV":
-            img = motion_blur_path(img, 0, 100, 0, 0, 10)
+            img = motion_blur_path(img, 0 * S_, 100 * S_, 0 * S_, 0 * S_, 10)
         elif tp == "zoom":
             img = zoom_blur(img, 1.12, 1.0)
         elif tp == "soft":
-            img = motion_blur_path(img, 25, 0, 0, 0, 6)
+            img = motion_blur_path(img, 25 * S_, 0 * S_, 0 * S_, 0 * S_, 6)
         if SHAKE and (abs(shx[n]) + abs(shy[n]) > 0.5):
             img = motion_blur_path(img, shx[n - 1] if n > 0 else 0.0, shy[n - 1] if n > 0 else 0.0, shx[n], shy[n], 10)
         if BLACK and any(fr(a_) <= n < fr(b_) for a_, b_ in BLACK):
