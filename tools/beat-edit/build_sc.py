@@ -201,6 +201,13 @@ if VARIANT == "A":       # impact cut, ~1 cut a bar
     REACT_J = 4 / 4
     IMPACT_J = {4 / 4, 32 / 4, 52 / 4}     # the drop 808s, the 808 roll into section 2, the bar-14 kick slam
     TRANS_FORCE = {1: "zoom"}
+elif VARIANT == "C":     # a different A: face reaction on the drop 808, every recorded element, three impact shots
+    B_ = [0, 4, 12, 16, 22, 24.5, 28, 36, 40, 44, 48, 52, 54, 58, 60.5, 64, 68]
+    L_ = ["full:PRE", "face:F808", "full:MIXER_T", "face:CLAP", "full:CLIPPER", "face:S808", "full:F808", "face:CLAP4",
+          "full:M808_8", "face:HAT", "full:F808_8", "face:KICK", "full:CLAP4", "face:OHAT", "full:F808_8", "face:MIXER_L"]
+    REACT_J = 4 / 4
+    IMPACT_J = {4 / 4, 28 / 4, 52 / 4}
+    TRANS_FORCE = {1: "zoom"}
 else:                    # longer holds: face over the arrangement, the 808 held through the drop
     B_ = [0, 4, 14, 22, 24.5, 28, 36, 42, 45.5, 52, 54, 57, 61, 68]
     L_ = ["face:PRE_F", "full:F808", "face:CLAP", "full:MIXER_T", "face:S808", "full:F808", "face:CLAP4", "full:M808_8",
