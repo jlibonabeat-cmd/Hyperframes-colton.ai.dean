@@ -367,3 +367,21 @@ No window given; picked bars 9–20 (0:17.45–0:43.64): bars 9–16 the second 
 - **Always Full HD 1080×1920.** If the footage was filmed in 4K (every source video ≥ 3840 px wide), render **native 4K 2160×3840** instead of downscaling. `build_fe.py` decides automatically from the source widths; `RES=1080` / `RES=4k` forces one. Layout, face panel, divider, shakes and whip blurs scale with the output (`S_ = W / 1080`); the face clip is read at the output width with Lanczos.
 - Encode: x264 `-preset slow -crf 14` high profile (≈5 Mbps at 1080, ≈14 Mbps at 4K), Lanczos resampling on every crop/zoom. Never upscale footage to fake 4K: 1080p/1200p screen recordings stay a 1080×1920 output.
 - `build_fe.py` is the template for new edits; port the `RES`/`S_` block if starting from an older builder.
+
+## SCOUSE (179 BPM, Nov 15) — `build_sc.py` + `sc_reuse.py` + `sc_qa.py`
+
+Bars 1-17 (0:00-0:22.79): bar 1 intro (arrangement "first frame pre drop"), drop at bar 2, section 2 at bar 10, bar 17 has
+no 808 (pre-drop) and loops back to the intro. Blue-grey FL theme: notes mint, FL playhead green (R80 G121 B64), grid
+x 356-1895, y 185-925, keyboard light 294-350 (`fe_keylit.py clip band 300 348`).
+
+- **808 follow-along (`f808`)**: FL sweeps its playhead across the first page, then parks it at x=862 and scrolls. Treat it
+  as a page roll (`kind="roll"`, the camera rides FL's own line) - as a fixed view the first page looked frozen.
+- **Clap follow-along**: play line hidden at the grid edge (x=357, key lights +4 ms); drawn with the `sc` style; split only.
+- **Hats**: one row of ticks, split only, `hs=380`. Kick (one note a page), open hat, perc (him putting notes in), clap4
+  (tick row) and the secondary 808 (two tiny notes a page) left out.
+- **Mixer recording** = mixer + floating Soft Clipper (864-1202 x 526-724): views MIXER, MIXER_T (808/bass strips), CLIPPER.
+  **Smooth Operator Pro** window is ~1420 px wide: crop the live spectrum + curve dip (fx=1290, h=780).
+- **Impact punches (new)**: master 30-100 Hz onsets with strength >= 0.45, >= 0.62 s apart, none within 5 frames after a
+  whip/zoom. Envelope [1, .62, .36, .19, .09, .03] x 5% (808 shots, no shake) / 8% (others, plus a ~7 px damped shake
+  with motion blur), applied to the DAW panel only, zoom-blurred between frames. `PUNCH=0` turns it off.
+- `sc_qa.py A B`: shot sheet (5 frames a shot), punch sheet (frame before/on/after each punch), empty-roll + frozen scans.
