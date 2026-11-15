@@ -77,8 +77,6 @@ for _vn, _segs in COVER.items():
         V[_vn] = dict(ROLL, clip="m808.mp4", inst="808", segs=_sg, cy=470, h=700, hs=520)
     elif _base == "HAT":    # page mode, one row of hats (y 444)
         V[_vn] = dict(ROLL, clip="hat.mp4", inst="HAT", segs=_sg, cy=444, h=700, hs=380, split_only=True)   # tiny ticks: split only, tighter
-    elif _base == "KICK":   # page mode, sparse kick notes (y 557)
-        V[_vn] = dict(ROLL, clip="kick.mp4", inst="KICK", segs=_sg, cy=557, h=700, hs=560)
     elif _base == "F808":   # 808 follow-along: FL's playhead sweeps the first page (clip 1-3.4 s), then parks at x=862 and
         # the notes scroll under it (key lights agree) -> treat as a page roll: the camera rides FL's own playhead
         V[_vn] = dict(ROLL, clip="f808.mp4", inst="808", segs=_sg, cy=470, h=740, hs=560)
@@ -89,10 +87,23 @@ for _vn, _segs in COVER.items():
         V["MIXER"] = dict(clip="mixclip.mp4", inst="ARR", kind="fixed", segs=_sg, fx=1060, cy=520, h=760, xmin=0)
         V["MIXER_T"] = dict(V["MIXER"], fx=1250, cy=430, h=660)          # 808 / bass strips, meters + names
         V["CLIPPER"] = dict(V["MIXER"], fx=1033, cy=625, h=760)          # the whole Soft Clipper window, room for the punch
+        V["MIXER_L"] = dict(V["MIXER"], fx=555, cy=440, h=640)           # master + drum strips (snare, claps, hats, perc), no clipper
     elif _base == "SMOOTH" and _vn == "SMOOTH":  # Smooth Operator Pro on the master: live spectrum + curve (x 600-1690)
         V["SMOOTH"] = dict(clip="smooth.mp4", inst="ARR", kind="fixed", segs=_sg, fx=1290, cy=590, h=780, xmin=0)
-    elif _base == "PRE":    # arrangement, bar 1 ("first frame pre drop")
-        V["PRE"] = dict(clip="pre.mp4", inst="ARR", kind="fixed", segs=_sg, fx=870, cy=620, h=900, ymin=180, ymax=1060, xmin=560)
+    elif _base == "PRE":    # arrangement, bar 1: zoomed on FL's playhead (x 603-640 over the intro bar), the riser tracks
+        # and the melody that comes in at bar 2, ruler bar numbers in view (v1 showed the whole song, too wide - Jack)
+        V["PRE"] = dict(clip="pre.mp4", inst="ARR", kind="fixed", segs=_sg, fx=715, cy=420, h=520, ymin=150, ymax=1060, xmin=540)
+        V["PRE_F"] = dict(V["PRE"], fx=770, h=440)
+    elif _base == "KICK":   # page mode, the kick note at the page start = the bar-2 / bar-10 downbeat
+        V[_vn] = dict(ROLL, clip="kick.mp4", inst="KICK", segs=_sg, cy=561, h=560, hs=380)   # one note: framed tight so it reads
+    elif _base == "OHAT":   # page mode, open hats at x 768 / 1716 (beats 43.07, 59.07)
+        V[_vn] = dict(ROLL, clip="ohat.mp4", inst="HAT", segs=_sg, cy=561, h=560, hs=420)
+    elif _base == "S808":   # Hood Trap Bass 26 #2 (the bassline): small note pairs on rows 357/378, framed tight
+        V[_vn] = dict(ROLL, clip="s808.mp4", inst="BASS", segs=_sg, cy=368, h=600, hs=380, split_only=True)
+    elif _base == "CLAP4":  # claps every 4 steps: smooth follow, play line hidden at the grid edge x=357 (verified: the
+        # ticks sit on x 356-373 at the master snare onsets), one row of ticks -> framed tight
+        V[_vn] = dict(FOLLOW, clip="clap4.mp4", inst="SNARE", segs=_sg, ph=357, ph_lead=0.01, draw_ph=True, sc=True, xmin=352,
+                      cy=561, h=560, hs=380)
 _free_t = {}
 
 
@@ -180,16 +191,23 @@ def act(inst, t0, t1):
 # KICK 35.8-68 | MIXER/MIXER_T/CLIPPER 0-68 | SMOOTH 36-68. Left out: perc (him putting notes in, one note a bar), clap4
 # (one row of tiny ticks), open hat (one note a page), 808 secondary (two tiny notes a page).
 # kick roll left out too: one kick note a page reads as an empty grid (QA: 0.7 s with no note in view).
-if VARIANT == "A":       # impact cut: ~1 cut a bar, arrangement intro, face + 808 on the drop
-    B_ = [0, 4, 14, 18, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68]
-    L_ = ["full:PRE", "face:F808", "full:CLIPPER", "face:CLAP", "full:MIXER_T", "face:CLAP", "full:CLIPPER", "full:F808_8",
-          "face:HAT", "full:SMOOTH", "face:F808_8", "full:CLIPPER", "face:HAT", "full:F808_8", "face:SMOOTH"]
+# v2 (Jack, Nov 15): Soft Clipper once per edit, no Smooth Operator ("very zoomed in, didn't feel sincere"), kick +
+# the clap-every-4-steps pattern + open hat + the bassline in, opener zoomed on the playhead. Every ~5th-6th cut is an
+# IMPACT shot: a bigger centred punch + rotation kick + blur on each kick / 808 / bass hit in it, in sequence.
+if VARIANT == "A":       # impact cut, ~1 cut a bar
+    B_ = [0, 4, 14, 18, 24, 28, 32, 36, 42, 45.5, 52, 54, 58, 64, 68]
+    L_ = ["full:PRE", "face:F808", "full:MIXER_T", "face:CLAP", "full:CLIPPER", "face:S808", "full:F808", "face:CLAP4",
+          "full:M808_8", "face:HAT", "full:KICK", "face:F808_8", "full:CLAP4", "face:MIXER_L"]
     REACT_J = 4 / 4
-else:                    # longer holds: face + clipper hook, the 808 page held through the drop, two-bar holds
-    B_ = [0, 4, 13, 20, 24, 32, 36, 44, 52, 60, 64, 68]
-    L_ = ["face:CLIPPER", "full:F808", "face:CLAP", "full:MIXER_T", "face:F808", "full:MIXER", "face:SMOOTH", "full:F808_8",
-          "face:HAT", "full:F808_8", "face:CLIPPER"]     # hats from beat 52: the bar-10 hat page starts empty in the crop
-    REACT_J = 13 / 4
+    IMPACT_J = {4 / 4, 32 / 4, 52 / 4}     # the drop 808s, the 808 roll into section 2, the bar-14 kick slam
+    TRANS_FORCE = {1: "zoom"}
+else:                    # longer holds: face over the arrangement, the 808 held through the drop
+    B_ = [0, 4, 14, 22, 24.5, 28, 36, 42, 45.5, 52, 54, 57, 61, 68]
+    L_ = ["face:PRE_F", "full:F808", "face:CLAP", "full:MIXER_T", "face:S808", "full:F808", "face:CLAP4", "full:M808_8",
+          "face:HAT", "full:KICK", "face:F808_8", "full:OHAT", "face:CLIPPER"]
+    REACT_J = 14 / 4
+    IMPACT_J = {4 / 4, 28 / 4, 52 / 4}
+    TRANS_FORCE = {1: "zoom"}
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 1                                   # bar 2: the drop
@@ -200,7 +218,6 @@ DROP_T = DROP_J * BAR
 # J Sewell blackout (Jack loved it on MERSEY): after the counter snare at the end of bar 9 the beat drops out (10.76-11.19 s,
 # -34 dB, the OK vox inside it) and slams back at bar 10 -> black for exactly that gap.
 BLACK = None
-TRANS_FORCE = {1: "zoom"}
 SILENT_J = -1
 shots = []
 last_view, last_layout, since_face = None, None, 9
@@ -293,7 +310,7 @@ pp = 0
 for s in shots:
     v = V[s["view"]]
     s["theta"] = 0.0
-    if s["view"] == "PRE":
+    if s["view"].startswith("PRE"):
         s["zm"] = "tilt"; s["theta"] = 1
     elif s["idx"] == 0:
         s["zm"] = "impact"
@@ -331,6 +348,8 @@ def zoom_at(s, n):
         if V[s["view"]]["inst"] == "808":
             return 1.12 + 0.10 * smooth(u)          # 808 focus: wider so the whole 808 phrase reads, slow push
         return V[s["view"]].get("tz", 1.55) + 0.08 * smooth(u)
+    if zm == "tilt" and s["view"].startswith("PRE"):
+        return 1.04 + 0.06 * smooth(u)
     if zm == "tilt":
         return 1.26 + 0.10 * smooth(u)
     if zm == "push":
@@ -344,6 +363,8 @@ def theta_at(s, n):
     if s.get("zm") != "tilt":
         return 0.0
     u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
+    if s["view"].startswith("PRE"):
+        return s["theta"] * (4.0 - 2.0 * smooth(u))
     return s["theta"] * (7.0 - 4.0 * smooth(u))
 
 
@@ -487,13 +508,32 @@ PUNCH = os.environ.get("PUNCH", "1") == "1"
 PENV = [1.0, 0.62, 0.36, 0.19, 0.09, 0.03]
 SENV = [1.0, -0.6, 0.32, -0.14, 0.04]
 pz = np.zeros(NF + 12); psx = np.zeros(NF + 12); psy = np.zeros(NF + 12); punches = []
+# impact shots (every ~5th-6th cut): every kick / 808 / bass hit in the shot, in sequence: bigger centred zoom punch,
+# a rotation kick alternating left/right (centred, so the 808 stays in the middle), a vertical shake on non-808 shots,
+# all motion-blurred between frames; the face panel punches with it, lighter.
+IENV = [1.0, 0.7, 0.45, 0.27, 0.15, 0.07, 0.02]
+iz = np.zeros(NF + 12); irot = np.zeros(NF + 12); isy = np.zeros(NF + 12); impacts = []
+imp_frames = set()
+for s_ in shots:
+    if s_["j0"] in IMPACT_J:
+        imp_frames.update(range(s_["n0"], s_["n1"]))
 if PUNCH:
     rp = np.random.default_rng(179)
     for t, s_ in sorted(zip(kt, ks)):
         n = int(round(t * FPS))
-        if s_ < 0.45 or n < 2 or n > NF - 3:
+        if n < 1 or n > NF - 3:
             continue
-        if any(0 <= n - w <= 5 for w in whip_in) or (punches and t - punches[-1][0] < 0.62):
+        if n in imp_frames:
+            if s_ < 0.2 or (impacts and t - impacts[-1][0] < 0.2):
+                continue
+            a_ = 0.75 + 0.25 * min(1.0, s_ / 0.6)
+            sg = 1 if len(impacts) % 2 == 0 else -1
+            impacts.append((float(t), round(float(a_), 2)))
+            for k, p in enumerate(IENV):
+                if a_ * p > iz[n + k]:
+                    iz[n + k] = a_ * p; irot[n + k] = sg * a_ * p; isy[n + k] = sg * a_ * p * (1 if k % 2 == 0 else -0.7)
+            continue
+        if s_ < 0.45 or any(0 <= n - w <= 5 for w in whip_in) or (punches and t - punches[-1][0] < 0.62):
             continue
         a_ = 0.6 + 0.4 * min(1.0, s_)
         punches.append((float(t), round(float(a_), 2)))
@@ -502,6 +542,23 @@ if PUNCH:
             pz[n + k] = max(pz[n + k], a_ * p)
         for k, p in enumerate(SENV):
             psx[n + k] = 7.0 * S_ * a_ * p * math.cos(ang); psy[n + k] = 7.0 * S_ * a_ * p * math.sin(ang)
+
+
+def xform_blur(img, p0, p1, samples=7):
+    """average of centred zoom/rotate/shift transforms from p0=(z, deg, dx, dy) to p1: motion + radial blur."""
+    h_, w_ = img.shape[:2]
+    if max(abs(a - b) for a, b in zip(p0, p1)) < 0.002:
+        samples = 1
+    acc = np.zeros(img.shape, np.float32)
+    for i in range(samples):
+        u = i / max(1, samples - 1)
+        z, r, dx, dy = [a + (b - a) * u for a, b in zip(p0, p1)]
+        M = cv2.getRotationMatrix2D((w_ / 2, h_ / 2), r, z)
+        M[0, 2] += dx; M[1, 2] += dy
+        acc += cv2.warpAffine(img, M, (w_, h_), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    return (acc / samples).astype(np.uint8)
+
+
 flash = np.zeros(NF + 10)
 for k, a in enumerate([0.35, 0.18, 0.07]):
     flash[fr(drop_t) + k] = a
@@ -721,14 +778,22 @@ for s in shots:
                 px, py = 0.0, 0.0
             reg = np.ascontiguousarray(img[dy0:dy1])
             img[dy0:dy1] = motion_blur_path(reg, px, py, jx[n], jy[n])
-        if PUNCH and (pz[n] > 0.001 or (n > 0 and pz[n - 1] > 0.001)):
+        if PUNCH and (iz[n] > 0.001 or (n > 0 and iz[n - 1] > 0.001)):
+            is808 = v["inst"] == "808"
+            ZA, RA, YA = (0.11, 1.6, 0.0) if is808 else (0.14, 2.0, 16.0 * S_)
+            def P(m, za=ZA, ya=YA):
+                return (1 + za * iz[m], RA * irot[m], 0.0, ya * isy[m])
+            pp, pc = P(n - 1) if n > 0 else P(n), P(n)
+            img[dy0:dy1] = xform_blur(np.ascontiguousarray(img[dy0:dy1]), pp, pc, 9)
+            if s["layout"] == "face":                            # the face panel punches with it, lighter
+                fp = (1 + 0.045 * iz[n - 1], 0.5 * RA * irot[n - 1], 0, 0); fc = (1 + 0.045 * iz[n], 0.5 * RA * irot[n], 0, 0)
+                img[:FH - DIV] = xform_blur(np.ascontiguousarray(img[:FH - DIV]), fp, fc, 7)
+        elif PUNCH and (pz[n] > 0.001 or (n > 0 and pz[n - 1] > 0.001)):
             amp_ = 0.05 if v["inst"] == "808" else 0.08       # 808 shots: smaller, centred, no shake
-            z1_, z0_ = 1 + amp_ * pz[n], 1 + amp_ * (pz[n - 1] if n > 0 else 0.0)
-            reg = np.ascontiguousarray(img[dy0:dy1])
-            reg = zoom_blur(reg, z0_, z1_, 7) if abs(z1_ - z0_) > 0.004 else zoom_blur(reg, z1_, z1_, 2)
-            if v["inst"] != "808" and abs(psx[n]) + abs(psy[n]) + abs(psx[n - 1]) + abs(psy[n - 1]) > 0.5:
-                reg = motion_blur_path(reg, psx[n - 1], psy[n - 1], psx[n], psy[n], 8)
-            img[dy0:dy1] = reg
+            sh_ = v["inst"] != "808"
+            pp = (1 + amp_ * pz[n - 1], 0.0, psx[n - 1] if sh_ else 0.0, psy[n - 1] if sh_ else 0.0)
+            pc = (1 + amp_ * pz[n], 0.0, psx[n] if sh_ else 0.0, psy[n] if sh_ else 0.0)
+            img[dy0:dy1] = xform_blur(np.ascontiguousarray(img[dy0:dy1]), pp, pc, 8)
         if s["layout"] == "face":
             img[FH - DIV:FH + DIV] = MINT
         # whips: outgoing frame streaks left, incoming frames streak in from the right
@@ -769,10 +834,10 @@ for s in shots:
         frames_done += 1
 enc.stdin.close()
 enc.wait()
-json.dump({"start": START, "dur": DUR, "jolts": jolts, "punches": punches, "whips": sorted(whip_in), "trans": {str(k): t for k, t in sorted(trans.items())},
+json.dump({"start": START, "dur": DUR, "jolts": jolts, "punches": punches, "impacts": impacts, "whips": sorted(whip_in), "trans": {str(k): t for k, t in sorted(trans.items())},
            "shots": [{k_: s.get(k_) for k_ in ("t0", "t1", "layout", "view", "tau", "zm", "face_t", "cy", "n_cross")} for s in shots]},
           open(out_path.rsplit(".", 1)[0] + "_events.json", "w"), indent=1)
 print("frames", frames_done, "shots", len(shots))
 for s in shots:
     print(f"{s['t0']:6.2f} bar{START_BAR + s['j0']:5.2f} {s['layout']:5s} {s['view']:8s} zoom={s.get('zm')} cands={s['cands']}")
-print("punches", len(punches), [round(t, 2) for t, _ in punches], "whips", sorted(whip_in))
+print("impacts", len(impacts), [round(t, 2) for t, _ in impacts], "punches", len(punches), [round(t, 2) for t, _ in punches], "whips", sorted(whip_in))

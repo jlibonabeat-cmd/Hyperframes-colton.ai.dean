@@ -99,3 +99,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - FEAR v2 (2026-11-13): wants to SEE the interesting parts of a roll: multi-pitch snare rolls framed wide enough that every pitch is in view, and sharp (don't upscale a tiny crop). One row of tiny ticks (claps) = "nothing happening on screen": skip it. B looked better than A.
 - OUTPUT RESOLUTION (2026-11-13, standing rule): every edit is delivered in Full HD 1080x1920. If the footage was filmed in 4K, deliver native 4K 2160x3840 (don't downscale). Never upscale non-4K footage.
 - SCOUSE (2026-11-15, request): "start doing impact and movement like him [J Sewell] with some of his hits on the kick and 808, and the transitions have a small amount of whip / shake motion with blur". Supersedes the old "no shake on 808s" only as far as a CENTRED punch: on heavy kick/808 hits the DAW panel zoom-punches about its centre (radial blur, ~5% on 808 shots, ~8% elsewhere, ~6 frames); non-808 shots also get a tiny damped shake (~7 px) with motion blur; 808 shots never jolt sideways. Whips/zooms are followed by a small damped shake with blur. Awaiting his verdict on the amount.
+- SCOUSE v1 (2026-11-15): liked overall and liked the transitions. Fixes asked for:
+  - Arrangement opener must be zoomed in on the playhead area (bar 1 = riser), not the whole song.
+  - Soft Clipper "a tad too much": once per edit. Smooth Operator crop "very zoomed in, didn't feel sincere": leave it out.
+  - Use more of what he recorded: kick (bar-start hits), every clap pattern, etc.
+  - More J Sewell impact, but not on every cut: about 1 cut in 5–6 gets bigger motion and blur on each kick / 808 / bass hit in sequence.
+  - Renders Full HD for now (file size).

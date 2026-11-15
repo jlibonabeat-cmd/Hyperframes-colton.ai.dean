@@ -32,7 +32,7 @@ def runs(rec, excl=(), lo=0.0, hi=999.0):
             iv = [q for x, y in iv for q in ([x, min(y, ea)], [max(x, eb), y]) if q[1] - q[0] > 0.3]
         out += [(x, y, D) for x, y in iv if y - x > 0.5]
     return out
-FOLLOW_X = {"clap": 357, "f808": 862}
+FOLLOW_X = {"clap": 357, "clap4": 357, "f808": 862}
 def with_notes(rec, wins):
     S = json.load(open(f"{rec}_scan.json")); X = FOLLOW_X[rec]
     L, Rr = ((300, 300) if rec == "f808" else (10, 420))
@@ -55,14 +55,16 @@ REC = {
     "m808": runs("m808", hi=7.1),
     "clap": with_notes("clap", runs("clap")),
     "hat": runs("hat", lo=6.0, hi=14.85),
-    "kick": runs("kick"),
+    "kick": runs("kick", excl=[(8.4, 9.0)]),        # he draws the bar-14 kick in at clip ~8.7 (pencil)
+    "clap4": with_notes("clap4", runs("clap4")),
+    "ohat": runs("ohat"),
     "s808": runs("s808"),
     "mixclip": runs("mixclip"),
     "smooth": runs("smooth"),
 }
-NAME = {"pre": "PRE", "f808": "F808", "m808": "M808", "clap": "CLAP", "hat": "HAT", "kick": "KICK", "s808": "S808", "mixclip": "MIXER", "smooth": "SMOOTH"}
+NAME = {"pre": "PRE", "f808": "F808", "m808": "M808", "clap": "CLAP", "hat": "HAT", "kick": "KICK", "s808": "S808", "clap4": "CLAP4", "ohat": "OHAT", "mixclip": "MIXER", "smooth": "SMOOTH"}
 FIXED0 = ("pre",)
-BCHK = {"f808": ("sub",), "m808": ("sub",), "s808": ("sub",), "kick": ("sub",), "clap": ("snr",), "hat": ("hi",), "mixclip": ("sub", "mid", "snr", "hi"), "smooth": ("sub", "mid", "snr", "hi")}
+BCHK = {"f808": ("sub",), "m808": ("sub",), "s808": ("sub",), "kick": ("sub",), "clap": ("snr",), "clap4": ("snr",), "ohat": ("hi",), "hat": ("hi",), "mixclip": ("sub", "mid", "snr", "hi"), "smooth": ("sub", "mid", "snr", "hi")}
 VIEWS = {}
 for rec in REC:
     for sh in ([0] if rec in FIXED0 else range(-12, 13, 4)):

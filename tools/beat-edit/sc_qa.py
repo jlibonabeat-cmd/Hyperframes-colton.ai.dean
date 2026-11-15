@@ -15,7 +15,7 @@ for v in sys.argv[1:]:
     rows = [np.hstack(th[i:i + 10] + [np.zeros_like(th[0])] * (10 - len(th[i:i + 10]))) for i in range(0, len(th), 10)]
     cv2.imwrite(f'sheets/{v}_shots.png', np.vstack(rows))
     pt = []
-    for t, a in d['punches']:
+    for t, a in d['punches'] + d.get('impacts', []):
         n = int(round(t * 30)); pt += [grab(c, m, f"{m/30:.2f}{'*' if m == n else ''}") for m in (n - 1, n, n + 1, n + 2)]
     if pt:
         rows = [np.hstack(pt[i:i + 12] + [np.zeros_like(pt[0])] * (12 - len(pt[i:i + 12]))) for i in range(0, len(pt), 12)]
@@ -25,7 +25,7 @@ for v in sys.argv[1:]:
         ok, f = cap.read()
         if not ok: break
         s = sh.get(i); mm = f.mean(2); edge += sum(sl.mean() < 8 for sl in (mm[:6], mm[-6:], mm[:, :6], mm[:, -6:]))
-        if s and s['view'].split('_')[0] in ('F808', 'M808', 'HAT', 'KICK', 'CLAP'):
+        if s and s['view'].split('_')[0] in ('F808', 'M808', 'HAT', 'KICK', 'CLAP', 'CLAP4', 'OHAT', 'S808'):
             p = (f[800:] if s['layout'] == 'face' else f)[::4, ::4].astype(int); R, G, B = p[..., 2], p[..., 1], p[..., 0]
             m = (G > 170) & (R > 115) & (B > 115) & (G - R > 15) & (G - B > 8)
             if m.sum() < 6: empty.append(i)

@@ -385,3 +385,19 @@ x 356-1895, y 185-925, keyboard light 294-350 (`fe_keylit.py clip band 300 348`)
   whip/zoom. Envelope [1, .62, .36, .19, .09, .03] x 5% (808 shots, no shake) / 8% (others, plus a ~7 px damped shake
   with motion blur), applied to the DAW panel only, zoom-blurred between frames. `PUNCH=0` turns it off.
 - `sc_qa.py A B`: shot sheet (5 frames a shot), punch sheet (frame before/on/after each punch), empty-roll + frozen scans.
+
+### SCOUSE v2 (Jack's notes, Nov 15)
+- **PRE** is now framed tight on FL's playhead (x 603-640 in bar 1) with the riser tracks and ruler (`h=520`). Light tilt only.
+- **Soft Clipper** once per edit. `MIXER_L` (master + drum strips, no clipper) is the mixer ending. Smooth Operator dropped.
+- **New views:**
+  - `KICK`: page roll, framed tight. The bar-14 kick is drawn in at clip ~8.7 s, so it's excluded until 9.0.
+  - `CLAP4`: tick row, play line at x=357.
+  - `OHAT`
+  - `S808`: the bassline, Hood Trap Bass 26 #2.
+- **IMPACT_J** marks about 1 cut in 5 as an impact shot. Every low-end onset in the shot (strength >= 0.2, 0.2 s apart), in sequence, gets:
+  - zoom 11–14%;
+  - a rotation kick of ±1.6–2°, alternating;
+  - a 16 px vertical shake (not on 808 shots);
+  - a lighter face-panel punch.
+  
+  All of it is blurred between frames (`xform_blur`). Other shots keep the light punches.
