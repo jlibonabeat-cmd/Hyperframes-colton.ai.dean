@@ -66,6 +66,8 @@ def fr(t):
 # ----------------------------------------------------------------------------- views (clip, instrument, kind, playback segments)
 # segments: (clip_a, clip_b, D) with song = clip + D (picture), from kush_reuse.py (audio-checked per bar).
 COVER = json.load(open(f"{HERE}/cover.json"))
+if "SNARE_8" in COVER:
+    COVER["SNARE_8"][-1][1] = 13.88                 # playback stops at clip 13.88 (marker gone, notes frozen from 13.883)
 ROLL = dict(kind="roll", lo=356, xmin=352, ymin=180, ymax=937, tz=1.15, fixcy=True, dfm=True)
 V = {}
 for _vn, _segs in COVER.items():
@@ -82,14 +84,21 @@ for _vn, _segs in COVER.items():
     elif _vn == "MIXER":    # mixer: master + inserts 1-10 (snare, clap, three 808s, open hat, ...), meters y 180-495
         V["MIXER"] = dict(clip="mixer.mp4", inst="ARR", kind="fixed", segs=_sg, fx=660, cy=440, h=760, xmin=0, ymin=0, ymax=1200, drift=1)
         V["MIXER_T"] = dict(V["MIXER"], fx=590, cy=360, h=520, drift=-1)    # the three 808 strips, meters + names
-        V["MIXER_L"] = dict(V["MIXER"], fx=620, cy=380, h=600, xmin=330, drift=1)     # master + snare + clap strips, browser kept out
+        V["MIXER_L"] = dict(V["MIXER"], fx=620, cy=380, h=600, xmin=330, drift=1)     # 808 / open hat / clap strips
+        # bars 2/4/6/8 have no 808: only master, snare and clap move -> frame those three (Jack: first mixer shot "empty looking")
+        V["MIXER_D"] = dict(V["MIXER"], fx=420, cy=330, h=500, xmin=322, drift=1)
     elif _vn == "MACRO":    # arrangement during its only playback (bar 1): FL's playhead x 610-676, 12 tracks
         V["MACRO"] = dict(clip="macro.mp4", inst="ARR", kind="fixed", segs=_sg, fx=760, cy=560, h=760, xmin=0, ymin=0, ymax=1140, drift=1)
 # the macro recording's long static stretch (clip 6.5-12.6, zoomed on bar 1, playhead off-crop): an aesthetic cutaway
 # with camera motion only - no playhead or note crosses anything in it, so nothing can read as out of time
 V["MACRO_S"] = dict(clip="macro.mp4", inst="ARR", kind="fixed", segs=[(6.6, 9.0, 2.3), (9.1, 12.5, 5.2)], fx=1200, cy=780, h=720, xmin=700, ymin=0, ymax=1140, drift=-1)   # taskbar (y>1150) kept out
 # the opening static stretch (clip 0.75-2.75): the whole arrangement zoomed out, playhead parked at bar 1 (off-crop)
-V["MACRO_W"] = dict(clip="macro.mp4", inst="ARR", kind="fixed", segs=[(0.75, 2.75, 8.15), (0.75, 2.75, 15.1)], fx=1150, cy=430, h=620, xmin=700, ymin=0, ymax=1140, drift=1)
+# framed on the bars that are playing (bar 1 = x 604, 102.6 px a bar; Jack: "some of the macro zooms aren't relevant"):
+# MACRO_W8 = bars 7-10, the 808s / claps stopping before bar 9 and the drop clips starting at bar 9 (x 1425)
+# MACRO_W12 = bars 9-13, the drop clips (808 16 #2, open hat, vox) under bars 11-13
+_mw = dict(clip="macro.mp4", inst="ARR", kind="fixed", segs=[(0.75, 2.75, 8.15), (0.75, 2.75, 13.6), (0.75, 2.75, 14.1)], cy=560, h=800, xmin=900, ymin=150, ymax=1140)
+V["MACRO_W8"] = dict(_mw, fx=1440, drift=1)   # clip names at bar 9 readable
+V["MACRO_W12"] = dict(_mw, fx=1690, drift=-1)
 _free_t = {}
 
 
@@ -185,17 +194,17 @@ def act(inst, t0, t1):
 # clean stretches (beats 37.5-43.8, 45.6-48.3, 49.8-51.6, 56.3-63.7); the rest of the drop is mixer / arrangement + face.
 if VARIANT == "A":       # arrangement hook -> each layer on its hit -> the drop slams on the 808 meters -> 808 roll
     B_ = [0, 2, 5, 8, 12, 16, 20, 24, 27, 32, 37.5, 43.5, 46, 48, 50, 51.5, 56, 58, 60, 64]
-    L_ = ["full:MACRO", "face:CLAP", "full:SNARE", "face:SPINZ", "full:MIXER", "face:CLAP_4", "full:SNARE", "face:CTM",
-          "full:MACRO_S", "face:MIXER_T", "full:M808", "face:MIXER_L", "full:M808", "face:MACRO_W", "full:M808", "full:MIXER",
-          "face:SPINZ_8", "full:M808", "face:MIXER_T"]
+    L_ = ["full:MACRO", "face:CLAP", "full:SNARE", "face:SPINZ", "full:MIXER_D", "face:CLAP_4", "full:SNARE", "face:CTM",
+          "full:MACRO_W8", "face:MIXER_T", "full:M808", "face:MIXER_L", "full:M808", "face:MACRO_W12", "full:M808", "full:MIXER",
+          "face:SPINZ_8", "full:M808", "face:SNARE_8"]
     REACT_J = 32 / 4
     IMPACT_J = {8 / 4, 32 / 4, 56 / 4}
     TRANS_FORCE = {}
 else:                    # longer holds: face + snare hook, the drop on the full mixer, face reaction on the 808 roll
     B_ = [0, 8, 9.5, 12, 16, 21, 24, 27, 32, 37.5, 43.5, 46, 48, 50, 51.5, 56, 58, 60, 64]
-    L_ = ["face:SNARE", "full:SPINZ", "face:SNFILL", "full:MIXER_L", "face:CLAP_4", "full:SNARE_4", "face:SPINZ", "full:MACRO_W",
-          "full:MIXER", "face:M808", "full:MACRO_S", "face:M808", "full:MIXER_L", "face:M808", "full:MIXER_T", "face:CTM_8",
-          "full:M808", "face:MIXER"]
+    L_ = ["face:SNARE", "full:SPINZ", "face:SNFILL", "full:MIXER_D", "face:CLAP_4", "full:SNARE_4", "face:SPINZ", "full:MACRO_W8",
+          "full:MIXER", "face:M808", "full:MACRO_W12", "face:M808", "full:MIXER_L", "face:M808", "full:MIXER_T", "face:CTM_8",
+          "full:M808", "face:SNARE_8"]
     REACT_J = 37.5 / 4
     IMPACT_J = {8 / 4, 32 / 4, 56 / 4}
     TRANS_FORCE = {8: "zoom"}

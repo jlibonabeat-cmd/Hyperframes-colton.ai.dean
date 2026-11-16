@@ -109,3 +109,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - Macro and mixer shots must get zoom and motion ("they are boring shots"): push, a settling tilt and a slow pan, plus the hit punches.
   - "Make sure you aren't making the mistakes from the last edit with misaligning certain parts." Every note hit a roll shows must be one the MASTER plays. Check the roll against the mp3, not only against the recording's own audio: the project can differ from the bounced mp3. For DRUG FIT, the project's claps at beats 7/23 are not in the mp3.
   - Every edit in a "putting in" recording must be found pixel-exactly and cut out (`df_editpx.py`).
+- DRUG FIT v2 (2026-11-16): "a good one", with two fixes asked for:
+  - Macro zooms must show the part of the arrangement that matches the bar being played: e.g. bars 7-10 with the clips stopping before bar 9 and the drop clips starting, names readable. A random static stretch is not enough.
+  - The first mixer shot looked empty: frame the strips whose meters actually move in that bar. In no-808 bars that is master + snare + clap; measure the meters per strip first.
