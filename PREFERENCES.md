@@ -105,3 +105,7 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - Use more of what he recorded: kick (bar-start hits), every clap pattern, etc.
   - More J Sewell impact, but not on every cut: about 1 cut in 5–6 gets bigger motion and blur on each kick / 808 / bass hit in sequence.
   - Renders Full HD for now (file size).
+- DRUG FIT (2026-11-16, request):
+  - Macro and mixer shots must get zoom and motion ("they are boring shots"): push, a settling tilt and a slow pan, plus the hit punches.
+  - "Make sure you aren't making the mistakes from the last edit with misaligning certain parts." Every note hit a roll shows must be one the MASTER plays. Check the roll against the mp3, not only against the recording's own audio: the project can differ from the bounced mp3. For DRUG FIT, the project's claps at beats 7/23 are not in the mp3.
+  - Every edit in a "putting in" recording must be found pixel-exactly and cut out (`df_editpx.py`).

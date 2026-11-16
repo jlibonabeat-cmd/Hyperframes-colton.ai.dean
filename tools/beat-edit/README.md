@@ -401,3 +401,21 @@ x 356-1895, y 185-925, keyboard light 294-350 (`fe_keylit.py clip band 300 348`)
   - a lighter face-panel punch.
   
   All of it is blurred between frames (`xform_blur`). Other shots keep the light punches.
+
+## DRUG FIT (181 BPM, Nov 16) — `build_df.py` + `df_reuse.py` + `df_qa.py`
+
+Light FL theme with hot-pink notes (~R245 G71 B163); grid x 354-1893, y 180-937.
+- **Playhead:** a soft pink band; its marker triangle in the ruler (y 157-173) is centred on the play position (`dfm=True` in the renderer, `df_scan.py`).
+- **Clock:** OCR needs Otsu + a 5 px erode (thin digits) — `df_clock.py`, crop 140x46 at (962,4).
+
+**Alignment checks — the new standard.** Run all four before planning:
+1. `df_cross.py clip band`: the times a note's left edge crosses FL's play position, compared with master onsets.
+2. The master's band rise at each of those times: a shown hit the mp3 doesn't play must be cut out. Here, claps at beats 7.07 / 23.08 are in the project but not in the mp3, and the snare fill has a note at beat 13.97 the mp3 doesn't play.
+3. The recording's own audio vs the master per band. Snare and hi bands correlate at only ~0.6: the project changed after the bounce.
+4. `df_editpx.py`: pink note pixels vs 6 frames earlier, ignoring ±30 px around the playhead.
+   - It caught the 808 main recording being re-drawn at bars 9-14, and an open hat drawn in every ~2.6 s.
+   - The coarse box diff (`df_edits.py`) misses single small notes.
+
+**Macro:** only ~0.85 s of playback (bar 1). The other macro shots are the static stretches (`MACRO_S`, `MACRO_W`): no playhead or crossing in the crop, camera motion only.
+
+**Impact bursts:** at most 4 punches, within the first 1.6 s of the impact shot, then the shot settles.
