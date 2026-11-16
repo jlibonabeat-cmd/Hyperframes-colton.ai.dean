@@ -43,7 +43,7 @@ REC = {
     "ctm808": runs("ctm808", excl=[(3.6, 4.1), (8.6, 8.9)]),
     "ohat": runs("ohat", excl=[(3.55, 3.85), (6.15, 6.45), (8.9, 9.2), (11.35, 11.7)]),   # an open hat drawn in every ~2.6 s
     "spinz": runs("spinz", excl=[(4.85, 5.2), (7.2, 7.55), (9.8, 10.1), (12.15, 12.5)]),
-    "m808": runs("m808", excl=[(6.7, 7.2), (7.7, 8.2), (10.3, 10.9), (11.8, 12.3), (12.9, 13.4), (13.65, 14.45)]),
+    "m808": runs("m808", excl=[(6.7, 7.2), (7.7, 8.2), (11.8, 12.3), (12.9, 13.4), (13.65, 14.45)]),   # 10.43-10.8 edit is outside the crop
     "mixer": runs("mixer"),
 }
 NAME = {"macro": "MACRO", "snare": "SNARE", "snfill": "SNFILL", "clap": "CLAP", "ctm808": "CTM", "ohat": "OHAT", "spinz": "SPINZ", "m808": "M808", "mixer": "MIXER"}

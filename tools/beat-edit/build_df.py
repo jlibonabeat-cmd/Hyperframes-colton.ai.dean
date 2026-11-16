@@ -66,8 +66,9 @@ def fr(t):
 # ----------------------------------------------------------------------------- views (clip, instrument, kind, playback segments)
 # segments: (clip_a, clip_b, D) with song = clip + D (picture), from kush_reuse.py (audio-checked per bar).
 COVER = json.load(open(f"{HERE}/cover.json"))
-if "SNARE_8" in COVER:
-    COVER["SNARE_8"][-1][1] = 13.88                 # playback stops at clip 13.88 (marker gone, notes frozen from 13.883)
+for _k in ("SNARE", "SNARE_4", "SNARE_8"):          # snare playback stops at clip 13.88 (the 3-frame OCR grid ends at 13.85)
+    if _k in COVER:
+        COVER[_k][-1][1] = 13.88
 ROLL = dict(kind="roll", lo=356, xmin=352, ymin=180, ymax=937, tz=1.15, fixcy=True, dfm=True)
 V = {}
 for _vn, _segs in COVER.items():
@@ -192,21 +193,22 @@ def act(inst, t0, t1):
 # OHAT_8 60-63.2 | SPINZ 0-31.8 (hits 8.1, 16.1, 24.1), SPINZ_8 56-60 | M808 32-44.7, 55.6-63.7, M808_4 48-52 | MIXER all.
 # bars 12-14 of the 808 main recording have him moving / redrawing notes (df_editpx.py) -> the 808 roll only plays in its
 # clean stretches (beats 37.5-43.8, 45.6-48.3, 49.8-51.6, 56.3-63.7); the rest of the drop is mixer / arrangement + face.
+# v3 (Jack, Nov 16): no clap roll (the clap pattern isn't in the mp3), no static macro stretches, no 808 rolls shifted into
+# another section (SPINZ_8 / CTM_8 at 0:19 "irrelevant"), the CTM 808 on both its hits (beats 8.1 and 24.1), more of the
+# 808 main roll in bars 9-16, fewer mixer shots.
 if VARIANT == "A":       # arrangement hook -> each layer on its hit -> the drop slams on the 808 meters -> 808 roll
-    B_ = [0, 2, 5, 8, 12, 16, 20, 24, 27, 32, 37.5, 43.5, 46, 48, 50, 51.5, 56, 58, 60, 64]
-    L_ = ["full:MACRO", "face:CLAP", "full:SNARE", "face:SPINZ", "full:MIXER_D", "face:CLAP_4", "full:SNARE", "face:CTM",
-          "full:MACRO_W8", "face:MIXER_T", "full:M808", "face:MIXER_L", "full:M808", "face:MACRO_W12", "full:M808", "full:MIXER",
-          "face:SPINZ_8", "full:M808", "face:SNARE_8"]
+    B_ = [0, 2, 5, 8, 12, 16, 20, 24, 28, 32, 37.5, 48, 50, 51.5, 56.5, 60, 64]
+    L_ = ["full:MACRO", "face:SNFILL", "full:SNARE", "face:CTM", "full:MIXER_D", "face:SPINZ", "full:SNARE_4", "face:CTM",
+          "full:SNARE", "face:MIXER_T", "full:M808", "face:MIXER", "full:M808", "face:MIXER_L", "full:M808", "face:SNARE_8"]
     REACT_J = 32 / 4
-    IMPACT_J = {8 / 4, 32 / 4, 56 / 4}
+    IMPACT_J = {8 / 4, 32 / 4, 56.5 / 4}
     TRANS_FORCE = {}
-else:                    # longer holds: face + snare hook, the drop on the full mixer, face reaction on the 808 roll
-    B_ = [0, 8, 9.5, 12, 16, 21, 24, 27, 32, 37.5, 43.5, 46, 48, 50, 51.5, 56, 58, 60, 64]
-    L_ = ["face:SNARE", "full:SPINZ", "face:SNFILL", "full:MIXER_D", "face:CLAP_4", "full:SNARE_4", "face:SPINZ", "full:MACRO_W8",
-          "full:MIXER", "face:M808", "full:MACRO_W12", "face:M808", "full:MIXER_L", "face:M808", "full:MIXER_T", "face:CTM_8",
-          "full:M808", "face:SNARE_8"]
+else:                    # longer holds: face + snare hook, face reaction held on the 808 roll after the drop
+    B_ = [0, 8, 12, 16, 20, 24, 26, 28, 32, 37.5, 48, 56.5, 60, 64]
+    L_ = ["face:SNARE", "full:CTM", "face:MIXER_D", "full:SPINZ", "face:SNARE_4", "full:CTM", "face:SNFILL_4", "full:SNARE",
+          "full:MIXER_T", "face:M808", "full:MIXER_L", "full:M808", "face:SNARE_8"]
     REACT_J = 37.5 / 4
-    IMPACT_J = {8 / 4, 32 / 4, 56 / 4}
+    IMPACT_J = {8 / 4, 32 / 4, 56.5 / 4}
     TRANS_FORCE = {8: "zoom"}
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}

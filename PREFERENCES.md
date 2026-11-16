@@ -112,3 +112,10 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - DRUG FIT v2 (2026-11-16): "a good one", with two fixes asked for:
   - Macro zooms must show the part of the arrangement that matches the bar being played: e.g. bars 7-10 with the clips stopping before bar 9 and the drop clips starting, names readable. A random static stretch is not enough.
   - The first mixer shot looked empty: frame the strips whose meters actually move in that bar. In no-808 bars that is master + snare + clap; measure the meters per strip first.
+- DRUG FIT v2 → v3 (2026-11-16):
+  - Shots he called irrelevant:
+    - the clap roll: the clap pattern isn't in the bounced mp3, so it never belongs on screen;
+    - static macro stretches, even when framed on the right bars: macro only when FL is actually playing;
+    - 808 rolls shifted into another section (spinz / CTM shown in bar 15).
+  - Use every recorded element on its real hits. He asked for the CTM 808 on both of its hits.
+  - Don't lean on the mixer: B had 6 mixer shots, too many. Aim for at most 3–4, and say when it's the only footage covering a stretch.
