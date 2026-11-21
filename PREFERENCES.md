@@ -137,3 +137,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     - the counter-melody put-in, notes drawn ahead of the playhead kept, as he asked;
     - the smoother macro, as one split transitional shot before bar 9.
   - The Edison flute was left out again: transport stopped, Edison plays the raw 116 BPM sample on its own.
+- AIN'T GOT TIME v6 (2026-11-21): "These are really good" — the approved sample-edit template.
+  - Calm camera: one punch-in on the drop, a whip into the main melodic reveal, hard cuts elsewhere, no shakes.
+  - Element rolls lead.
+  - One mixer shot plus one split macro as in-betweens.
+  - ShaperBox and plugins in the split.
+  - End on the face.
