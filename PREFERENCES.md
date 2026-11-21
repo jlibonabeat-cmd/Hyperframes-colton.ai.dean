@@ -119,3 +119,4 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     - 808 rolls shifted into another section (spinz / CTM shown in bar 15).
   - Use every recorded element on its real hits. He asked for the CTM 808 on both of its hits.
   - Don't lean on the mixer: B had 6 mixer shots, too many. Aim for at most 3–4, and say when it's the only footage covering a stretch.
+- AIN'T GOT TIME (2026-11-21, sample edit, request): wide shots (macro, mixer) zoomed on the area that matters at that moment; keep retention; make the sample feel like it's being built up, showing each element as it comes in.

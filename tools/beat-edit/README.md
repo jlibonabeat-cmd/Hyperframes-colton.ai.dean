@@ -419,3 +419,24 @@ Light FL theme with hot-pink notes (~R245 G71 B163); grid x 354-1893, y 180-937.
 **Macro:** only ~0.85 s of playback (bar 1). The other macro shots are the static stretches (`MACRO_S`, `MACRO_W`): no playhead or crossing in the crop, camera motion only.
 
 **Impact bursts:** at most 4 punches, within the first 1.6 s of the impact shot, then the shot settles.
+
+## AIN'T GOT TIME (140 BPM sample, Nov 21) — `build_agt.py` + `agt_reuse.py` + `agt_qa.py`
+
+- **Sample edit, no drums.** Bars 1-16 (0:00-0:27.43):
+  - bar 1: vocal chop + Pigments #3 bass (+ steel-drum accent);
+  - bar 5: flute;
+  - bar 9: Pigments chords + Pigments #4 counter (+ ShaperBox on the chop).
+  - The plan follows that order.
+- **OBS recordings have no audio track.** Sync is the clock (`agt_clock.py`; the Otsu threshold inverts automatically for the dark theme's light digits), checked on the picture by `agt_sync.py`.
+- **Rolls:** dark theme, mint notes, teal playhead (`mode="teal"`).
+  - Chords is smooth follow with the play line hidden at the grid edge (x~96); it's drawn in, and lit keys show at the edge.
+- **Playlist** (pink theme): the playhead is a blue glow whose sharp right edge is the play position (`mode="pinkph"`, empty-track rows).
+  - Macro: 54.5 px/bar, bar 1 at x 342. The camera rides the playhead, framed on the tracks entering (`MACRO_A` chop/bass/steel, `MACRO_F` flute, `MACRO_C` chords/counter/bass).
+  - The flute recording is follow mode: playhead parked at x 692.
+- **Note edits cut out:** bass F3 drawn at clip 7.4; counter notes at 13.8 / 14.4.
+- **Reuse:** the bass reuses +8 bars (the same Pigments #3 clip restarts at bar 9; hits within 25 ms).
+- **Mixer:** re-laid out at clip 12.5, so only bars 1-15 are used. Meters measured per strip.
+- **Not used:**
+  - Edison vocal-chop recording: Edison plays the raw 90 BPM chop with the transport stopped, so it's never in time.
+  - The flute tail (bars 7-8): a flat line.
+- **Face:** `face_pac.mp4` = copy_99ED92DA_1.MOV, hflip, trimmed at 29.2 s.
