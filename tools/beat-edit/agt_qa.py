@@ -25,7 +25,7 @@ for v in sys.argv[1:]:
         ok, f = cap.read()
         if not ok: break
         s = sh.get(i); mm = f.mean(2); edge += sum(sl.mean() < 8 for sl in (mm[:6], mm[-6:], mm[:, :6], mm[:, -6:]))
-        if s and s['view'].split('_')[0] in ('BASS', 'COUNTER', 'CHORDS'):
+        if s and s['view'].split('_')[0] in ('BASS', 'COUNTER'):
             p = (f[800:] if s['layout'] == 'face' else f)[::4, ::4].astype(int); R, G, B = p[..., 2], p[..., 1], p[..., 0]
             m = (G > 180) & (G - R > 80) & (B > 100)
             if m.sum() < 6: empty.append(i)

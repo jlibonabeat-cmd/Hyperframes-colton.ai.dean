@@ -47,7 +47,7 @@ FIXED0 = ("macro", "flute", "mixer", "shaper", "chords")
 BCHK = {"bass": (), "counter": ("mid",)}   # bass: the same Pigments #3 pattern clip restarts at bar 9 (pattern identity)
 VIEWS = {}
 for rec in REC:
-    for sh in ([0] if rec in FIXED0 else (0, 8)):
+    for sh in ([0] if rec in FIXED0 else (0, 4, 8, 12)):
         VIEWS[NAME[rec] + ("" if sh == 0 else f"_{'m' if sh < 0 else ''}{abs(sh)}")] = (rec, sh)
 cover = {}
 for v, (rec, sh) in VIEWS.items():

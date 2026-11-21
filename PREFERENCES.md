@@ -127,3 +127,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - Changes were too fast in places: hold shots ~1.5-2 bars.
   - A cut to the mixer in the first seconds right before he puts the bass note in was wrong. He WANTS the moment the note goes in shown there. An exception to "never show note editing" when it's a single note going in on the playhead in an opening roll shot.
 - AIN'T GOT TIME v3 (2026-11-21): he prefers edit B (face over the bass hook, longer holds). Never use a recording where FL visibly lagged while recording (staggered / slow scrolling, e.g. the AGT Pigments chords roll). Check smooth-follow rolls for uneven scroll speed before using them. Use more of the recordings supplied (e.g. the Edison vocal-chop view).
+- AIN'T GOT TIME v4 (2026-11-21):
+  - Removed: the Edison vocal-chop shot (out of time, even as a still shot) and the flute recording (staggered and jagged, FL lag).
+  - Macro / arrangement shots: he is "not usually keen", they don't look high quality. Default to none, or at most one, only when nothing else covers the bars.

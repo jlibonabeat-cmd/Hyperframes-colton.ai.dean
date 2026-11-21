@@ -201,19 +201,21 @@ def act(inst, t0, t1):
 # with the beat).
 # v2 (Jack, Nov 21): the element rolls are the edit; macro / mixer only as short in-between shots; longer holds; calmer
 # camera; keep the bass shot running through the F3 going in (no cut to the mixer in the first seconds).
-# v3 (Jack, Nov 21): the Pigments chords recording is out (FL lagged while recording it: staggered, slow scrolling).
-if VARIANT == "A":       # playlist opener -> bass (note going in) -> the vocal sample in Edison -> flute -> bass drop -> counter
-    B_ = [0, 2, 12, 16, 22, 28, 32, 39, 46, 52, 57, 64]
-    L_ = ["full:MACRO_A", "face:BASS", "full:VOX", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "full:BASS_8", "full:COUNTER",
-          "face:SHAPER", "full:MACRO_C", "face:SHAPER"]
-    REACT_J = 46 / 4
+# v4 (Jack, Nov 21): no Edison (out of time), no flute recording (laggy), no macro, no chords recording. What's left and in
+# time: bass roll (bars 1-6 as recorded, the same pattern clip reused +4 / +8 / +12 bars where its hits match the master
+# within 15 ms: BASS_4 only to beat 27), counter roll, ShaperBox, mixer strips.
+if VARIANT == "A":       # full-screen led: the bass note going in, the drop on the bass, counter, ShaperBox
+    B_ = [0, 8, 12, 20, 27, 32, 39, 46, 54, 60, 64]
+    L_ = ["full:BASS", "face:MIXER_B", "full:BASS", "face:BASS_4", "full:MIXER_A", "face:BASS_8", "full:COUNTER", "face:SHAPER",
+          "full:BASS_12", "face:SHAPER"]
+    REACT_J = 32 / 4
     IMPACT_J = set()
     TRANS_FORCE = {}
-else:                    # face over the bass as the hook, face reaction on the bar-9 drop
-    B_ = [0, 8, 12, 16, 22, 28, 32, 39, 46, 52, 57, 64]
-    L_ = ["face:BASS", "full:VOX", "face:BASS", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "face:BASS_8", "full:COUNTER",
-          "face:SHAPER", "full:MACRO_C", "face:SHAPER"]
-    REACT_J = 32 / 4
+else:                    # face over the bass as the hook (the note going in), reaction held on the counter after the drop
+    B_ = [0, 8, 14, 20, 27, 32, 39, 46, 52, 56.5, 64]
+    L_ = ["face:BASS", "full:MIXER_A", "face:BASS", "full:BASS_4", "face:MIXER_B", "full:BASS_8", "face:COUNTER", "full:BASS_8",
+          "full:BASS_12", "face:SHAPER"]
+    REACT_J = 39 / 4
     IMPACT_J = set()
     TRANS_FORCE = {8: "zoom"}
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
