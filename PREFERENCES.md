@@ -130,3 +130,10 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - AIN'T GOT TIME v4 (2026-11-21):
   - Removed: the Edison vocal-chop shot (out of time, even as a still shot) and the flute recording (staggered and jagged, FL lag).
   - Macro / arrangement shots: he is "not usually keen", they don't look high quality. Default to none, or at most one, only when nothing else covers the bars.
+- AIN'T GOT TIME v6 (2026-11-21):
+  - ShaperBox only in the split, never full-screen close (too zoomed).
+  - New re-recordings are in:
+    - chords re-done, smooth and synced (pattern mode, shifted to song bar 9);
+    - the counter-melody put-in, notes drawn ahead of the playhead kept, as he asked;
+    - the smoother macro, as one split transitional shot before bar 9.
+  - The Edison flute was left out again: transport stopped, Edison plays the raw 116 BPM sample on its own.

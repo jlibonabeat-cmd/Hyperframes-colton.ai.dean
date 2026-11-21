@@ -98,6 +98,19 @@ for _vn, _segs in COVER.items():
 # stretch is used: a short in-between shot of the vocal sample, camera push only. segs map it to edit beat 12 (A) / 8 (B).
 V["VOX"] = dict(clip="vox.mp4", inst="ARR", kind="fixed", segs=[(15.0, 17.2, 12 * 60 / 140 - 15.0 - 0.02), (15.0, 17.2, 8 * 60 / 140 - 15.0 - 0.02)], fx=790, cy=625, h=600, hs=520,
                 xmin=320, ymin=230, ymax=830)
+# --- Nov 21 re-recordings (blue-grey theme, browser open; FL's own playhead drawn) ---
+# CHORDS2: Pigments chords re-done, pattern mode (clock = pattern time; pattern starts at song bar 9 -> D + 8 bars),
+#   smooth follow with FL's playhead parked at x 977 from clip 4.45; hits vs master +15 ms median.
+V["CHORDS2"] = dict(kind="fixed", clip="n1.mp4", inst="MEL", segs=[(4.45, 16.05, -2.278 + 8 * 240 / 140)],
+                    fx=1090, cy=560, h=740, hs=700, xmin=740, ymin=186, ymax=936, tz=1.0)   # playhead ~1/4 in; grid only, no title bar / lane
+# COUNTER2: Pigments #4, him putting the melody in (second clip), song mode page view; notes A#5/A5/C6 cross FL's
+#   green playhead at beats 36.55 / 37.04 / 39.04 / 39.55 (same as the master). Notes drawn ahead of the playhead kept.
+V["COUNTER2"] = dict(kind="fixed", clip="n2.mp4", inst="MEL", segs=[(14.9, 18.0, 0.104)], fx=1270, cy=590, h=640, hs=560,
+                     xmin=900, ymin=183, ymax=938, tz=1.0)
+# MACRO2: the smoother arrangement, smooth follow ~427 px a bar, play line at the grid's left edge (x 770); framed on
+#   vocal chop / chords / counter / bass tracks (y 200-660) so the bar-9 clips can be seen arriving.
+V["MACRO2"] = dict(kind="fixed", clip="macro2.mp4", inst="ARR", segs=[(1.0, 30.0, -0.951)], ph=770,
+                   fx=1045, cy=430, h=620, hs=560, xmin=772, ymin=190, ymax=1000, tz=1.0)
 if "SHAPER" in V:                  # full-screen ShaperBox: tall crop on the LFO curve + live spectrum (2 of its 4 cycles)
     V["SHAPER_F"] = dict(V["SHAPER"], fx=1010, cy=620, h=1000)
 _free_t = {}
@@ -203,19 +216,24 @@ def act(inst, t0, t1):
 # with the beat).
 # v2 (Jack, Nov 21): the element rolls are the edit; macro / mixer only as short in-between shots; longer holds; calmer
 # camera; keep the bass shot running through the F3 going in (no cut to the mixer in the first seconds).
-# v5 (Jack, Nov 21, agreed blueprint): bar 1 bass full screen with one punch-in, face + bass from bar 2 (the F3 going in),
-# one-bar mixer breather, the drop (bar 9) on the bass G3 with the second punch-in, counter-melody cut on its first hit,
-# ShaperBox full screen from bar 13 (whip in, slow push), end on face + ShaperBox. Hard cuts except the drop (zoom) and the
-# ShaperBox reveal (whip); no shakes. (The counter can't take the drop itself: its recording starts a beat late and has
-# notes being drawn in at beats 37-38.9.)
-if VARIANT in ("A", "B"):
-    B_ = [0, 4, 8, 12, 20, 28, 32, 39, 48, 54, 57, 64]
-    L_ = ["full:BASS", "face:BASS", "full:MIXER_A", "face:BASS", "full:BASS_4", "face:MIXER_B", "full:BASS_8", "face:COUNTER",
-          "full:SHAPER_F", "full:BASS_12", "face:SHAPER"]
-    REACT_J = 39 / 4
-    IMPACT_J = set()
+# v6 (Jack, Nov 21): ShaperBox only in the split, the re-done chords (CHORDS2) and counter put-in (COUNTER2), the new
+# smoother macro as one transitional split shot before bar 9. Edison flute left out (transport stopped: Edison plays the
+# raw 116 BPM sample on its own, so it can't line up with the beat).
+if VARIANT == "A":       # ends on face + chords
+    B_ = [0, 4, 12, 16, 27, 32, 36, 42, 50, 54, 58, 64]
+    L_ = ["full:BASS", "face:BASS", "full:MIXER_A", "full:BASS_4", "face:MACRO2", "full:BASS_8", "face:COUNTER2", "full:CHORDS2",
+          "face:SHAPER", "full:BASS_12", "face:CHORDS2"]
+    REACT_J = 36 / 4
     PUNCH_J = {0, 8}
-    TRANS_FORCE = {8: "zoom", 12: "whipH"}
+    TRANS_FORCE = {8: "zoom", 10.5: "whipH"}
+else:                    # face over the bass hook, ends on face + ShaperBox
+    B_ = [0, 8, 12, 20, 27, 32, 36, 42, 50, 56.5, 64]
+    L_ = ["face:BASS", "full:MIXER_A", "face:BASS", "full:BASS_4", "face:MACRO2", "full:BASS_8", "face:COUNTER2", "full:CHORDS2",
+          "full:BASS_12", "face:SHAPER"]
+    REACT_J = 36 / 4
+    PUNCH_J = {8}
+    TRANS_FORCE = {8: "zoom", 10.5: "whipH"}
+IMPACT_J = set()
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 8                                   # bar 9: the drop
