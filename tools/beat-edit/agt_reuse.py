@@ -36,7 +36,7 @@ def runs(rec, excl=(), lo=0.0, hi=999.0):
 REC = {
     "macro": runs("macro"),
     "flute": runs("flute"),
-    "bass": runs("bass", excl=[(7.2, 7.6)], hi=13.5),             # F3 drawn in at 7.4; page scrolls on from 13.5
+    "bass": runs("bass", hi=13.5),                                # Jack wants the F3 going in at 7.4 shown; page scrolls on from 13.5
     "counter": runs("counter", excl=[(13.7, 14.55)], lo=12.0),     # notes drawn in at 13.8 / 14.4; playhead on page from 12.0
     "chords": runs("chords", hi=17.3),                            # pattern end scrolls into view after 17.3
     "mixer": runs("mixer", excl=[(12.4, 29.5)]),                   # mixer re-laid out at 12.5 (browser closed), OBS popup

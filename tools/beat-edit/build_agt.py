@@ -194,19 +194,21 @@ def act(inst, t0, t1):
 # CHORDS 32-56, 56.3-59.2 | COUNTER 33-37, 38.9-48.6 (first hits 36.56, 39.04) | MIXER 0.2-56.2 | SHAPER 32-38.7, 40.3-55, 56.4-64.
 # Not used: the Edison vocal-chop recording (Edison plays the raw 90 BPM chop on its own, transport stopped: not in time
 # with the beat).
-if VARIANT == "A":       # build-up: the sample starting in the playlist -> bass -> flute -> chords / counter / ShaperBox
-    B_ = [0, 2, 6, 8, 12, 16, 22, 26, 32, 39, 44, 48, 52, 56, 60, 64]
-    L_ = ["full:MACRO_A", "face:BASS", "full:MIXER_A", "face:BASS", "full:MACRO_A", "full:FLUTE", "face:MIXER_A", "full:MACRO_F",
-          "full:CHORDS", "face:COUNTER", "full:BASS_8", "face:SHAPER", "full:CHORDS", "full:MACRO_C", "face:SHAPER"]
+# v2 (Jack, Nov 21): the element rolls are the edit; macro / mixer only as short in-between shots; longer holds; calmer
+# camera; keep the bass shot running through the F3 going in (no cut to the mixer in the first seconds).
+if VARIANT == "A":       # build-up: playlist opener -> bass (note going in) -> flute -> chords / counter / bass / ShaperBox
+    B_ = [0, 2, 12, 16, 22, 28, 32, 39, 46, 52, 56, 60, 64]
+    L_ = ["full:MACRO_A", "face:BASS", "full:MACRO_F", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "full:CHORDS", "face:COUNTER",
+          "full:BASS_8", "face:CHORDS", "full:MACRO_C", "face:SHAPER"]
     REACT_J = 39 / 4
-    IMPACT_J = {16 / 4, 32 / 4}
+    IMPACT_J = set()
     TRANS_FORCE = {}
-else:                    # longer holds: face over the bass as the hook, reaction on the chords drop
-    B_ = [0, 6, 12, 16, 22, 26, 32, 40, 44, 48, 56, 60, 64]
-    L_ = ["face:BASS", "full:MACRO_A", "face:MIXER_A", "full:FLUTE", "face:MIXER_A", "full:MACRO_F", "face:CHORDS", "full:COUNTER",
+else:                    # face over the bass as the hook, reaction on the chords drop
+    B_ = [0, 8, 12, 16, 22, 28, 32, 40, 46, 52, 56, 60, 64]
+    L_ = ["face:BASS", "full:MACRO_A", "face:BASS", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "face:CHORDS", "full:COUNTER",
           "face:BASS_8", "full:CHORDS", "full:MACRO_C", "face:SHAPER"]
     REACT_J = 32 / 4
-    IMPACT_J = {16 / 4, 32 / 4, 48 / 4}
+    IMPACT_J = set()
     TRANS_FORCE = {8: "zoom"}
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
@@ -317,7 +319,7 @@ for s in shots:
     elif s["view"].split("_")[0] in ("MIXER", "SHAPER"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and s["view"].split("_")[0] in ("FLUTE", "CHORDS"):
-        s["zm"] = "push"
+        s["zm"] = None
     elif s["layout"] == "full" and (v["kind"] == "roll" or v.get("follow")):
         s["zm"] = "track"                       # tight macro, camera follows the playhead
     elif s["layout"] == "full" and s["view"] == "MACRO_W":
@@ -345,7 +347,7 @@ def zoom_at(s, n):
     if zm == "impact":
         return 1.0 + 0.25 * (1 - smooth(k / 10.0)) ** 2 + 0.06 * smooth(u)
     if zm == "mixer":                          # macro / mixer (Jack: "boring shots"): a real push, tilt + pan in theta/drift
-        return 1.06 + 0.16 * smooth(u)
+        return 1.02 + 0.06 * smooth(u)          # AGT v2: gentle push only
     if zm == "track":
         if V[s["view"]]["inst"] == "808":
             return 1.12 + 0.10 * smooth(u)          # 808 focus: wider so the whole 808 phrase reads, slow push
@@ -364,10 +366,10 @@ def zoom_at(s, n):
 def theta_at(s, n):
     if s.get("zm") == "mixer":                 # tilt that settles: +-2.6 deg -> +-0.6 deg, direction alternates per shot
         u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
-        return V[s["view"]].get("drift", 1) * (2.6 - 2.0 * smooth(u))
+        return V[s["view"]].get("drift", 1) * (1.0 - 0.6 * smooth(u))
     if s["view"].startswith("MACRO"):          # playlist shots: a gentle tilt that settles (motion on the wide shots)
         u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
-        return (1 if s["idx"] % 2 == 0 else -1) * (3.0 - 2.0 * smooth(u))
+        return (1 if s["idx"] % 2 == 0 else -1) * (1.2 - 0.8 * smooth(u))
     if s.get("zm") != "tilt":
         return 0.0
     u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
@@ -502,7 +504,9 @@ if SHAKE:
     for n0_, kind_ in trans.items():
         if kind_ in ("hard", "soft"):
             continue
-        amp = (20.0 if kind_ == "zoom" else 14.0) * S_     # small (Jack: "a small amount of whip / shake with blur")
+        if kind_ != "zoom":
+            continue                              # AGT v2: shake only after the zoom transitions, and small
+        amp = 8.0 * S_     # small (Jack: "a small amount of whip / shake with blur")
         ang = rs.uniform(0, 2 * np.pi)
         for k in range(1, 8):                     # starts right after the transition lands
             a_ = amp * math.exp(-(k - 1) / 1.8) * (1 if k % 2 else -1)
@@ -527,7 +531,11 @@ for s_ in shots:
         imp_frames.update(range(s_["n0"], s_["n1"]))
 if PUNCH:
     rp = np.random.default_rng(179)
+    # AGT v2: one soft punch on each section downbeat (bars 5, 9, 13) only - not on every bass note
+    _sec = [START + j * BAR for j in (4, 8, 12)]
     for t, s_ in sorted(zip(kt, ks)):
+        if min(abs(t - q) for q in _sec) > 0.06:
+            continue
         n = int(round(t * FPS))
         if n < 1 or n > NF - 3:
             continue
@@ -791,7 +799,7 @@ for s in shots:
         thp = theta_at(s, n - 1) if n > s["n0"] else th
         if (s.get("zm") == "track" or (s["layout"] == "face" and v["kind"] == "roll")) and x is not None:
             xs_ = st.get("xs")
-            xs_ = x if xs_ is None else 0.3 * xs_ + 0.7 * x      # light smoothing: the zoomed hat roll moves ~35 px/frame in page mode
+            xs_ = x if xs_ is None else 0.85 * xs_ + 0.15 * x      # AGT v2: heavy smoothing, no jittery tracking. light smoothing: the zoomed hat roll moves ~35 px/frame in page mode
             st["xs"] = xs_
             st["r"] = None
         if s["layout"] == "full":

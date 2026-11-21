@@ -120,3 +120,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - Use every recorded element on its real hits. He asked for the CTM 808 on both of its hits.
   - Don't lean on the mixer: B had 6 mixer shots, too many. Aim for at most 3–4, and say when it's the only footage covering a stretch.
 - AIN'T GOT TIME (2026-11-21, sample edit, request): wide shots (macro, mixer) zoomed on the area that matters at that moment; keep retention; make the sample feel like it's being built up, showing each element as it comes in.
+- AIN'T GOT TIME v1 → v2 (2026-11-21):
+  - Too much camera movement. Too many shakes and impact punches (e.g. the chords drop, the flute). Zooming on the flute was overdone. "Shaky tracking" is OK occasionally, not all the time.
+    - For sample / melodic edits: gentle push only, small shake after zoom transitions only, heavily smoothed playhead tracking, no impact bursts.
+  - The element shots (rolls, plugin) are the edit. Macro and mixer are short transitional shots, not the main content.
+  - Changes were too fast in places: hold shots ~1.5-2 bars.
+  - A cut to the mixer in the first seconds right before he puts the bass note in was wrong. He WANTS the moment the note goes in shown there. An exception to "never show note editing" when it's a single note going in on the playhead in an opening roll shot.
