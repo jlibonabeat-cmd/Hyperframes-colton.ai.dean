@@ -98,6 +98,8 @@ for _vn, _segs in COVER.items():
 # stretch is used: a short in-between shot of the vocal sample, camera push only. segs map it to edit beat 12 (A) / 8 (B).
 V["VOX"] = dict(clip="vox.mp4", inst="ARR", kind="fixed", segs=[(15.0, 17.2, 12 * 60 / 140 - 15.0 - 0.02), (15.0, 17.2, 8 * 60 / 140 - 15.0 - 0.02)], fx=790, cy=625, h=600, hs=520,
                 xmin=320, ymin=230, ymax=830)
+if "SHAPER" in V:                  # full-screen ShaperBox: tall crop on the LFO curve + live spectrum (2 of its 4 cycles)
+    V["SHAPER_F"] = dict(V["SHAPER"], fx=1010, cy=620, h=1000)
 _free_t = {}
 
 
@@ -201,23 +203,19 @@ def act(inst, t0, t1):
 # with the beat).
 # v2 (Jack, Nov 21): the element rolls are the edit; macro / mixer only as short in-between shots; longer holds; calmer
 # camera; keep the bass shot running through the F3 going in (no cut to the mixer in the first seconds).
-# v4 (Jack, Nov 21): no Edison (out of time), no flute recording (laggy), no macro, no chords recording. What's left and in
-# time: bass roll (bars 1-6 as recorded, the same pattern clip reused +4 / +8 / +12 bars where its hits match the master
-# within 15 ms: BASS_4 only to beat 27), counter roll, ShaperBox, mixer strips.
-if VARIANT == "A":       # full-screen led: the bass note going in, the drop on the bass, counter, ShaperBox
-    B_ = [0, 8, 12, 20, 27, 32, 39, 46, 54, 60, 64]
-    L_ = ["full:BASS", "face:MIXER_B", "full:BASS", "face:BASS_4", "full:MIXER_A", "face:BASS_8", "full:COUNTER", "face:SHAPER",
-          "full:BASS_12", "face:SHAPER"]
-    REACT_J = 32 / 4
-    IMPACT_J = set()
-    TRANS_FORCE = {}
-else:                    # face over the bass as the hook (the note going in), reaction held on the counter after the drop
-    B_ = [0, 8, 14, 20, 27, 32, 39, 46, 52, 56.5, 64]
-    L_ = ["face:BASS", "full:MIXER_A", "face:BASS", "full:BASS_4", "face:MIXER_B", "full:BASS_8", "face:COUNTER", "full:BASS_8",
-          "full:BASS_12", "face:SHAPER"]
+# v5 (Jack, Nov 21, agreed blueprint): bar 1 bass full screen with one punch-in, face + bass from bar 2 (the F3 going in),
+# one-bar mixer breather, the drop (bar 9) on the bass G3 with the second punch-in, counter-melody cut on its first hit,
+# ShaperBox full screen from bar 13 (whip in, slow push), end on face + ShaperBox. Hard cuts except the drop (zoom) and the
+# ShaperBox reveal (whip); no shakes. (The counter can't take the drop itself: its recording starts a beat late and has
+# notes being drawn in at beats 37-38.9.)
+if VARIANT in ("A", "B"):
+    B_ = [0, 4, 8, 12, 20, 28, 32, 39, 48, 54, 57, 64]
+    L_ = ["full:BASS", "face:BASS", "full:MIXER_A", "face:BASS", "full:BASS_4", "face:MIXER_B", "full:BASS_8", "face:COUNTER",
+          "full:SHAPER_F", "full:BASS_12", "face:SHAPER"]
     REACT_J = 39 / 4
     IMPACT_J = set()
-    TRANS_FORCE = {8: "zoom"}
+    PUNCH_J = {0, 8}
+    TRANS_FORCE = {8: "zoom", 12: "whipH"}
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}
 DROP_J = 8                                   # bar 9: the drop
@@ -322,7 +320,7 @@ for s in shots:
     s["theta"] = 0.0
     if s["view"].startswith("PRE"):
         s["zm"] = "tilt"; s["theta"] = 1
-    elif s["idx"] == 0:
+    elif False:
         s["zm"] = "impact"
     elif s["view"] == "VOX":
         s["zm"] = "push"
@@ -351,6 +349,14 @@ def smooth(u):
 
 
 def zoom_at(s, n):
+    z = _zoom_at(s, n)
+    if s["j0"] in PUNCH_J:                     # v5 punch-in: 108% -> 100% over 8 frames, eased
+        k = n - s["n0"]
+        z *= 1.0 + 0.08 * (1 - smooth(min(k, 8) / 8.0)) ** 2
+    return z
+
+
+def _zoom_at(s, n):
     u = (n - s["n0"]) / max(1, s["n1"] - s["n0"])
     k = n - s["n0"]
     zm = s.get("zm")
@@ -461,7 +467,7 @@ def zoom_blur(img, z0, z1, samples=8):
 
 # ----------------------------------------------------------------------------- motion events
 # whips: drop + every third cut (not into the silent bar, not into the last shot)
-TRANS_CYCLE = ["whipH", "zoom", "whipV", "hard", "whipH", "zoom", "hard", "whipV"]
+TRANS_CYCLE = ["hard"]          # v5: hard cuts unless forced
 trans = {}
 k_ = 0
 for s in shots:
@@ -514,8 +520,8 @@ if SHAKE:
     for n0_, kind_ in trans.items():
         if kind_ in ("hard", "soft"):
             continue
-        if kind_ != "zoom":
-            continue                              # AGT v2: shake only after the zoom transitions, and small
+        if True:
+            continue                              # v5: no shakes at all                              # AGT v2: shake only after the zoom transitions, and small
         amp = 8.0 * S_     # small (Jack: "a small amount of whip / shake with blur")
         ang = rs.uniform(0, 2 * np.pi)
         for k in range(1, 8):                     # starts right after the transition lands
