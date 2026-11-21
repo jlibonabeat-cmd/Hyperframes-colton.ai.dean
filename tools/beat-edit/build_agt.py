@@ -93,6 +93,11 @@ for _vn, _segs in COVER.items():
         V["MIXER_B"] = dict(V["MIXER_A"], fx=585, cy=380, h=600, hs=400, drift=-1)
     elif _vn == "SHAPER":      # ShaperBox 3 on the vocal chop: LFO curve + live spectrum (x 375-1590, y 435-800)
         V["SHAPER"] = dict(clip="shaper.mp4", inst="ARR", kind="fixed", segs=_sg, fx=1000, cy=600, h=760, hs=900, xmin=0, ymin=100, ymax=1060, drift=1, split_only=True)
+# Edison with the vocal chop source (clip 15.0-17.2: Edison open, transport stopped, nothing moving). Edison's own
+# playback later in the recording plays the raw 90 BPM chop on its own (no match with the beat, r=0.29), so only this still
+# stretch is used: a short in-between shot of the vocal sample, camera push only. segs map it to edit beat 12 (A) / 8 (B).
+V["VOX"] = dict(clip="vox.mp4", inst="ARR", kind="fixed", segs=[(15.0, 17.2, 12 * 60 / 140 - 15.0 - 0.02), (15.0, 17.2, 8 * 60 / 140 - 15.0 - 0.02)], fx=790, cy=625, h=600, hs=520,
+                xmin=320, ymin=230, ymax=830)
 _free_t = {}
 
 
@@ -196,17 +201,18 @@ def act(inst, t0, t1):
 # with the beat).
 # v2 (Jack, Nov 21): the element rolls are the edit; macro / mixer only as short in-between shots; longer holds; calmer
 # camera; keep the bass shot running through the F3 going in (no cut to the mixer in the first seconds).
-if VARIANT == "A":       # build-up: playlist opener -> bass (note going in) -> flute -> chords / counter / bass / ShaperBox
-    B_ = [0, 2, 12, 16, 22, 28, 32, 39, 46, 52, 56, 60, 64]
-    L_ = ["full:MACRO_A", "face:BASS", "full:MACRO_F", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "full:CHORDS", "face:COUNTER",
-          "full:BASS_8", "face:CHORDS", "full:MACRO_C", "face:SHAPER"]
-    REACT_J = 39 / 4
+# v3 (Jack, Nov 21): the Pigments chords recording is out (FL lagged while recording it: staggered, slow scrolling).
+if VARIANT == "A":       # playlist opener -> bass (note going in) -> the vocal sample in Edison -> flute -> bass drop -> counter
+    B_ = [0, 2, 12, 16, 22, 28, 32, 39, 46, 52, 57, 64]
+    L_ = ["full:MACRO_A", "face:BASS", "full:VOX", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "full:BASS_8", "full:COUNTER",
+          "face:SHAPER", "full:MACRO_C", "face:SHAPER"]
+    REACT_J = 46 / 4
     IMPACT_J = set()
     TRANS_FORCE = {}
-else:                    # face over the bass as the hook, reaction on the chords drop
-    B_ = [0, 8, 12, 16, 22, 28, 32, 40, 46, 52, 56, 60, 64]
-    L_ = ["face:BASS", "full:MACRO_A", "face:BASS", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "face:CHORDS", "full:COUNTER",
-          "face:BASS_8", "full:CHORDS", "full:MACRO_C", "face:SHAPER"]
+else:                    # face over the bass as the hook, face reaction on the bar-9 drop
+    B_ = [0, 8, 12, 16, 22, 28, 32, 39, 46, 52, 57, 64]
+    L_ = ["face:BASS", "full:VOX", "face:BASS", "full:FLUTE", "face:MACRO_F", "full:MIXER_A", "face:BASS_8", "full:COUNTER",
+          "face:SHAPER", "full:MACRO_C", "face:SHAPER"]
     REACT_J = 32 / 4
     IMPACT_J = set()
     TRANS_FORCE = {8: "zoom"}
@@ -316,6 +322,8 @@ for s in shots:
         s["zm"] = "tilt"; s["theta"] = 1
     elif s["idx"] == 0:
         s["zm"] = "impact"
+    elif s["view"] == "VOX":
+        s["zm"] = "push"
     elif s["view"].split("_")[0] in ("MIXER", "SHAPER"):
         s["zm"] = "mixer"
     elif s["layout"] == "full" and s["view"].split("_")[0] in ("FLUTE", "CHORDS"):

@@ -126,3 +126,4 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - The element shots (rolls, plugin) are the edit. Macro and mixer are short transitional shots, not the main content.
   - Changes were too fast in places: hold shots ~1.5-2 bars.
   - A cut to the mixer in the first seconds right before he puts the bass note in was wrong. He WANTS the moment the note goes in shown there. An exception to "never show note editing" when it's a single note going in on the playhead in an opening roll shot.
+- AIN'T GOT TIME v3 (2026-11-21): he prefers edit B (face over the bass hook, longer holds). Never use a recording where FL visibly lagged while recording (staggered / slow scrolling, e.g. the AGT Pigments chords roll). Check smooth-follow rolls for uneven scroll speed before using them. Use more of the recordings supplied (e.g. the Edison vocal-chop view).
