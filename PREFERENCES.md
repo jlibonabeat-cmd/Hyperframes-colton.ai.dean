@@ -151,3 +151,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     (h 950, ~535 px full / 920 px split), a barely-there push, no tilt.
   - He missed the Pigments preset (and "other things"): use every plugin/preset recording he sends. Put the preset
     shot on a chord so its on-screen keys light, next to the chords roll.
+- SOMETHING2SAY v3 (2026-11-23): he asked for a different face take, "the beige sweatshirt hoodie" = IMG_9921
+  (cream hoodie, no cap; usable 2.3–32.4 s, the first 2 s are headphones going on). Rotate the new face takes
+  between edits rather than always using the same one.

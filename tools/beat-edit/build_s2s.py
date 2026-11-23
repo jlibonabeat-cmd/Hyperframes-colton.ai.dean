@@ -49,9 +49,9 @@ MINT = (160, 230, 46)                # BGR
 SRC_W, SRC_H = 1920, 1200
 VARIANT = os.environ.get("VARIANT", "A")
 # one face clip per edit (no outfit change mid-beat); only stretches where he's quietly listening at the screen
-FACE_FILE = "face_9918.mp4"
-FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int(470 * S_)   # face clip read at the output width (native if 4K)
-FACE_SEGS = [(0.4, 28.6)]           # IMG_9918: steady listening / nodding the whole take
+FACE_FILE = "face_9921.mp4"           # v3 (Jack, Nov 23): the beige/cream hoodie take
+FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int(450 * S_)   # face clip read at the output width (native if 4K)
+FACE_SEGS = [(2.6, 32.3)]           # IMG_9921: 0-2.3 s headphones on / settling; then steady listening
 REACT_T = 9.0
 
 out_path = sys.argv[1]
