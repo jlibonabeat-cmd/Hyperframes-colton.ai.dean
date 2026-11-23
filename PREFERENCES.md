@@ -160,3 +160,5 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - Expression: the furrowed static stare at the monitor reads as "troubleshooting a crash". Pick face windows where
     his eyes are closed / he's nodding / feeling the sound (those "work great"). Hand-label eyes-closed stretches
     per take (9918: 3.5-4.3, 6.9-8.1, 14.5-15.1, 18.1-19.9, 22.5-24.5 s) and feed those to FACE_SEGS first.
+- SOMETHING2SAY v5 (2026-11-23): not sold on the desk-angle (IMG_9931) or the new close takes for this one; back to
+  the usual cap face clip (face_pac.mp4) for now. The new face takes are still to be tried on future edits.
