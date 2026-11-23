@@ -143,3 +143,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - One mixer shot plus one split macro as in-betweens.
   - ShaperBox and plugins in the split.
   - End on the face.
+- SOMETHING2SAY (2026-11-23, request): J Sewell-modified sample edit, 0:00–0:31. One outfit only (denim jacket,
+  IMG_9918), no irrelevant mixer/macro shots, everything on time. Delivered A/B at 0:00–0:30.7 (bar 19 = loop
+  point): rolls lead, the vocal-chop playlist + ShaperBox carry bar 11 onward, no mixer, no macro. Awaiting feedback.

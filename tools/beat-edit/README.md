@@ -440,3 +440,30 @@ Light FL theme with hot-pink notes (~R245 G71 B163); grid x 354-1893, y 180-937.
   - Edison vocal-chop recording: Edison plays the raw 90 BPM chop with the transport stopped, so it's never in time.
   - The flute tail (bars 7-8): a flat line.
 - **Face:** `face_pac.mp4` = copy_99ED92DA_1.MOV, hflip, trimmed at 29.2 s.
+
+## SOMETHING2SAY (144 BPM sample, F# minor, Nov 23) — `build_s2s.py` + `s2s_notemap.py` + `s2s_qa.py` + `s2s_hitsheet.py`
+
+J Sewell-modified sample edit on the approved AGT v6 template, mp3 0:00–0:30.69 (bars 1–18, ends on the bar-19
+breakdown so it loops). Face: IMG_9918 (denim jacket) only.
+
+- **Tempo ramp in the intro.** Bars 1–2 ramp from ~99 to 144 BPM, so FL's 144 BPM clock is 0.692 s behind the mp3
+  from bar 3 on. Every segment offset is `clock D + 0.692 + 0.020` (picture lead). Fitted on 84 key-light note-ons
+  (+0.676..+0.700). The intro playlist recording plays in real time: its "slow" clock was the ramp, not FL lag.
+  Plan beats are mp3 time / BEAT; `k_(k)` converts an FL song beat (k ≥ 8) into a plan beat.
+- **Smooth-follow rolls with FL's playhead parked at the grid edge (x 520).** Edge-crossing detection finds nothing.
+  Use key-light detection instead (`s2s_keylit.py`: orange keys at x 430–485).
+- **Frame rolls on the whole grid height (y 205–1125), left-aligned at x 440** (`fxl`). Full screen that gives
+  517 px (~420 px of grid ahead of the playhead), and the split 872 px. The first v1 crop (h 700, 394 px) left
+  chords / counter / serum on empty grid for beats at a time.
+- **`s2s_notemap.py`** maps, per 16th, whether each roll has ≥ 60 px of note columns ahead of the playhead in the
+  full crop and in the split crop. **Plan the cuts from that table.** Chords only show notes ~4 of every 8 beats,
+  so cut in on the chord. Serum leaves gaps at the end of each 2-bar phrase. The counter is sparse single notes:
+  split only, framed on its rows (cy 760, hs 540). Exclude the green playhead column (x < 530) or it reads as a
+  note.
+- **Reuse +8 bars (`_8` views):** bass (band r = 0.997), chords and counter (identical clips in the playlist).
+  Serum changes in section B, so it is not reused. Every roll recording ends just before bar 11 (mp3 17.30), so
+  bar 11 is vocal playlist / ShaperBox only.
+- **Scroll smoothness:** phase correlation on raw frames reads long held notes as "frozen" (horizontally uniform).
+  Measure on Sobel-x edges instead. Bass / chords / counter / serum all scroll at their expected speed, so no FL lag.
+- **Left out:** macro (Jack: not keen); mixer (his "no irrelevant shots around the mixer" note). B had one mixer
+  split, swapped for the counter roll.
