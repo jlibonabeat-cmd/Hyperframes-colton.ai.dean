@@ -154,3 +154,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - SOMETHING2SAY v3 (2026-11-23): he asked for a different face take, "the beige sweatshirt hoodie" = IMG_9921
   (cream hoodie, no cap; usable 2.3–32.4 s, the first 2 s are headphones going on). Rotate the new face takes
   between edits rather than always using the same one.
+- SOMETHING2SAY v4 (2026-11-23): IMG_9921 hoodie take was "way too zoomed in on me". Its 800 px panel already uses the
+  full clip width, so that take can't be widened: prefer the wide takes (IMG_9931 desk shot, IMG_9927) or the denim
+  IMG_9918 for the face split.
+  - Expression: the furrowed static stare at the monitor reads as "troubleshooting a crash". Pick face windows where
+    his eyes are closed / he's nodding / feeling the sound (those "work great"). Hand-label eyes-closed stretches
+    per take (9918: 3.5-4.3, 6.9-8.1, 14.5-15.1, 18.1-19.9, 22.5-24.5 s) and feed those to FACE_SEGS first.
