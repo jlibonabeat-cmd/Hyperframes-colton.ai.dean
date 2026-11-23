@@ -72,7 +72,7 @@ RK = dict(kind="fixed", fxl=440, xmin=430, ymin=205, ymax=1125, tz=1.0, cy=665, 
 V = {
     # intro build (playlist, smooth follow, FL's playhead at the left edge x~770): riser / kalimba / synth accents, the
     # crash clip arriving at the playhead on the drop. Plays in real time (its odd clock rate is the tempo ramp).
-    "INTRO": dict(kind="fixed", fxl=762, xmin=740, clip="intro.mp4", inst="ARR", segs=[(0.75, 6.9, -1.326)], cy=600, h=780, hs=760, ymin=190, ymax=1000),
+    "INTRO": dict(kind="fixed", fxl=762, xmin=740, clip="intro.mp4", inst="ARR", segs=[(0.75, 6.9, -1.326)], cy=660, h=950, hs=950, ymin=185, ymax=1135, drift=0, zgentle=1),   # v2: wider (Jack: intro "a bit close")
     "BASS": dict(RK, clip="bass.mp4", inst="808", segs=[(5.75, 19.05, -1.699)]),
     "BASS_8": dict(RK, clip="bass.mp4", inst="808", segs=[(7.4, 19.05, -1.699 + K8)]),
     "CHORDS": dict(RK, clip="chords.mp4", inst="MEL", segs=[(4.05, 17.3, 0.005)]),
@@ -200,8 +200,9 @@ DROP_B, VOX_B = k_(8), k_(40)
 # 14.5-19.75, 22.5-27.75, 30.5-35.75 (split from k13 / 21 / 29), nothing in bar 10; counter only sparse single notes ->
 # split only, k8-28; serum full k8-13.25, 14.75-21.25, 22.75-29.25, 30.75-37.25. +32 beats for the _8 reuse views.
 if VARIANT == "A":       # intro build hook -> the drop on the bass -> each layer on its notes -> vocal chop entry -> the loop
-    B_ = [0, t_(2.4), k_(8), k_(16), k_(23), k_(29), k_(35), k_(40), k_(47), k_(51), k_(57), k_(64), NBARS * 4]
-    L_ = ["full:INTRO", "face:INTRO", "full:BASS", "face:COUNTER", "full:SERUM", "face:CHORDS", "full:BASS",
+    # v2 (Jack, Nov 23): A preferred; wider intro; the Pigments preset in (bars 7-9, keys lit on the bar-9 chord)
+    B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(57), k_(64), NBARS * 4]
+    L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
           "face:VOCAL", "full:CHORDS_8", "face:COUNTER_8", "full:BASS_8", "face:CHOPS"]
 else:                    # face over the intro as the hook, face reaction on the drop, Pigments preset; no mixer (Jack: no irrelevant mixer shots)
     B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(55), k_(63), NBARS * 4]
@@ -358,6 +359,8 @@ def _zoom_at(s, n):
     zm = s.get("zm")
     if zm == "impact":
         return 1.0 + 0.25 * (1 - smooth(k / 10.0)) ** 2 + 0.06 * smooth(u)
+    if zm == "mixer" and V[s["view"]].get("zgentle"):
+        return 1.0 + 0.03 * smooth(u)           # S2S v2 intro: wide, barely-there push
     if zm == "mixer":                          # macro / mixer (Jack: "boring shots"): a real push, tilt + pan in theta/drift
         return 1.02 + 0.06 * smooth(u)          # AGT v2: gentle push only
     if zm == "track":

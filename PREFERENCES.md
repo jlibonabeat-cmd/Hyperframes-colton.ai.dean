@@ -145,4 +145,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - End on the face.
 - SOMETHING2SAY (2026-11-23, request): J Sewell-modified sample edit, 0:00–0:31. One outfit only (denim jacket,
   IMG_9918), no irrelevant mixer/macro shots, everything on time. Delivered A/B at 0:00–0:30.7 (bar 19 = loop
-  point): rolls lead, the vocal-chop playlist + ShaperBox carry bar 11 onward, no mixer, no macro. Awaiting feedback.
+  point): rolls lead, the vocal-chop playlist + ShaperBox carry bar 11 onward, no mixer, no macro.
+- SOMETHING2SAY v1 → v2 (2026-11-23): "the edit is ok". Prefers A (wide intro hook → drop on the bass roll).
+  - The intro before the sample drops was "a bit close" on both. Show the playlist intro wide: the whole track area
+    (h 950, ~535 px full / 920 px split), a barely-there push, no tilt.
+  - He missed the Pigments preset (and "other things"): use every plugin/preset recording he sends. Put the preset
+    shot on a chord so its on-screen keys light, next to the chords roll.
