@@ -7,6 +7,7 @@ B: bars 1-4 (0-7.68 s) = SEGMENTED section - graded face on top, three stacked i
 usage (plug folder): python3 -I scripts/seg_plug.py A|B in_js.mp4 out.mp4"""
 import sys, json, subprocess, numpy as np, cv2
 MODE, SRC, OUT = sys.argv[1:4]
+AUD_SS = 32 * 60 / 125 if MODE == "C" else 0.0   # C starts at bar 9
 W, H, FPS = 1080, 1920, 30; BEAT = 60 / 125; NF = int(round(32 * BEAT * FPS)); ND = int(round(16 * BEAT * FPS))   # 461, 230
 FACE_H, GAP = 690, 12; GREY = (22, 22, 22)
 def ease(u): u = min(max(u, 0), 1); return u * u * (3 - 2 * u)
@@ -50,7 +51,7 @@ if MODE == "B":
     R_MZ = R(560, 1890, 660)                                   # zoomed arrangement
     n8 = int(round(8 * BEAT * FPS))
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                        "-t", f"{NF / FPS:.3f}", "-i", "beat.mp3", "-map", "0:v", "-map", "1:a", "-af", f"afade=t=out:st={NF / FPS - 0.12:.3f}:d=0.12",
+                        "-ss", f"{AUD_SS:.3f}", "-t", f"{NF / FPS:.3f}", "-i", "beat.mp3", "-map", "0:v", "-map", "1:a", "-af", f"afade=t=out:st={NF / FPS - 0.12:.3f}:d=0.12",
                         "-c:v", "libx264", "-preset", "slow", "-crf", "14", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
                         "-c:a", "aac", "-b:a", "192k", "-shortest", OUT], stdin=subprocess.PIPE)
 for n in range(NF):

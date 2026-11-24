@@ -32,7 +32,7 @@ BEAT = 60.0 / BPM
 BAR = 4 * BEAT
 B0 = 0.0                             # FL bar 1 = mp3 0:00 (offsets live in cover.json)
 VARIANT = os.environ.get("VARIANT", "A")
-START_J = 0                          # bar 1 (0:00)
+START_J = 8 if os.environ.get("VARIANT") == "C" else 0   # C (Jack, Nov 24): the second half, bars 9-16 (0:15.36-0:30.72)
 OFF = 0.0
 NBARS = 8                            # ends on the bar-9 downbeat (0:15.36)
 START_BAR = START_J + 1
@@ -78,7 +78,7 @@ def _ph(clip):
     """FL playhead x per 60 fps frame, gaps interpolated (playhead hidden behind waveforms)"""
     a = json.load(open(f"{HERE}/{clip}_ph.json")); k = np.arange(len(a)); ok = np.array([x is not None for x in a])
     return np.interp(k, k[ok], np.array([x for x in a if x is not None], float))
-PH = {c: _ph(c) for c in ("bass", "sax", "macroz", "bell")}
+PH = {c: _ph(c) for c in ("bass", "sax", "macroz", "bell", "counter", "macro")}
 BAR4 = 4 * 4 * 60 / 125
 RL = dict(kind="roll", tz=1.0)
 V = {
@@ -88,6 +88,12 @@ V = {
     "SAX": dict(RL, clip="sax.mp4", inst="ARR", phscan="sax", segs=[(0.8, 31.45, -0.87)], cy=700, h=760, hs=620, xmin=600, ymin=330, ymax=1110, lead=0.3),
     # the same recording framed on track 8 (haunted synth, bars 5-7.5) for after the sax has ended
     "SYNTH": dict(RL, clip="sax.mp4", inst="ARR", phscan="sax", segs=[(0.8, 31.45, -0.87)], cy=520, h=700, hs=560, xmin=600, ymin=150, ymax=1110, lead=0.3),
+    # C: Serum 2 counter-melody (Pattern 7), smooth follow, playhead parked x ~1189; its notes hit the playhead from bar 15
+    "COUNTER": dict(RL, clip="counter.mp4", inst="MEL", phscan="counter", segs=[(2.35, 9.7, 20.63)], cy=600, h=640, hs=560, xmin=560, ymin=190, ymax=1000, lead=0.3),
+    # C: bell bars 1-2 shown in bars 13-14 (bell pitches r 0.98 / 0.69 vs bars 5-6; bars 9-12 don't match -> not shown)
+    "BELL_12": dict(RL, clip="bell.mp4", inst="MEL", phscan="bell", segs=[(7.75, 11.6, -7.715 + 3 * BAR4)], cy=575, h=640, hs=480, xmin=470, ymin=200, ymax=930, lead=0.35),
+    # C: the wide arrangement (all tracks), playhead walks to x 1169 then parks
+    "MACRO": dict(RL, clip="macro.mp4", inst="ARR", phscan="macro", segs=[(2.2, 32.9, -2.20)], cy=600, h=900, hs=760, xmin=780, ymin=180, ymax=1100, lead=0.35),
     # zoomed arrangement (tracks 7-15), playhead walks to x 1168 then parks
     "MACROZ": dict(RL, clip="macroz.mp4", inst="ARR", phscan="macroz", segs=[(0.9, 31.65, -0.965)], cy=660, h=900, hs=760, xmin=780, ymin=220, ymax=1130, lead=0.35),
     # Pigments bell, piano roll page (bars 1-5, 306.75 px a bar from x 558), playhead sweeping; keys light at x 470-556
@@ -95,6 +101,8 @@ V = {
     "BELL_4": dict(RL, clip="bell.mp4", inst="MEL", phscan="bell", segs=[(7.75, 15.45, -7.715 + BAR4)], cy=575, h=640, hs=480, xmin=470, ymin=200, ymax=930, lead=0.35),
     # Pigments "Slick - Synth Pad" visual (the bell's instrument), keyboard lighting at y 960-1035
     "PRESET": dict(kind="fixed", clip="preset.mp4", inst="ARR", segs=[(1.8, 32.6, -1.82)], fx=1060, cy=790, h=760, hs=760, xmin=600, ymin=280, ymax=1118, drift=1),
+    # C: mixer framed on inserts 1-10 (sax / Serum / synth / Pigments / pad / drum loop), all moving from bar 9
+    "MIXER": dict(kind="fixed", clip="mixer.mp4", inst="ARR", segs=[(1.85, 32.5, -1.85)], fx=860, cy=560, h=880, hs=600, xmin=560, ymin=120, ymax=1040, drift=1),
     # the new kit: Nocturnal Hours - Collection Bundle (@Loopvault) artwork in the browser of the mixer recording
     "KIT": dict(kind="fixed", clip="mixer.mp4", inst="ARR", segs=[(1.85, 32.5, -1.85)], fx=230, cy=800, h=470, hs=470, xmin=0, ymin=560, ymax=1040, drift=-1),
 }
@@ -209,13 +217,17 @@ if VARIANT == "A":       # J Sewell: the hit -> whip into the bell -> sax -> the
     B_ = [0, 4, 8, 12, 14, 16, 20, 24, 28, NBARS * 4]
     L_ = ["full:BASS", "face:BELL", "full:SAX", "face:KIT", "full:MACROZ", "full:BASS", "face:PRESET", "full:BELL_4", "face:MACROZ"]
     TRANS_FORCE = {1.0: "whipH", 4.0: "zoom"}
+elif VARIANT == "C":     # second half: the drums land -> preset -> synth -> kit -> wide -> bell -> arrangement -> whip into the counter
+    B_ = [0, 4, 8, 12, 14, 16, 20, 24, 30, NBARS * 4]
+    L_ = ["full:MACRO", "face:PRESET", "full:MIXER", "face:KIT", "full:MACRO", "face:BELL_12", "full:SYNTH", "full:COUNTER", "face:PRESET"]
+    TRANS_FORCE = {6.0: "whipH"}
 else:                    # bars 1-4 = segmented section (seg_plug.py composites over beats 0-16); J Sewell from bar 5
     B_ = [0, 16, 20, 22, 25, 28, NBARS * 4]
     L_ = ["full:MACROZ", "full:BASS", "face:KIT", "full:SYNTH", "full:BELL_4", "face:PRESET"]
     TRANS_FORCE = {4.0: "zoom"}
 REACT_J = -99
 IMPACT_J = set()
-PUNCH_J = {DROP_B / 4}
+PUNCH_J = {DROP_B / 4} if VARIANT != "C" else set()
 CUT_BARS = [b / 4 for b in B_[:-1]] + [NBARS]
 assert abs(B_[-1] / 4 - NBARS) < 1e-6
 FORCE = {b / 4: tuple(l.split(":")) for b, l in zip(B_, L_)}

@@ -210,3 +210,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   (bars 1-8, 0:15.36), Full HD, quick shots of the new kit (Nocturnal Hours bundle in the browser). Delivered A (J Sewell:
   hit -> whip into the bell -> sax -> kit -> punch into bar 5 -> preset -> bell -> drop coming) and B (bars 1-4 segmented:
   face + bell page / sax / hits->arrangement strips, then J Sewell from bar 5). Both with the impact start. Awaiting feedback.
+- REALLY I'M THE PLUG A/B (2026-11-24): "Love both of these edits". Then C = the second half, bars 9-16
+  (0:15.36-0:30.72), VARIANT=C. Bell only in bars 13-14 (its pitches match bars 5-6, r 0.98; bars 9-12 don't),
+  counter-melody (Serum 2) from bar 15 with a whip, one mixer shot framed on the 10 moving strips. Awaiting feedback.
