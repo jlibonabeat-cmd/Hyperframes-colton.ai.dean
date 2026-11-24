@@ -31,8 +31,8 @@ def crop(f, r, size):
     x, y, w, h = [int(round(v)) for v in r]; return cv2.resize(f[y:y + h, x:x + w], size, interpolation=cv2.INTER_AREA)
 def lerp(a, b, u): return [p + (q - p) * u for p, q in zip(a, b)]
 def ease(u): u = min(max(u, 0), 1); return u * u * (3 - 2 * u)
-S1 = (H - FACE_H - 3 * GAP) // 3                          # 398
-R_SN = (354, 278, 1539, 567); R_HT = (354, 380, 986, 363)    # whole pages (hats / 808 patterns sit in the left 2/3)
+S1 = (H - FACE_H - 2 * GAP) // 2                          # 603: v2 (Jack): 2 layers, the open-hat strip read as a duplicate 808
+R_SN = (354, 278, 1539, 567); R_HT = (354, 286, 986, 986 * 603 / 1080)    # whole pages (hats / 808 patterns sit in the left 2/3)
 M8H = 640                                                  # drop: 808 strip height when it's in
 R_MX_FULL = (362, 150, 560, 1206 * 650 / 1080)             # mixer filling the strip area (master + inserts 1-10)
 R_MX_HALF = (362, 175, 560, 566 * 560 / 1080)              # mixer as the lower strip (meters + names)
@@ -64,8 +64,8 @@ for n in range(NF):
     t = n / FPS; b = t / BEAT
     img = np.empty((H, W, 3), np.uint8); img[:] = GREY; img[:FACE_H] = face(n); y0 = FACE_H + GAP
     if n < nd:                                               # bars 1-8: three strips
-        for i, (src, r) in enumerate(((SN, R_SN), (OH, R_HT), (SP, R_HT))):
-            h = S1 if i < 2 else H - y0
+        for i, (src, r) in enumerate(((SN, R_SN), (SP, R_HT))):
+            h = S1 if i < 1 else H - y0
             if src is SN:                                    # snare: follow-along crop riding FL's playhead (bigger hits)
                 k = int(round((t - SN.D) * 60)); m = SNS[min(max(k, 0), len(SNS) - 1)]
                 if m is not None: snx[0] = m if snx[0] is None or abs(m - snx[0]) > 250 else 0.75 * snx[0] + 0.25 * m

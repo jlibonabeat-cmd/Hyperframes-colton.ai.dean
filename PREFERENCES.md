@@ -196,4 +196,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   (follow-along crop) / open hats going in on the playhead / Spinz 808 going in; strobe on the last beat; warm drop
   flash; mixer meters take the strip area, the 808 main roll slides in riding the playhead in its clean stretches
   (beats 37.5-43.8, 56.3-64), his note redraw kept off screen. Face = face_pac. `tools/segmented-edit/seg_df.py`.
-  Awaiting feedback.
+  - v2: "just do 2 layers": the open-hat and Spinz strips looked like the same 808 duplicated (one C5 note on an
+    empty row each). Segmented strips must look clearly different from each other; two single-row one-note
+    patterns stacked read as a duplicate. Bars 1-8 now = snare + Spinz 808.
