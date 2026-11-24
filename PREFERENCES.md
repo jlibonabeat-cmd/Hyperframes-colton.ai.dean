@@ -162,3 +162,8 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     per take (9918: 3.5-4.3, 6.9-8.1, 14.5-15.1, 18.1-19.9, 22.5-24.5 s) and feed those to FACE_SEGS first.
 - SOMETHING2SAY v5 (2026-11-23): not sold on the desk-angle (IMG_9931) or the new close takes for this one; back to
   the usual cap face clip (face_pac.mp4) for now. The new face takes are still to be tried on future edits.
+- SOMETHING2SAY v6 (2026-11-24): Jack wants the desk take IMG_9931 (cream hoodie, far from camera) as the J Sewell
+  face shot, **cropped in so he's in it with the screen below** (and "absolutely loves it" as the segmented-edit
+  top panel too). The file is portrait 1800x3200 stored rotated; crop x 50–1642, y 333–3163 (of 1800x3200) to
+  1080x1920 and show panel y 192–992 (FACE=desk). That keeps the side monitor (unrelated footage) out. Usable
+  10.3–27.6 s (blue desk LED before that).

@@ -53,8 +53,8 @@ VARIANT = os.environ.get("VARIANT", "A")
 # hoodie, wide) or FACE=denim (IMG_9918). Face windows are picked on the eyes-closed / nodding moments ("when you close
 # your eyes and actually feel the preset it works"; the furrowed static stare reads as troubleshooting).
 FACE = os.environ.get("FACE", "desk")
-FACE_FILE = {"desk": "face_9931.mp4", "denim": "face_9918.mp4", "hoodie": "face_9921.mp4", "pac": "face_pac.mp4"}[FACE]
-FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int({"desk": 330, "denim": 470, "hoodie": 450, "pac": 460}[FACE] * S_)   # face clip read at the output width (native if 4K)
+FACE_FILE = {"desk": "face_9931C.mp4", "denim": "face_9918.mp4", "hoodie": "face_9921.mp4", "pac": "face_pac.mp4"}[FACE]
+FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int({"desk": 192, "denim": 470, "hoodie": 450, "pac": 460}[FACE] * S_)   # face clip read at the output width (native if 4K)
 FACE_SEGS = {"desk": [(10.3, 27.6)],      # IMG_9931: desk LED blue until ~9.5 s, then off; nodding at the monitor, keys
              "hoodie": [(2.6, 32.3)],
              "pac": [(0.6, 2.2), (3.4, 4.0), (5.0, 9.2), (9.9, 17.7), (18.6, 22.3), (22.9, 26.4)],   # the usual cap take (GLOCK/AGT)
