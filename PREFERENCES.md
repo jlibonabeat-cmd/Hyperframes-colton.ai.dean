@@ -199,3 +199,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - v2: "just do 2 layers": the open-hat and Spinz strips looked like the same 808 duplicated (one C5 note on an
     empty row each). Segmented strips must look clearly different from each other; two single-row one-note
     patterns stacked read as a duplicate. Bars 1-8 now = snare + Spinz 808.
+  - v3: he LOVED the 808 roll strip sliding in above the mixer at 0:12 ("keep that in"): once a strip enters, keep
+    it, don't go back to a mixer-only view. Add J Sewell motion to the segmented style: a slow push on every strip,
+    a zoom-blur punch transition into the drop (the main change), and a 1.5 s slow zoom out on the intro.
