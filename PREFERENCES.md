@@ -191,3 +191,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - B + FX (`tools/beat-edit/fx_agt.py`): his accent types baked onto edit B's cuts (no paper collage: a CapCut asset).
   - SEGMENTED (`tools/segmented-edit/seg_agt.py`): face on top, stacked in-sync strips below (bass page + arrangement in
     bars 1-8; ShaperBox -> chords / bass / arrangement from the drop), warm flash on the drop, no text. Awaiting feedback.
+- DRUG FIT SEGMENTED (2026-11-24, request): "3 layers and follow along stuff and then me at the top". He chose the
+  full 0:00-0:21 with 2 layers after the drop (no clean 3rd roll for bars 9-16). Delivered: bars 1-8 = snare
+  (follow-along crop) / open hats going in on the playhead / Spinz 808 going in; strobe on the last beat; warm drop
+  flash; mixer meters take the strip area, the 808 main roll slides in riding the playhead in its clean stretches
+  (beats 37.5-43.8, 56.3-64), his note redraw kept off screen. Face = face_pac. `tools/segmented-edit/seg_df.py`.
+  Awaiting feedback.
