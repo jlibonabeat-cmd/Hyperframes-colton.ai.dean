@@ -467,3 +467,15 @@ breakdown so it loops). Face: IMG_9918 (denim jacket) only.
   Measure on Sobel-x edges instead. Bass / chords / counter / serum all scroll at their expected speed, so no FL lag.
 - **Left out:** macro (Jack: not keen); mixer (his "no irrelevant shots around the mixer" note). B had one mixer
   split, swapped for the counter roll.
+
+## REALLY I'M THE PLUG (125 BPM sample, C minor, Nov 24) — `build_plug.py` + `plug_phscan.py` (+ `segmented-edit/seg_plug.py`)
+
+- mp3 0:00–0:15.36 (bars 1–8, ends on the bar-9 drums so it loops). FL song time = mp3 time; segs D = clock D + 0.020.
+- The OBS recordings' audio tracks are silent: sync = clock OCR (`s2s_clock.py`, BPM 125), checked on the clip edges
+  crossing the playhead (bar-5 Confession hit +7 ms).
+- Smooth-follow playlists walk the playhead right to x 1168 (sax view parked at 886) then scroll: `plug_phscan.py`
+  stores per-frame playhead x and views with `phscan=` ride it (`zm="track"`). The bell roll is a static page with the
+  playhead sweeping (306.75 px a bar from x 558).
+- BELL_4 = bell bars 1–4 shown in bars 5–8: one Pattern 2 clip, notes identical bar for bar in the playlist.
+- KIT = the Nocturnal Hours kit artwork in the browser of the mixer recording (Jack: "a quick screenshot here and there").
+- Counter-melody recording is bars 13–16, outside the 16 s: not used.

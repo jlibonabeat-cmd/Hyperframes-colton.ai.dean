@@ -206,3 +206,7 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     0:18 onwards was "disengaging" (too still). Added a sway + push, zoom bumps on downbeats, film-burn flash
     transitions on bars 15/16, and a burn swell into the loop. For still stretches he'll give timestamps: fix them with
     transitions that keep attention, in the edit's aesthetic.
+- REALLY I'M THE PLUG (2026-11-24, request): mainly J Sewell, a small segmented section in one of two edits, first 16 s
+  (bars 1-8, 0:15.36), Full HD, quick shots of the new kit (Nocturnal Hours bundle in the browser). Delivered A (J Sewell:
+  hit -> whip into the bell -> sax -> kit -> punch into bar 5 -> preset -> bell -> drop coming) and B (bars 1-4 segmented:
+  face + bell page / sax / hits->arrangement strips, then J Sewell from bar 5). Both with the impact start. Awaiting feedback.
