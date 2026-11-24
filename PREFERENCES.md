@@ -167,3 +167,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   top panel too). The file is portrait 1800x3200 stored rotated; crop x 50–1642, y 333–3163 (of 1800x3200) to
   1080x1920 and show panel y 192–992 (FACE=desk). That keeps the side monitor (unrelated footage) out. Usable
   10.3–27.6 s (blue desk LED before that).
+- SOMETHING2SAY v7 (2026-11-24): "you're using the wrong parts". Face shots must be him **looking at his laptop
+  screen**: never playing the keys/synth, never turned to the side desktop monitor. Hand-label every face take for
+  gaze before use. IMG_9931 has only ~6.5 s of laptop looks (0.0–4.65, 11.45–12.95); v7 cuts a face clip from just
+  those at 0.8x (60 fps source, still smooth), keeps face shots ~1.7 s, and reuses only far-apart stretches.
+  - An iPhone Photos crop doesn't survive sharing (IMG_9931_2 arrived byte-identical to the original): ask him to
+    export / "Save as new clip" or send a screenshot of the framing.
