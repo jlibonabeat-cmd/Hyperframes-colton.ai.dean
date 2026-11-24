@@ -173,3 +173,8 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   those at 0.8x (60 fps source, still smooth), keeps face shots ~1.7 s, and reuses only far-apart stretches.
   - An iPhone Photos crop doesn't survive sharing (IMG_9931_2 arrived byte-identical to the original): ask him to
     export / "Save as new clip" or send a screenshot of the framing.
+- SOMETHING2SAY v8 (2026-11-24): Jack colour-graded his own desk face take ("use this one"): a wider desk angle
+  (copy_A506CD77…mov, 1080x1920 HLG, 27.8 s). Keep HIS grade (convert HLG→BT.709 only; still never grade his
+  footage ourselves). Laptop looks: 0–2.3, 8.8–13.1, 14.8–27.7 (2.5–8.5 turned to the side monitor; 13.3–14.7
+  head down). Crop x 206–978, y 300–1672 → 1080x1920, panel y 330–1130 (FACE=graded). ~19 s of usable footage, so
+  the approved v2/v3 plan runs with full-length face shots, no slow-down, no reuse.

@@ -53,10 +53,11 @@ VARIANT = os.environ.get("VARIANT", "A")
 # hoodie, wide) or FACE=denim (IMG_9918). Face windows are picked on the eyes-closed / nodding moments ("when you close
 # your eyes and actually feel the preset it works"; the furrowed static stare reads as troubleshooting).
 FACE = os.environ.get("FACE", "desk")
-FACE_FILE = {"desk": "face_desk_laptop.mp4", "denim": "face_9918.mp4", "hoodie": "face_9921.mp4", "pac": "face_pac.mp4"}[FACE]
-FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int({"desk": 192, "denim": 470, "hoodie": 450, "pac": 460}[FACE] * S_)   # face clip read at the output width (native if 4K)
+FACE_FILE = {"desk": "face_desk_laptop.mp4", "denim": "face_9918.mp4", "hoodie": "face_9921.mp4", "pac": "face_pac.mp4", "graded": "face_graded.mp4"}[FACE]
+FACE_W, FACE_H, FACE_Y0 = W, int(W * 1920 / 1080), int({"desk": 192, "denim": 470, "hoodie": 450, "pac": 460, "graded": 330}[FACE] * S_)   # face clip read at the output width (native if 4K)
 FACE_SEGS = {"desk": [(0.05, 5.75), (5.86, 7.66)],   # v7: only the looking-at-the-laptop bits (src 0-4.65, 11.45-12.95) at 0.8x; was      # IMG_9931: desk LED blue until ~9.5 s, then off; nodding at the monitor, keys
              "hoodie": [(2.6, 32.3)],
+             "graded": [(0.05, 2.3), (8.8, 13.1), (14.8, 27.7)],   # Jack's graded desk take: laptop looks only
              "pac": [(0.6, 2.2), (3.4, 4.0), (5.0, 9.2), (9.9, 17.7), (18.6, 22.3), (22.9, 26.4)],   # the usual cap take (GLOCK/AGT)
              # IMG_9918 windows around the eyes-closed stretches 3.5-4.3, 6.9-8.1, 14.5-15.1, 18.1-19.9, 22.5-24.5
              "denim": [(2.85, 4.7), (6.45, 8.75), (13.75, 16.9), (17.45, 20.6), (22.15, 25.7), (9.0, 11.75)]}[FACE]
@@ -208,15 +209,19 @@ DROP_B, VOX_B = k_(8), k_(40)
 # 14.5-19.75, 22.5-27.75, 30.5-35.75 (split from k13 / 21 / 29), nothing in bar 10; counter only sparse single notes ->
 # split only, k8-28; serum full k8-13.25, 14.75-21.25, 22.75-29.25, 30.75-37.25. +32 beats for the _8 reuse views.
 if VARIANT == "A":       # intro build hook -> the drop on the bass -> each layer on its notes -> vocal chop entry -> the loop
-    # v7 (Jack, Nov 24): desk face take has only ~6.5 s of him looking at the laptop -> shorter face shots (~1.7 s)
-    B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(23), k_(29), k_(33), k_(40), k_(44), k_(47), k_(51), k_(55), k_(59), k_(67), NBARS * 4]
-    L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
-          "face:VOCAL", "full:BASS_8", "full:CHORDS_8", "face:COUNTER_8", "full:CHORDS_8", "full:BASS_8", "face:CHOPS"]
+    if FACE == "desk":   # v7 (Jack, Nov 24): desk face take has only ~6.5 s of him looking at the laptop -> ~1.7 s face shots
+        B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(23), k_(29), k_(33), k_(40), k_(44), k_(47), k_(51), k_(55), k_(59), k_(67), NBARS * 4]
+        L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
+              "face:VOCAL", "full:BASS_8", "full:CHORDS_8", "face:COUNTER_8", "full:CHORDS_8", "full:BASS_8", "face:CHOPS"]
+    else:                # v2/v3 plan (approved): wide intro -> drop on the bass -> preset -> vocal whip -> ShaperBox ending
+        B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(57), k_(64), NBARS * 4]
+        L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
+              "face:VOCAL", "full:CHORDS_8", "face:COUNTER_8", "full:BASS_8", "face:CHOPS"]
 else:                    # face over the intro as the hook, face reaction on the drop, Pigments preset; no mixer (Jack: no irrelevant mixer shots)
     B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(55), k_(63), NBARS * 4]
     L_ = ["face:INTRO", "full:INTRO", "face:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
           "face:VOCAL", "full:CHORDS_8", "face:COUNTER_8", "full:BASS_8", "face:CHOPS"]
-REACT_J = -99 if FACE == "desk" else (k_(8) if VARIANT == "B" else k_(16)) / 4   # his reaction: first face shot from the drop
+REACT_J = -99 if FACE in ("desk", "graded") else (k_(8) if VARIANT == "B" else k_(16)) / 4   # his reaction: first face shot from the drop
 IMPACT_J = set()
 PUNCH_J = {DROP_B / 4}
 TRANS_FORCE = {DROP_B / 4: "zoom", VOX_B / 4: "whipH"}
