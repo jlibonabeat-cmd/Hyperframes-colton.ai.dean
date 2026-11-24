@@ -38,6 +38,21 @@ def zblur(img, z0, z1, k=8):
     acc = np.zeros(img.shape, np.float32)
     for z in np.linspace(z0, z1, k): acc += scale(img, z)
     return (acc / k).astype(np.uint8)
+def rot_scale(img, z, deg, dx=0.0):
+    hh, ww = img.shape[:2]; M = cv2.getRotationMatrix2D((ww / 2, hh / 2), deg, z); M[0, 2] += dx
+    return cv2.warpAffine(img, M, (ww, hh), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+_yy, _xx = np.mgrid[0:H // 4, 0:W // 4].astype(np.float32)
+def film_burn(img, n, amt):
+    """organic film burn: drifting warm blobs (orange -> yellow-white core), screen-blended. deterministic in n."""
+    if amt <= 0.005: return img
+    m = np.zeros((H // 4, W // 4), np.float32)
+    for k, (cx, cy, r, sp) in enumerate(((0.15, 0.3, 0.55, 1.3), (0.85, 0.65, 0.5, -1.0), (0.5, 0.95, 0.45, 0.8))):
+        x = (cx + 0.18 * np.sin(n * 0.11 * sp + k)) * W / 4; y = (cy + 0.12 * np.cos(n * 0.09 * sp + 2 * k)) * H / 4
+        m += np.exp(-(((_xx - x) ** 2 + (_yy - y) ** 2) / (2 * (r * W / 4) ** 2)))
+    m = np.clip(m * amt, 0, 1.2); m = cv2.resize(m, (W, H), interpolation=cv2.INTER_CUBIC)[..., None]
+    col = np.clip(np.concatenate([40 + 150 * m ** 2, 90 + 150 * m, 255 * np.ones_like(m)], 2), 0, 255)   # BGR warm ramp
+    f = img.astype(np.float32) / 255; c = col / 255 * np.clip(m, 0, 1)
+    return np.clip(255 * (1 - (1 - f) * (1 - c)), 0, 255).astype(np.uint8)
 def lerp(a, b, u): return [p + (q - p) * u for p, q in zip(a, b)]
 def ease(u): u = min(max(u, 0), 1); return u * u * (3 - 2 * u)
 S1 = (H - FACE_H - 2 * GAP) // 2                          # 603: v2 (Jack): 2 layers, the open-hat strip read as a duplicate 808
@@ -96,8 +111,21 @@ for n in range(NF):
         r[1] = min(max(r[1], 0), 1200 - r[3])
         img[y0:y0 + hm] = crop(MX.at(t), push(r, 1 + 0.06 * ease((b - 32) / 32)), (W, hm))
         log.append((round(t, 2), round(u, 2)))
-    if n < 45:                                               # v3: slow zoom out on the intro (1.5 s)
-        img = scale(img, 1 + 0.14 * (1 - ease(n / 45)))
+    if n < 14:                                               # v4: impact start - fast motion-blurred zoom out, then settle
+        z0 = 1 + 0.42 * (1 - ease(n / 14)) ** 1.6; z1 = 1 + 0.42 * (1 - ease((n + 1) / 14)) ** 1.6
+        img = zblur(img, z1, z0, 10) if n < 9 else scale(img, z0)
+    # v4 outro (from 0:18): sway + push, downbeat zoom bumps, film-burn transitions on bars 15/16, burn swell into the loop
+    if b >= 54:
+        u = ease((b - 54) / 2); bump = 0.0
+        for d in (56, 60, 62, 63):
+            if b >= d: bump += (0.06 if d in (56, 60) else 0.03) * np.exp(-(b - d) * 3.2)
+        img = rot_scale(img, 1 + 0.04 * u + 0.05 * ease((b - 56) / 8) + bump, 1.3 * u * np.sin((b - 54) * np.pi / 4), 14 * u * np.sin((b - 54) * np.pi / 8))
+        if 56 <= b < 56.3: img = zblur(img, 1.0, 1.12)
+        burn = 0.0
+        for d, pk in ((56, 1.05), (60, 0.7)):
+            if d - 0.35 <= b < d + 2: burn = max(burn, pk * (ease((b - d + 0.35) / 0.35) if b < d else np.exp(-(b - d) * 2.2)))
+        if b >= 62.4: burn = max(burn, 1.3 * ease((b - 62.4) / 1.6))
+        img = film_burn(img, n, burn)
     if nd - 3 <= n < nd:                                     # J Sewell transition into the drop: zoom-blur punch out...
         k = n - nd + 3; img = zblur(img, 1.0, (1.08, 1.18, 1.32)[k])
     elif nd <= n < nd + 8:                                   # ...and land: zoom-blurred punch-in that settles

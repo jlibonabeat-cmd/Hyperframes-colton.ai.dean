@@ -202,3 +202,7 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - v3: he LOVED the 808 roll strip sliding in above the mixer at 0:12 ("keep that in"): once a strip enters, keep
     it, don't go back to a mixer-only view. Add J Sewell motion to the segmented style: a slow push on every strip,
     a zoom-blur punch transition into the drop (the main change), and a 1.5 s slow zoom out on the intro.
+  - v3 "This is perfect". v4 asks: an impact start (fast motion-blurred zoom out, not a slow one), and an FX outro:
+    0:18 onwards was "disengaging" (too still). Added a sway + push, zoom bumps on downbeats, film-burn flash
+    transitions on bars 15/16, and a burn swell into the loop. For still stretches he'll give timestamps: fix them with
+    transitions that keep attention, in the edit's aesthetic.
