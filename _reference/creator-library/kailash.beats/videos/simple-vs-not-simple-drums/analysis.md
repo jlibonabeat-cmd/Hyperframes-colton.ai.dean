@@ -35,3 +35,11 @@ not part of the edit.
 - **Footage needed:** each element's piano roll recorded with **follow / scrolling OFF**, zoomed out so the whole
   section (e.g. 4 or 8 bars) fits on one page, playhead sweeping across. Same zoom and the same page start for
   every element so the playheads line up. Plus a face / B-roll clip of him vibing in headphones for the top.
+
+## Jack's footage decision (Nov 24)
+- Top panel = IMG_9931 (the YOSHI desk take, cream hoodie). It's portrait 1800x3200 stored rotated (-90°), so
+  convert it in portrait. Crop the source (1080x1920 scale) at x 30–985, y 385–995 into a 1080x690 panel: him, the
+  keys, the laptop, the lamp and the guitars, with the side monitor (it shows unrelated footage) cropped out. His
+  head stays in frame for the whole 27.8 s.
+- The desk LED is blue for 0–9.5 s and off after that: switch at a section change (under the light-leak flash) so
+  the change reads as intentional.
