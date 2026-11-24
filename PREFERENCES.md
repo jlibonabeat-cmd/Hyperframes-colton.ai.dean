@@ -185,3 +185,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   the drop. 0:08-0:10 counter-melody split "a bit irrelevant", wants something more captivating with motion -> the
   animated Pigments preset (moving visual + lit keys) there; sparse single-note rolls (counter) and arps that rest at
   phrase ends (Serum) don't hold a 2 s split.
+- AIN'T GOT TIME variations (2026-11-24): Jack re-cut edit B in CapCut with his own accents (flash on the mixer cut,
+  paper/tape collage, strobe + light-streak whiteout into the drop, B&W -> red-duotone flickers) and asked for
+  variations with "a different look, maybe a bit of segment style". Delivered:
+  - B + FX (`tools/beat-edit/fx_agt.py`): his accent types baked onto edit B's cuts (no paper collage: a CapCut asset).
+  - SEGMENTED (`tools/segmented-edit/seg_agt.py`): face on top, stacked in-sync strips below (bass page + arrangement in
+    bars 1-8; ShaperBox -> chords / bass / arrangement from the drop), warm flash on the drop, no text. Awaiting feedback.
