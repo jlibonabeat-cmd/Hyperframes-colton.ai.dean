@@ -181,3 +181,7 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - **SOMETHING2SAY A v8 APPROVED (2026-11-24): "Yep this is great".** Template for sample edits: wide intro playlist
   hook, drop on the 808 roll with one punch-in, rolls framed on the whole grid, the Pigments preset on a chord,
   a whip into the vocal entry, ending on ShaperBox in the split. Face = his graded desk take, laptop looks only.
+- SOMETHING2SAY v9/v10 (2026-11-24): "continue the shot at 0:02, don't do the split" -> intro = one full-screen shot to
+  the drop. 0:08-0:10 counter-melody split "a bit irrelevant", wants something more captivating with motion -> the
+  animated Pigments preset (moving visual + lit keys) there; sparse single-note rolls (counter) and arps that rest at
+  phrase ends (Serum) don't hold a 2 s split.

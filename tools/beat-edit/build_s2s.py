@@ -214,8 +214,11 @@ if VARIANT == "A":       # intro build hook -> the drop on the bass -> each laye
         L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
               "face:VOCAL", "full:BASS_8", "full:CHORDS_8", "face:COUNTER_8", "full:CHORDS_8", "full:BASS_8", "face:CHOPS"]
     else:                # v2/v3 plan (approved): wide intro -> drop on the bass -> preset -> vocal whip -> ShaperBox ending
-        B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(57), k_(64), NBARS * 4]
-        L_ = ["full:INTRO", "face:INTRO", "full:BASS", "full:CHORDS", "face:COUNTER", "full:SERUM", "face:PRESET", "full:BASS",
+        # v9 (Jack, Nov 24): "continue the shot at 0:02, don't do the split screen" -> one full intro shot to the drop
+        B_ = [0, k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(57), k_(64), NBARS * 4]
+        # v10 (Jack, Nov 24): 0:08-0:10 counter split "a bit irrelevant" -> the busy Serum arp in the split instead
+        #   (Serum split tried: the arp rests at each phrase end -> empty grid) -> the animated Pigments preset there
+        L_ = ["full:INTRO", "full:BASS", "full:CHORDS", "face:PRESET", "full:SERUM", "face:CHORDS", "full:BASS",
               "face:VOCAL", "full:CHORDS_8", "face:COUNTER_8", "full:BASS_8", "face:CHOPS"]
 else:                    # face over the intro as the hook, face reaction on the drop, Pigments preset; no mixer (Jack: no irrelevant mixer shots)
     B_ = [0, t_(2.4), k_(8), k_(15), k_(19), k_(24), k_(29), k_(36), k_(40), k_(47), k_(51), k_(55), k_(63), NBARS * 4]
