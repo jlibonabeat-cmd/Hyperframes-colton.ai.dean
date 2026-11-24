@@ -178,3 +178,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   footage ourselves). Laptop looks: 0–2.3, 8.8–13.1, 14.8–27.7 (2.5–8.5 turned to the side monitor; 13.3–14.7
   head down). Crop x 206–978, y 300–1672 → 1080x1920, panel y 330–1130 (FACE=graded). ~19 s of usable footage, so
   the approved v2/v3 plan runs with full-length face shots, no slow-down, no reuse.
+- **SOMETHING2SAY A v8 APPROVED (2026-11-24): "Yep this is great".** Template for sample edits: wide intro playlist
+  hook, drop on the 808 roll with one punch-in, rolls framed on the whole grid, the Pigments preset on a chord,
+  a whip into the vocal entry, ending on ShaperBox in the split. Face = his graded desk take, laptop looks only.
