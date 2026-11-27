@@ -213,9 +213,9 @@ DROP_B = 4                               # bar 17: the new bassline + drums
 # bar 16 build -> drop on the bass going in -> hats -> the kick going in -> clap -> the bass stop (wide) -> section 2 on
 # the reso follow -> end-of-4-bar bass notes going in -> hats -> reso -> clap -> mixer -> end-of-8-bar notes going in
 # v2: sparse drum rolls (kick ~2 bars, claps ~820 px apart) only in the wide split panel (686 px)
-B_ = [0, 4, 14, 18, 23, 28, 37, 44, 48, 52, 56, 60, 64, NBARS * 4]
+B_ = [0, 4, 14, 18, 23, 28, 37, 44, 48, 52, 56, 59.5, 63, NBARS * 4]   # clap/hat rests trimmed (v2)
 L_ = ["full:MACRO", "full:BASSIN", "full:HATIN", "face:KICKIN", "full:BASSIN", "full:MACRO", "face:RESO",
-      "full:BASSEND", "face:HAT", "full:RESO", "face:CLAP_8", "full:MIXER", "face:BASSEND"]
+      "full:BASSEND", "face:MIXER", "full:RESO", "face:CLAP_8", "full:HAT", "face:BASSEND"]   # v2: hats rest in bar 28 -> mixer there
 TRANS_FORCE = {1.0: "zoom", 7.0: "whipH"}
 REACT_J = -99
 IMPACT_J = set()

@@ -5,15 +5,15 @@ _cache = {}
 def _vig(h, w):
     if (h, w) not in _cache:
         y, x = np.mgrid[0:h, 0:w].astype(np.float32); d = np.sqrt(((x - w / 2) / (w * 0.62)) ** 2 + ((y - h * 0.45) / (h * 0.7)) ** 2)
-        _cache[(h, w)] = np.clip(1 - 0.85 * d ** 1.9, 0.22, 1)[..., None]
+        _cache[(h, w)] = np.clip(1 - 0.45 * d ** 2.0, 0.55, 1)[..., None]
     return _cache[(h, w)]
 def grade(img, k=1.0):
     f = img.astype(np.float32) / 255
-    f = f * (1 - 0.30 * k)                                            # exposure down (the vignette does the rest)
+    f = f * (1 - 0.16 * k)                                            # v2 (Jack: a bit dark vs the screen): light exposure cut
     lum = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
     f = lum + (f - lum) * (1 - 0.32 * k)                              # mute saturation
     x = np.clip(f, 0, 1)                                              # S-curve, crushed toe
-    f = np.clip((x - 0.04 * k) / (1 - 0.04 * k), 0, 1); f = f * f * (3 - 2 * f) * (0.9 * k) + f * (1 - 0.9 * k)
+    f = np.clip((x - 0.02 * k) / (1 - 0.02 * k), 0, 1); f = f * f * (3 - 2 * f) * (0.55 * k) + f * (1 - 0.55 * k)
     lum = (0.114 * f[..., 0] + 0.587 * f[..., 1] + 0.299 * f[..., 2])[..., None]
     sh = np.clip(1 - lum * 2.2, 0, 1); hi = np.clip((lum - 0.35) * 1.6, 0, 1)
     f = f + k * (sh * np.array([0.06, 0.03, -0.03]) + hi * np.array([-0.07, -0.005, 0.06]))   # BGR: teal shadows, warm highs

@@ -217,4 +217,7 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   in the style of J Sewell's "808s having a whole conversation", plus his moody face grade on Jack. Grade approved
   "somewhat good" with a request: a bit more light on the frame-left side of his face (his right, where his lamp is)
   -> sewell_grade.grade + key_light(amt 0.3). Delivered bars 16-33 (0:18.95-0:40.42). Sparse drum rolls (kick ~2 bars,
-  claps ~820 px apart) only in the wide split panel, never a narrow full-screen crop. Awaiting feedback.
+  claps ~820 px apart) only in the wide split panel, never a narrow full-screen crop.
+  - v2: "the lighting of me is a bit dark in comparison to the screen recording, needs to blend and be brighter" ->
+    lighter grade (exposure -16%, vignette floor 0.55, softer S-curve): face median L ~145 vs ~75 before. Keep the
+    face panel roughly as bright as the DAW content under it; the J Sewell mood comes from the tint + key light.
