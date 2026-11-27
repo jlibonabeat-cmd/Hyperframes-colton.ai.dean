@@ -14,7 +14,11 @@ Each bullet should end with a date in parentheses — that traces back to the pe
 
 _(colors, typography, density, placement — populated by /feedback over time)_
 
-- _no rules captured yet_
+- **NO colour grading / filtering from Claude, even when a reference creator grades** (2026-11-27, Mystery v3: "every
+  time I've asked you to filter you make things too dark ... I'm happy to filter after"). Deliver his footage as shot
+  (or as HE graded it, e.g. face_graded); he applies his own CapCut filter afterwards. His filter on Mystery was a subtle
+  cool/teal cast at about the same brightness, not a darkening. Don't try to reproduce it by colour-matching: his look
+  was his filter stacked on my grade (vignette + key light), so a colour transform can't rebuild it on clean footage.
 
 ## Pacing
 
@@ -65,6 +69,15 @@ _(preferred / avoid — populated by /feedback over time)_
 - Arrested re-edit feedback (2026-10-29): show an element's piano-roll MIDI rather than its arrangement clip (a clip near the bottom of the frame isn't central); arrangement/scratch shots must have a moving playhead that follows the audio, never a static frame; a "putting in" channel-rack shot frames the row being put in (e.g. the lazer zap), not the whole rack.
 - Rack On Top (2026-10-31): edit C was his favourite of three. Drum-focused, cap face clip (GLOCK copy_99ED92DA), wide arrangement opening, bass/bongo rolls, hat rolls with both rows in frame, the 808 drop alternating the two 808 recordings, one mixer moment. Confirms the drum-focused format (CALI C/D) as the default.
 - Packman (2026-11-01): not a fan of runs of arrangement (macro) shots, especially towards the end, and no shot that isn't focused on anything (an empty piano-roll grid). Before falling back on the arrangement view, reuse recordings whose pattern repeats in that section (verify every hit lines up), and keep the arrangement to a wide entry/exit shot.
+- **His transition FX (2026-11-27, Mystery v3 → his CapCut edit: "these are the types of transitions I want")**:
+  light/film overlays layered on top of the whips / zoom-blurs, not replacing them, about one per section change:
+  (1) a warm yellow/orange light-leak burn with a red burnt rim (3–5 frames) on the drop; (2) a prism/RGB light leak
+  with chromatic split, dust sparkle and a sliced-band glitch (~16 frames) on a cut into a drum roll; (3) vertical
+  rainbow prism bands washing over the face split, then a warm flare → glow → white flash into the bar line (~16 frames);
+  (4) a red circular film burn creeping in from the corner, then a red flood with ink blobs on the cut into the mixer
+  (~17 frames); (5) a white flash, a red ring/dark disc burn, then a single white vertical light streak on the next bar.
+  All sit in the top ~half of the frame and fade out before the lower notes (safe-zone readable). Rebuilt in
+  tools/beat-edit/fx_overlays.py (deterministic, frame-indexed events).
 - Outro: no fisheye/glitch finale on a frozen or face-only shot (Fast Lane v6 outro rejected). End clean on the bar line on a face + DAW shot so the reel loops. (2026-10-21, replaces the earlier "keep glitch finales" guess)
 - Hook idea from @pandoraxx918: real social-proof notifications (big producers following / liking) stacked in the first second, repeated at the end to loop. Only ever real notifications. (2026-10-21)
 
@@ -227,3 +240,6 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     DAW panel (scripted check: <25% of note pixels below y 1520); (3) show drum fills/rolls where they happen (clap
     roll where the hats end); (4) a macro shot over ~1.5 s "feels disengaging": one bar max, then a different framing;
     (5) more J Sewell motion: whip / zoom-blur transitions on every section change (7 in a 21 s edit).
+  - v4 (2026-11-27): his CapCut pass on v3 added light-leak / prism / film-burn / flash transitions and a subtle filter,
+    and he said he's happy to filter himself → v4 = v3 shot plan, FACE=graded (his own take, no grade from me; top
+    panel L 103 vs 84 in v3), and his 5 transition looks rebuilt with fx_overlays.py on the frames he used.

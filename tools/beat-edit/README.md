@@ -479,3 +479,15 @@ breakdown so it loops). Face: IMG_9918 (denim jacket) only.
 - BELL_4 = bell bars 1–4 shown in bars 5–8: one Pattern 2 clip, notes identical bar for bar in the playlist.
 - KIT = the Nocturnal Hours kit artwork in the browser of the mixer recording (Jack: "a quick screenshot here and there").
 - Counter-melody recording is bars 13–16, outside the 16 s: not used.
+
+## Mystery (Nov 27) — transition FX overlays, no grading
+
+- `build_mystery.py` (from build_plug): `FACE=graded python3 -I build_mystery.py out.mp4` → then `fin_impact.py` (impact
+  start) → `fx_overlays.py in.mp4 out.mp4 [events.json]`. `FACE=mystery` is the old graded face (`sewell_grade.py`):
+  don't use it; Jack grades himself now.
+- `fx_overlays.py`: Jack's CapCut transition looks as deterministic overlays on given frame ranges — `warm` (light-leak
+  burn), `prism` (RGB leak + chromatic glitch), `rainbow` (prism bands → flare → glow + white flash), `red` (film burn
+  → red flood with ink blobs), `flash`, `redring`, `streak`. Events = `[name, first_frame, end_frame]`; all masked to
+  the top ~60% of the frame. Place them on section changes / the drop / the mixer cut, on top of the whips.
+- `cc_filter.py`: applies a colour transform fitted from a render to his CapCut re-export. Only valid on footage that
+  was unchanged under his filter (the DAW panels); kept for reference, not for delivery.
