@@ -101,6 +101,10 @@ V = {
     "RESO": dict(FE, clip="reso.mp4", inst="808", segs=[(1.2, 11.45, 29.248)], cy=670, h=560, hs=520, ymin=140, ymax=1140),
     # bass page, Jack adds the notes at the end of the 4-bar (27.4-27.8) and 8-bar (32.2) sections; notes y 356-705
     "BASSEND": dict(RL, clip="bassend.mp4", inst="808", phscan="bassend", segs=[(7.65, 18.0, 23.805)], cy=644, h=700, hs=640, xmin=440, ymin=140, ymax=1140, lead=0.35),
+    # v6 (Jack, Nov 27): section 2's bass entry (edit beats 33-36) is note-for-note the end of section 1 (beats 65-68,
+    # bass-band spectrogram r=0.999, 25-600 Hz) -> the end-of-section bass page shifted back 8 bars. Beat 32 (silent) and
+    # the bar-9 downbeat (beat 36, r=0.29-0.58) do NOT match: the shot starts on the entry and exits on the zoom rush.
+    "BASSEND_S": dict(RL, clip="bassend.mp4", inst="808", phscan="bassend", segs=[(7.65, 18.0, 23.805 - BAR8)], cy=644, h=700, hs=640, xmin=440, ymin=140, ymax=1140, lead=0.35),
     # mixer, strips 1-10 (x 517-1091) all moving from bar 25
     "MIXER": dict(kind="fixed", clip="mixer.mp4", inst="ARR", segs=[(1.3, 11.65, 29.188)], fx=800, cy=640, h=1000, hs=600, xmin=440, ymin=120, ymax=1190, drift=1),
 }
@@ -216,10 +220,13 @@ DROP_B = 4                               # bar 17: the new bassline + drums
 # v2: sparse drum rolls (kick ~2 bars, claps ~820 px apart) only in the wide split panel (686 px)
 # v3 (Jack, Nov 27): clap roll at 0:05 where the hats end, bass notes going in kept 0:14-0:16 (split), macro cut
 # to one bar + a tight playlist split, safe zones, more J Sewell transitions (whips / zoom-blur like his reel)
-B_ = [0, 4, 13, 16.5, 19.5, 23, 28, 32, 37, 44, 50, 54, 59.5, 63, NBARS * 4]
-L_ = ["full:MACRO", "full:BASSIN", "full:HATIN", "face:CLAP", "full:KICKIN", "full:BASSIN", "full:MACRO", "face:MACROZ",
+# v6 (Jack, Nov 27): keep the bass-going-in shot running through 0:04 (no hi-hat cut: "it's me putting the bass in"),
+# and the second macro (0:10-0:11) replaced with the bass notes going in (BASSEND_S); both get the outro's zoom
+# (fin_zooms.py). The cut into BASSEND_S sits on the bass entry (beat 33), with Jack's rainbow-prism + flash into it.
+B_ = [0, 4, 16.5, 19.5, 23, 28, 33, 37, 44, 50, 54, 59.5, 63, NBARS * 4]
+L_ = ["full:MACRO", "full:BASSIN", "face:CLAP", "full:KICKIN", "full:BASSIN", "full:MACRO", "face:BASSEND_S",
       "full:RESO", "face:BASSEND", "full:MIXER", "face:CLAP_8", "full:HAT", "face:BASSEND"]
-TRANS_FORCE = {1.0: "zoom", 4.125: "whipH", 7.0: "whipV", 8.0: "zoom", 9.25: "whipH", 11.0: "zoom", 14.875: "whipV"}
+TRANS_FORCE = {1.0: "zoom", 4.125: "whipH", 7.0: "whipV", 9.25: "whipH", 11.0: "zoom", 14.875: "whipV"}
 REACT_J = -99
 IMPACT_J = set()
 PUNCH_J = {DROP_B / 4}

@@ -249,3 +249,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
     (zoom to 5x, heavy zoom blur, chromatic split, warm-white flash) that loops into the opening impact zoom-out. Blur
     samples scale with movement (~1 per 6 px, up to 48) or the streak shows steps. Overrides the old "clean cut ending"
     rule when he asks for an exit transition.
+  - v6 request: (1) at 0:04 don't cut to the hi-hats: "leave the previous clip going because it's me putting the bass
+    in" -> **never cut away from a putting-notes-in shot for a new element's entry**; (2) replace the 0:10-0:11 second
+    macro with the bass notes going in; (3) "that same zoom" on both bass shots. Section 2's bass entry (beats 33-36) is
+    note-for-note the end of section 1 (r=0.999 in 25-600 Hz) -> BASSEND page shifted back 8 bars; the bar line after it
+    doesn't match, so that shot starts ON the bass entry and leaves on the exit rush. The note zoom is now his standard
+    move for bass/MIDI-going-in shots (fin_zooms.py: punch on a downbeat, ride the playhead, optional exit rush).

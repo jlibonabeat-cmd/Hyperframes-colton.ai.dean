@@ -491,6 +491,8 @@ breakdown so it loops). Face: IMG_9918 (denim jacket) only.
   the top ~60% of the frame. Place them on section changes / the drop / the mixer cut, on top of the whips.
 - `cc_filter.py`: applies a colour transform fitted from a render to his CapCut re-export. Only valid on footage that
   was unchanged under his filter (the DAW panels); kept for reference, not for delivery.
-- `fin_outro_zoom.py`: last-shot outro — punch-in zoom into the notes at the playhead on the last bar downbeat (motion
-  blur along the zoom path, samples scaled to the movement), slow ride, then an exit rush (zoom blur + chromatic split +
-  warm-white flash) that loops into `fin_impact.py`'s opening zoom-out. Frame numbers are set at the top of the file.
+- `fin_zooms.py` (replaces fin_outro_zoom): note zooms on any shot — punch-in into the notes at the playhead on a
+  downbeat (motion blur along the zoom path, samples scaled to the movement; on a split the face pushes out the top),
+  slow ride on the measured playhead path, optional exit rush (zoom blur + chromatic split + warm-white flash; on the
+  last shot it loops into `fin_impact.py`'s opening zoom-out). Zooms are listed at the top (punch/end/exit frames,
+  note_y, ph_off). Pipeline: build → fin_impact → fin_zooms → fx_overlays (events json).
