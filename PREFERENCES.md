@@ -243,3 +243,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - v4 (2026-11-27): his CapCut pass on v3 added light-leak / prism / film-burn / flash transitions and a subtle filter,
     and he said he's happy to filter himself → v4 = v3 shot plan, FACE=graded (his own take, no grade from me; top
     panel L 103 vs 84 in v3), and his 5 transition looks rebuilt with fx_overlays.py on the frames he used.
+  - v5 request: "on that last shot let's have a dynamic zoom into the midi notes with a bit of motion blur following it
+    and then an exit transition" -> fin_outro_zoom.py: punch-in on the last bar downbeat (1 -> 2.15x in 9 frames, face
+    panel pushed out the top, notes landing at ~46% height), slow push riding the playhead, then a 10-frame exit rush
+    (zoom to 5x, heavy zoom blur, chromatic split, warm-white flash) that loops into the opening impact zoom-out. Blur
+    samples scale with movement (~1 per 6 px, up to 48) or the streak shows steps. Overrides the old "clean cut ending"
+    rule when he asks for an exit transition.

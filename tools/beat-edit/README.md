@@ -491,3 +491,6 @@ breakdown so it loops). Face: IMG_9918 (denim jacket) only.
   the top ~60% of the frame. Place them on section changes / the drop / the mixer cut, on top of the whips.
 - `cc_filter.py`: applies a colour transform fitted from a render to his CapCut re-export. Only valid on footage that
   was unchanged under his filter (the DAW panels); kept for reference, not for delivery.
+- `fin_outro_zoom.py`: last-shot outro — punch-in zoom into the notes at the playhead on the last bar downbeat (motion
+  blur along the zoom path, samples scaled to the movement), slow ride, then an exit rush (zoom blur + chromatic split +
+  warm-white flash) that loops into `fin_impact.py`'s opening zoom-out. Frame numbers are set at the top of the file.
