@@ -213,3 +213,8 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
 - REALLY I'M THE PLUG A/B (2026-11-24): "Love both of these edits". Then C = the second half, bars 9-16
   (0:15.36-0:30.72), VARIANT=C. Bell only in bars 13-14 (its pitches match bars 5-6, r 0.98; bars 9-12 don't),
   counter-melody (Serum 2) from bar 15 with a whip, one mixer shot framed on the 10 moving strips. Awaiting feedback.
+- MYSTERY (2026-11-27, request): edit from ~0:19 where the new bassline comes in; show the bass notes going in + drums,
+  in the style of J Sewell's "808s having a whole conversation", plus his moody face grade on Jack. Grade approved
+  "somewhat good" with a request: a bit more light on the frame-left side of his face (his right, where his lamp is)
+  -> sewell_grade.grade + key_light(amt 0.3). Delivered bars 16-33 (0:18.95-0:40.42). Sparse drum rolls (kick ~2 bars,
+  claps ~820 px apart) only in the wide split panel, never a narrow full-screen crop. Awaiting feedback.
