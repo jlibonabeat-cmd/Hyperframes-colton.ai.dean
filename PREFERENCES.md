@@ -221,3 +221,9 @@ _(anti-patterns to never repeat — populated by /feedback over time)_
   - v2: "the lighting of me is a bit dark in comparison to the screen recording, needs to blend and be brighter" ->
     lighter grade (exposure -16%, vignette floor 0.55, softer S-curve): face median L ~145 vs ~75 before. Keep the
     face panel roughly as bright as the DAW content under it; the J Sewell mood comes from the tint + key light.
+  - v3 feedback: (1) never cut away while he's putting notes in (0:14-0:16 bass end-notes were cut by a mixer shot)
+    -> hold the "putting in" moment to its last note, in the wide split; (2) **SAFE ZONES on every shot**: notes must sit
+    above the IG caption/button zone (bottom ~420 px) - full shots: note centre ~46% of the frame; splits: ~32% of the
+    DAW panel (scripted check: <25% of note pixels below y 1520); (3) show drum fills/rolls where they happen (clap
+    roll where the hats end); (4) a macro shot over ~1.5 s "feels disengaging": one bar max, then a different framing;
+    (5) more J Sewell motion: whip / zoom-blur transitions on every section change (7 in a 21 s edit).

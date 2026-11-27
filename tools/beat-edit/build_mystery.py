@@ -85,21 +85,22 @@ FE = dict(kind="fixed", fxl=440, xmin=430, tz=1.0)     # follow-alongs: FL's pla
 V = {
     # playlist, smooth follow, playhead parked x 1160: bar 16 hat build, bars 23-24 the bass stop
     "MACRO": dict(RL, clip="macro.mp4", inst="ARR", phscan="macro", segs=[(1.65, 27.0, 13.462)], cy=620, h=900, hs=760, xmin=760, ymin=160, ymax=1120, lead=0.4),
+    "MACROZ": dict(RL, clip="macro.mp4", inst="ARR", phscan="macro", segs=[(1.65, 27.0, 13.462)], cy=560, h=560, hs=480, xmin=760, ymin=160, ymax=1120, lead=0.45),
     # "Reso" bass page, playhead sweeping, Jack putting notes in (bars 18.5 / 19.2); notes y 316-422 + 721-746
-    "BASSIN": dict(RL, clip="bassin.mp4", inst="808", phscan="bassin", segs=[(7.65, 16.3, 12.56)], cy=530, h=560, hs=520, xmin=440, ymin=140, ymax=890, lead=0.35),
+    "BASSIN": dict(RL, clip="bassin.mp4", inst="808", phscan="bassin", segs=[(7.65, 16.3, 12.56)], cy=564, h=760, hs=620, xmin=440, ymin=140, ymax=1140, lead=0.35),
     # hi-hat page (row y 521-540), filled in at bar 17.1
     "HATIN": dict(RL, clip="hatin.mp4", inst="HAT", phscan="hatin", segs=[(4.05, 9.3, 16.14)], cy=530, h=520, hs=380, xmin=440, ymin=140, ymax=900, lead=0.35),
     # kick page (row y 630-650), second kick goes in at bar 20.3
-    "KICKIN": dict(RL, clip="kickin.mp4", inst="808", phscan="kickin", segs=[(17.3, 26.3, 2.86)], cy=545, h=700, hs=700, xmin=440, ymin=140, ymax=900, lead=0.35),
+    "KICKIN": dict(RL, clip="kickin.mp4", inst="808", phscan="kickin", segs=[(17.3, 26.3, 2.86)], cy=671, h=700, hs=700, xmin=440, ymin=140, ymax=1140, lead=0.35),
     # clap (row y 516-545), "same for both sections" -> CLAP_8 = bars 21-24 shown in bars 29-32
-    "CLAP": dict(RL, clip="clap.mp4", inst="SNARE", phscan="clap", segs=[(6.9, 9.35, 19.255)], cy=545, h=700, hs=700, xmin=440, ymin=140, ymax=900, lead=0.35),
-    "CLAP_8": dict(RL, clip="clap.mp4", inst="SNARE", phscan="clap", segs=[(6.9, 9.35, 19.255 + BAR8)], cy=545, h=700, hs=700, xmin=440, ymin=140, ymax=900, lead=0.35),
+    "CLAP": dict(RL, clip="clap.mp4", inst="SNARE", phscan="clap", segs=[(0.95, 9.35, 19.24)], cy=655, h=700, hs=700, xmin=440, ymin=140, ymax=1140, lead=0.35),
+    "CLAP_8": dict(RL, clip="clap.mp4", inst="SNARE", phscan="clap", segs=[(0.95, 9.35, 19.24 + BAR8)], cy=655, h=700, hs=700, xmin=440, ymin=140, ymax=1140, lead=0.35),
     # hi-hat follow-along (row y 547-576), bars 26.4-33
-    "HAT": dict(FE, clip="hat.mp4", inst="HAT", segs=[(3.5, 13.5, 26.91)], cy=560, h=420, hs=380, ymin=140, ymax=900),
+    "HAT": dict(FE, clip="hat.mp4", inst="HAT", segs=[(3.5, 13.5, 26.91)], cy=580, h=420, hs=380, ymin=140, ymax=900),
     # reso bass follow-along (notes y 522-767), bars 25-33
-    "RESO": dict(FE, clip="reso.mp4", inst="808", segs=[(1.2, 11.45, 29.248)], cy=645, h=560, hs=520, ymin=140, ymax=900),
+    "RESO": dict(FE, clip="reso.mp4", inst="808", segs=[(1.2, 11.45, 29.248)], cy=670, h=560, hs=520, ymin=140, ymax=1140),
     # bass page, Jack adds the notes at the end of the 4-bar (27.4-27.8) and 8-bar (32.2) sections; notes y 356-705
-    "BASSEND": dict(RL, clip="bassend.mp4", inst="808", phscan="bassend", segs=[(7.65, 18.0, 23.805)], cy=530, h=600, hs=560, xmin=440, ymin=140, ymax=890, lead=0.35),
+    "BASSEND": dict(RL, clip="bassend.mp4", inst="808", phscan="bassend", segs=[(7.65, 18.0, 23.805)], cy=644, h=700, hs=640, xmin=440, ymin=140, ymax=1140, lead=0.35),
     # mixer, strips 1-10 (x 517-1091) all moving from bar 25
     "MIXER": dict(kind="fixed", clip="mixer.mp4", inst="ARR", segs=[(1.3, 11.65, 29.188)], fx=800, cy=640, h=1000, hs=600, xmin=440, ymin=120, ymax=1190, drift=1),
 }
@@ -213,10 +214,12 @@ DROP_B = 4                               # bar 17: the new bassline + drums
 # bar 16 build -> drop on the bass going in -> hats -> the kick going in -> clap -> the bass stop (wide) -> section 2 on
 # the reso follow -> end-of-4-bar bass notes going in -> hats -> reso -> clap -> mixer -> end-of-8-bar notes going in
 # v2: sparse drum rolls (kick ~2 bars, claps ~820 px apart) only in the wide split panel (686 px)
-B_ = [0, 4, 14, 18, 23, 28, 37, 44, 48, 52, 56, 59.5, 63, NBARS * 4]   # clap/hat rests trimmed (v2)
-L_ = ["full:MACRO", "full:BASSIN", "full:HATIN", "face:KICKIN", "full:BASSIN", "full:MACRO", "face:RESO",
-      "full:BASSEND", "face:MIXER", "full:RESO", "face:CLAP_8", "full:HAT", "face:BASSEND"]   # v2: hats rest in bar 28 -> mixer there
-TRANS_FORCE = {1.0: "zoom", 7.0: "whipH"}
+# v3 (Jack, Nov 27): clap roll at 0:05 where the hats end, bass notes going in kept 0:14-0:16 (split), macro cut
+# to one bar + a tight playlist split, safe zones, more J Sewell transitions (whips / zoom-blur like his reel)
+B_ = [0, 4, 13, 16.5, 19.5, 23, 28, 32, 37, 44, 50, 54, 59.5, 63, NBARS * 4]
+L_ = ["full:MACRO", "full:BASSIN", "full:HATIN", "face:CLAP", "full:KICKIN", "full:BASSIN", "full:MACRO", "face:MACROZ",
+      "full:RESO", "face:BASSEND", "full:MIXER", "face:CLAP_8", "full:HAT", "face:BASSEND"]
+TRANS_FORCE = {1.0: "zoom", 4.125: "whipH", 7.0: "whipV", 8.0: "zoom", 9.25: "whipH", 11.0: "zoom", 14.875: "whipV"}
 REACT_J = -99
 IMPACT_J = set()
 PUNCH_J = {DROP_B / 4}
